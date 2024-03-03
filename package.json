@@ -1,0 +1,31 @@
+{
+  "name": "holesail",
+  "version": "1.0.0",
+  "description": "A P2P based node package to expose your local ports on the Holepunch protocol",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holesail/holesail.git"
+  },
+  "keywords": [
+    "holesail",
+    "hyperdht",
+    "holepunch"
+  ],
+  "author": "supersuryaansh",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/holesail/holesail/issues"
+  },
+  "homepage": "https://github.com/holesail/holesail#readme",
+  "devDependencies": {
+    "holesail-server": "^1.1.1"
+  },
+  "dependencies": {
+    "graceful-goodbye": "^1.3.0",
+    "minimist": "^1.2.8"
+  }
+}

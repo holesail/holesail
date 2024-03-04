@@ -1,4 +1,4 @@
- # Holesail Server
+ # Holesail
 ##Note: This package is Under development at the moment
 ## Overview
 

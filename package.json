@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/holesail/holesail#readme",
   "devDependencies": {
-    "holesail-server": "^1.1.1"
+    "holesail-server": "*"
   },
   "dependencies": {
     "graceful-goodbye": "^1.3.0",

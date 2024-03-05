@@ -27,5 +27,8 @@
   "dependencies": {
     "graceful-goodbye": "^1.3.0",
     "minimist": "^1.2.8"
+  },
+  "bin": {
+    "holesail": "./index.js"
   }
 }

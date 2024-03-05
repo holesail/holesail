@@ -11,7 +11,7 @@ Before using Holesail, make sure you have Node.js installed on your system. You 
 Once Node.js is installed, you can install Holesail Server using npm (Node Package Manager):
 
 ```
-npm install holesail
+npm i holesail -g
 ```
 
 ## Usage

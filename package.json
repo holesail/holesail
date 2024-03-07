@@ -22,8 +22,9 @@
   },
   "homepage": "https://github.com/holesail/holesail#readme",
   "dependencies": {
-    "holesail-server": "*",
     "graceful-goodbye": "^1.3.0",
+    "holesail-client": "^1.0.1",
+    "holesail-server": "*",
     "minimist": "^1.2.8"
   },
   "bin": {

@@ -21,8 +21,14 @@ To start a local Holesail Server, use the following command:
 ```
 holesail --live port
 ```
-
 Replace `port` with the desired port number you want to expose to the network.
+
+This will give you a seed to connect to, use that to acess this server from anywhere:
+
+```js
+holesail --connect SEED --port
+```
+
 
 ### Example
 

@@ -1,6 +1,6 @@
 {
   "name": "holesail",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A P2P based node package to expose your local ports on the Holepunch protocol",
   "main": "index.js",
   "scripts": {

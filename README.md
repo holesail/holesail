@@ -1,5 +1,7 @@
  # Holesail
-##Note: This package is Under development at the moment
+
+[Join our Discord Support Server](https://discord.gg/TQVacE7Vnj)
+
 ## Overview
 
 Holesail is a simple and flexible solution for creating a distributed hash table (DHT) server. It allows you to expose your local port to the network, making it accessible to other nodes.

@@ -2,7 +2,7 @@
 const DHT = require('holesail-server') //require module to start server on local port
 const goodbye = require('graceful-goodbye')
 const argv = require('minimist')(process.argv.slice(2)) //required to parse cli arguments
-const helpMessage = 'Usage: The command below will expose your local port to the network\nholesail --live port \n Command to connect to a holesail-server:\n holesail --connect <seed> --port <portno>'
+const helpMessage = 'Usage: The command below will expose your local port to the network\nholesail --live port \n Command to connect to a holesail-server:\n holesail --connect <seed> --port <portno>. You can use the  --host option to change host, the default is 127.0.0.1'
 
 //setting up the command hierarchy
 if (argv.help) {

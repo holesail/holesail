@@ -30,6 +30,15 @@ This will give you a seed to connect to, use that to acess this server from anyw
 ```js
 holesail --connect SEED --port
 ```
+Available options:
+
+`--live PORT`: Create a tunnel on this port
+
+`--connect SEED`: Connect to a tunnel using the seed generated from --live command
+
+`--host ADDRESS`: Default address is 127.0.0.1, use it to change address to localhost or other
+
+`--port PORT`: Use this option with --connect to set a custom port instead of the default port `8989`
 
 
 ### Example

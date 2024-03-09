@@ -11,22 +11,37 @@ if (argv.help) {
 }
 const localServer = new DHT();
 if (argv.live) {
-    localServer.serve(argv.live, '127.0.0.1', () => {
-        console.log('Server started, Now listening on port ' + argv.live);
+    // --host
+    if (argv.host) {
+        host = argv.host
+    } else {
+        host = '127.0.0.1'
+    }
+
+    localServer.serve(argv.live, host, () => {
+        console.log(`Server started, Now listening on port ${host}:` + argv.live);
         console.log('Server public key:', localServer.getPublicKey());
     });
 
 } else if (argv.connect) {
 
-    if(!argv.port){
+
+    if (!argv.port) {
         port = 8989
-    }else{
+    } else {
         port = argv.port
     }
+     //--host
+    if (argv.host) {
+        host = argv.host
+    } else {
+        host = '127.0.0.1'
+    }
+
     const holesailClient = require('holesail-client')
     const pubClient = new holesailClient(argv.connect)
-    pubClient.connect(port, "127.0.0.1", () => {
-        console.log(`Listening on 127.0.0.1:${port}`)
+    pubClient.connect(port, host, () => {
+        console.log(`Listening on ${host}:${port}`)
     })
 } else {
     console.log(helpMessage);

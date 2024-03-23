@@ -3,12 +3,14 @@ const DHT = require('holesail-server') //require module to start server on local
 const goodbye = require('graceful-goodbye')
 const argv = require('minimist')(process.argv.slice(2)) //required to parse cli arguments
 const helpMessage = 'Usage: The command below will expose your local port to the network\nholesail --live port \n Command to connect to a holesail-server:\n holesail --connect <seed> --port <portno>. You can use the  --host option to change host, the default is 127.0.0.1'
-
+const {createHash}  = require('crypto'); //for connectors
 //setting up the command hierarchy
 if (argv.help) {
     console.log(helpMessage)
     process.exit(-1)
 }
+
+
 const localServer = new DHT();
 if (argv.live) {
     // --host
@@ -17,11 +19,22 @@ if (argv.live) {
     } else {
         host = '127.0.0.1'
     }
+    //to preserve seed
+    if (argv.connector) {
+        if (argv.connector.length === 64){
+            connector = argv.connector
+        }else{
+            connector = createHash('sha256').update(argv.connector.toString()).digest('hex');
+        }
+
+    } else{
+        connector = null
+    }
 
     localServer.serve(argv.live, host, () => {
         console.log(`Server started, Now listening on port ${host}:` + argv.live);
         console.log('Server public key:', localServer.getPublicKey());
-    });
+    },connector);
 
 } else if (argv.connect) {
 

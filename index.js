@@ -1,12 +1,16 @@
 #!/usr/bin/env node
+
 const DHT = require('holesail-server') //require module to start server on local port
 const goodbye = require('graceful-goodbye')
+const HyperDHT = require('hyperdht')
 const argv = require('minimist')(process.argv.slice(2)) //required to parse cli arguments
-const helpMessage = 'Usage: The command below will expose your local port to the network\nholesail --live port \n Command to connect to a holesail-server:\n holesail --connect <seed> --port <portno>. You can use the  --host option to change host, the default is 127.0.0.1'
-const {createHash}  = require('crypto'); //for connectors
+const {
+    createHash
+} = require('crypto'); //for connectors
 //setting up the command hierarchy
 if (argv.help) {
-    console.log(helpMessage)
+    const help = require('./includes/help.js');
+    help.printHelp(help.helpMessage);
     process.exit(-1)
 }
 
@@ -21,30 +25,45 @@ if (argv.live) {
     }
     //to preserve seed
     if (argv.connector) {
-        if (argv.connector.length === 64){
+        if (argv.connector.length === 64) {
             connector = argv.connector
-        }else{
+        } else {
             connector = createHash('sha256').update(argv.connector.toString()).digest('hex');
         }
 
-    } else{
+    } else {
         connector = null
     }
 
     localServer.serve(argv.live, host, () => {
-        console.log(`Server started, Now listening on port ${host}:` + argv.live);
+        console.log(`Server started, Now listening on ${host}:` + argv.live);
+        console.log(`Your connector is: ${argv.connector}`);
         console.log('Server public key:', localServer.getPublicKey());
-    },connector);
+    }, connector);
 
 } else if (argv.connect) {
 
+    //give priority to connector instead of connection seed
+    if (argv.connector) {
+        if (argv.connector.length === 64) {
+            connector = argv.connector
+        } else {
+            connector = createHash('sha256').update(argv.connector.toString()).digest('hex');
+            const seed = Buffer.from(connector, 'hex');
+            //the keypair here is not a reference to the function above
+            connector = HyperDHT.keyPair(seed).publicKey.toString('hex');
+        }
+
+    } else {
+        connector = argv.connect
+    }
 
     if (!argv.port) {
         port = 8989
     } else {
         port = argv.port
     }
-     //--host
+    //--host
     if (argv.host) {
         host = argv.host
     } else {
@@ -52,10 +71,13 @@ if (argv.live) {
     }
 
     const holesailClient = require('holesail-client')
-    const pubClient = new holesailClient(argv.connect)
+    const pubClient = new holesailClient(connector)
     pubClient.connect(port, host, () => {
-        console.log(`Listening on ${host}:${port}`)
-    })
+        console.log(`Client setup, access on ${host}:${port}`);
+        console.log(`Your connector is: ${argv.connector}`);
+        console.log('Connected to public key:', connector);
+        }
+    )
 } else {
     console.log(helpMessage);
     process.exit(-1)

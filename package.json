@@ -1,6 +1,6 @@
 {
   "name": "holesail",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "A P2P based node package to expose your local ports on the Holepunch protocol",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,8 @@
     "holesail-client": "^1.0.1",
     "holesail-server": "*",
     "hyperdht": "^6.13.1",
-    "minimist": "^1.2.8"
+    "minimist": "^1.2.8",
+    "terminal-kit": "^3.1.1"
   },
   "bin": {
     "holesail": "./index.js"

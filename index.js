@@ -4,8 +4,6 @@ const DHT = require('holesail-server') //require module to start server on local
 const goodbye = require('graceful-goodbye')
 const HyperDHT = require('hyperdht')
 const argv = require('minimist')(process.argv.slice(2)) //required to parse cli arguments
-var term = require( 'terminal-kit' ).terminal ; //to beautify terminal output
-
 
 const {
     createHash
@@ -50,7 +48,7 @@ if (argv.live) {
         if (isConnectorSet) {
             console.log(`Your connector is: ${argv.connector}`);
         } else {
-            term.yellow("Notice: There is no connector set. \n");
+            console.log("Notice: There is no connector set. \n");
         }
 
         console.log(`Server started, Now listening on ${host}:` + argv.live);
@@ -93,7 +91,7 @@ if (argv.live) {
             if (isConnectorSet) {
                 console.log(`Your connector is: ${argv.connect}`);
             } else {
-                term.yellow("Notice: There is no connector set.\n");
+                console.log("Notice: There is no connector set.\n");
             }
 
             console.log('Connected to public key:', connector);
@@ -134,7 +132,7 @@ if (argv.live) {
             if (isConnectorSet) {
                 console.log(`Your connector is: ${argv['_'][0]}`);
             } else {
-                term.yellow("Notice: There is no connector set.\n");
+                console.log("Notice: There is no connector set.\n");
             }
 
             console.log('Connected to public key:', connector);

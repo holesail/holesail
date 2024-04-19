@@ -75,6 +75,6 @@ Holesail is built using the following open-source projects:
 
 - hypertele: https://github.com/bitfinexcom/hypertele
 - holepunch: https://holepunch.to
-- holesail-server: https://github.com/holesail/holesail-server)
+- holesail-server: https://github.com/holesail/holesail-server
 
 and other node packges.

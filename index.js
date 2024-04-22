@@ -7,11 +7,10 @@ const argv = require('minimist')(process.argv.slice(2)) //required to parse cli 
 
 const {
     createHash
-} = require('crypto'); //for connectors
+} = require('node:crypto'); //for connectors
 
 //splitting into files
 const help = require('./includes/help.js');
-
 
 //setting up the command hierarchy
 if (argv.help) {
@@ -43,7 +42,7 @@ if (argv.live) {
         isConnectorSet = false;
     }
 
-    localServer.serve(argv.live, host, () => {
+    localServer.serve({port:argv.live,address:host,buffSeed:connector},() => {
 
         if (isConnectorSet) {
             console.log(`Your connector is: ${argv.connector}`);
@@ -53,7 +52,7 @@ if (argv.live) {
 
         console.log(`Server started, Now listening on ${host}:` + argv.live);
         console.log('Server public key:', localServer.getPublicKey());
-    }, connector);
+    });
 
 } else if (argv.connect) {
 

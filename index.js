@@ -85,7 +85,7 @@ if (argv.live) {
 
     const holesailClient = require('holesail-client')
     const pubClient = new holesailClient(connector)
-    pubClient.connect(port, host, () => {
+    pubClient.connect({port:port, address:host}, () => {
             console.log(`Client setup, access on http://${host}:${port}/`);
 
             if (isConnectorSet) {
@@ -126,7 +126,7 @@ if (argv.live) {
 
     const holesailClient = require('holesail-client')
     const pubClient = new holesailClient(connector)
-    pubClient.connect(port, host, () => {
+    pubClient.connect({port:port,address:host}, () => {
             console.log(`Client setup, access on http://${host}:${port}/`);
 
             if (isConnectorSet) {

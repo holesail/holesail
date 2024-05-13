@@ -10,7 +10,7 @@ const {
 } = require('node:crypto'); //for connectors
 
 //version info
-const version = "1.4.10";
+const version = "1.4.12";
 
 //splitting into files
 const help = require('./includes/help.js');
@@ -140,10 +140,11 @@ if (argv.live) {
     }
 
     const holesailClient = require('holesail-client')
+    var pubClient = null;
     if (isConnectorSet) {
-        const pubClient = new holesailClient(connector, "secure")
+         pubClient = new holesailClient(connector, "secure")
     } else {
-        const pubClient = new holesailClient(connector)
+         pubClient = new holesailClient(connector)
     }
 
     pubClient.connect({port: port, address: host}, () => {

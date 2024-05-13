@@ -4,13 +4,14 @@ const DHT = require('holesail-server') //require module to start server on local
 const goodbye = require('graceful-goodbye')
 const HyperDHT = require('hyperdht')
 const argv = require('minimist')(process.argv.slice(2)) //required to parse cli arguments
+const b4a = require('b4a')
 
 const {
     createHash
 } = require('node:crypto'); //for connectors
 
 //version info
-const version = "1.4.12";
+const version = "1.4.13";
 
 //splitting into files
 const help = require('./includes/help.js');
@@ -77,7 +78,7 @@ if (argv.live) {
         connector = createHash('sha256').update(argv.connect.toString()).digest('hex');
         const seed = Buffer.from(connector, 'hex');
         //the keypair here is not a reference to the function above
-        connector = HyperDHT.keyPair(seed).publicKey.toString('hex');
+        connector = b4a.toString(seed, 'hex');
         isConnectorSet = true;
     }
 
@@ -94,12 +95,15 @@ if (argv.live) {
     }
 
     const holesailClient = require('holesail-client')
+    var pubClient;
     if (isConnectorSet) {
-        const pubClient = new holesailClient(connector, "secure");
+        console.log(1)
+         pubClient = new holesailClient(connector, "secure");
+        console.log(2)
     } else {
-        const pubClient = new holesailClient(connector);
+         pubClient = new holesailClient(connector);
     }
-
+    console.log(3)
     pubClient.connect({port: port, address: host}, () => {
             console.log(`Client setup, access on http://${host}:${port}/`);
 
@@ -123,7 +127,7 @@ if (argv.live) {
         connector = createHash('sha256').update(argv['_'][0].toString()).digest('hex');
         const seed = Buffer.from(connector, 'hex');
         //the keypair here is not a reference to the function above
-        connector = HyperDHT.keyPair(seed).publicKey.toString('hex');
+        connector = b4a.toString(seed, 'hex');
         isConnectorSet = true;
     }
 
@@ -142,6 +146,7 @@ if (argv.live) {
     const holesailClient = require('holesail-client')
     var pubClient = null;
     if (isConnectorSet) {
+        console.log("Test")
          pubClient = new holesailClient(connector, "secure")
     } else {
          pubClient = new holesailClient(connector)

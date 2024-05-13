@@ -77,4 +77,4 @@ Holesail is built using the following open-source projects:
 - holepunch: https://holepunch.to
 - holesail-server: https://github.com/holesail/holesail-server)
 
-and other node packges.
+and other node packages.

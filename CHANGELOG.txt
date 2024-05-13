@@ -1,0 +1,4 @@
+v1.4.10
+-- Start maintaining changelog
+-- Bumped packages
+-- Added security to connectors.

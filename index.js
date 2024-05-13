@@ -9,25 +9,36 @@ const {
     createHash
 } = require('node:crypto'); //for connectors
 
+//version info
+const version = "1.4.10";
+
 //splitting into files
 const help = require('./includes/help.js');
 
 //setting up the command hierarchy
+
+//display help and exit
 if (argv.help) {
     help.printHelp(help.helpMessage);
     process.exit(-1)
 }
 
+//display version and exit
+if (argv.version) {
+    console.log(version);
+    process.exit(-1);
+}
 
 const localServer = new DHT();
 if (argv.live) {
-    // --host
+    // user sets the custom host address for the server or use 127.0.0.1
     if (argv.host) {
         host = argv.host
     } else {
         host = '127.0.0.1'
     }
-    //to preserve seed
+    //if the connector length is 64 consider it as a seed or else create a seed from the connector
+    //this lets the user pair with strings instead of long seeds
     if (argv.connector) {
         if (argv.connector.length === 64) {
             connector = argv.connector;
@@ -42,7 +53,7 @@ if (argv.live) {
         isConnectorSet = false;
     }
 
-    localServer.serve({port:argv.live,address:host,buffSeed:connector},() => {
+    localServer.serve({port: argv.live, address: host, buffSeed: connector, secure: isConnectorSet}, () => {
 
         if (isConnectorSet) {
             console.log(`Your connector is: ${argv.connector}`);
@@ -83,8 +94,13 @@ if (argv.live) {
     }
 
     const holesailClient = require('holesail-client')
-    const pubClient = new holesailClient(connector)
-    pubClient.connect({port:port, address:host}, () => {
+    if (isConnectorSet) {
+        const pubClient = new holesailClient(connector, "secure");
+    } else {
+        const pubClient = new holesailClient(connector);
+    }
+
+    pubClient.connect({port: port, address: host}, () => {
             console.log(`Client setup, access on http://${host}:${port}/`);
 
             if (isConnectorSet) {
@@ -124,8 +140,13 @@ if (argv.live) {
     }
 
     const holesailClient = require('holesail-client')
-    const pubClient = new holesailClient(connector)
-    pubClient.connect({port:port,address:host}, () => {
+    if (isConnectorSet) {
+        const pubClient = new holesailClient(connector, "secure")
+    } else {
+        const pubClient = new holesailClient(connector)
+    }
+
+    pubClient.connect({port: port, address: host}, () => {
             console.log(`Client setup, access on http://${host}:${port}/`);
 
             if (isConnectorSet) {

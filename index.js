@@ -7,6 +7,12 @@ const pkg = require('./package.json'); //holds info about current package
 const help = require('./includes/help.js');
 const Client = require('./includes/client.js');
 const Server = require('./includes/server.js');
+const { ValidateInput } = require('./includes/validateInput.js');
+
+
+//validate every input and throw errors if incorrect input
+const validator = new ValidateInput(argv);
+
 
 //setting up the command hierarchy
 //display help and exit
@@ -29,7 +35,6 @@ if (argv.live) {
     };
     const server = new Server(options);
     server.start();
-
     goodbye(async () => {
         await server.destroy();
     });

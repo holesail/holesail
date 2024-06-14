@@ -1,8 +1,10 @@
+const holesailClient = require('holesail-client');
+
+const b4a = require('b4a');
+const {createHash} = require('node:crypto');
+
 const boxConsole = require('cli-box');
 var colors = require('colors/safe');
-const b4a = require('b4a');
-const { createHash } = require('node:crypto');
-const holesailClient = require('holesail-client');
 
 class Client {
     constructor(keyInput, options) {
@@ -36,7 +38,7 @@ class Client {
     }
 
     start() {
-        this.pubClient.connect({ port: this.port, address: this.host }, () => {
+        this.pubClient.connect({port: this.port, address: this.host}, () => {
             if (this.isConnectorSet) {
                 this.printBox("Super Secret Connector", "Connected to Secret Connector: " + colors.white(this.keyInput));
             } else {
@@ -45,20 +47,41 @@ class Client {
         });
     }
 
-    printBox(connectionMode, additionalText) {
-        var box = boxConsole("100x10", {
-            text: colors.cyan.underline.bold("Holesail Client Started") + " ⛵️" + "\n" +
-                colors.magenta("Connection Mode: ") + colors.green(connectionMode) + "\n" +
-                colors.magenta(`Access application on http://${this.host}:${this.port}/`) + "\n" +
-                additionalText +
-                colors.gray(`Public key: ${this.connector}`) + "\n" +
-                colors.gray(`   NOTE: TREAT CONNECTORS HOW YOU WOULD TREAT SSH KEY, DO NOT SHARE IT WITH ANYONE YOU DO NOT TRUST    `),
-            autoEOL: true,
-            vAlign: "middle",
-            hAlign: "middle",
-            stretch: true
-        });
-        console.log(box);
+    printBox() {
+        if (this.isConnectorSet) {
+
+            var box = boxConsole("100x10", {
+                    text: colors.cyan.underline.bold("Holesail Client Started") + " ⛵️" + "\n" +
+                        colors.magenta("Connection Mode: ") + colors.green("Super Secret Connector") + "\n" +
+                        colors.magenta(`Access application on http://${this.host}:${this.port}/`) + "\n" +
+                        "Connected to Secret Connector: " + colors.white(this.keyInput) + "\n" +
+                        colors.gray(`Public key: ${this.connector}`) + "\n" +
+                        colors.gray(`   NOTE: TREAT CONNECTORS HOW YOU WOULD TREAT SSH KEY, DO NOT SHARE IT WITH ANYONE YOU DO NOT TRUST    `),
+                    autoEOL: true,
+                    vAlign: "middle",
+                    hAlign: "middle",
+                    stretch: true
+                }
+            );
+            console.log(box)
+
+        } else {
+
+            var box = boxConsole("100x10", {
+                    text: colors.cyan.underline.bold("Holesail Client Started") + " ⛵️" + "\n" +
+                        colors.magenta("Connection Mode: ") + colors.yellow("Publicly Sharable Key") + "\n" +
+                        colors.magenta(`Access application on http://${this.host}:${this.port}/`) + "\n" +
+                        colors.gray(`Public key: ${this.connector}`) + "\n" +
+                        colors.gray(`   NOTICE: TREAT PUBLIC KEYS LIKE YOU WOULD TREAT A DOMAIN NAME ON PUBLIC SERVER, IF THERE IS ANYTHING PRIVATE ON IT, IT IS YOUR RESPONSIBILITY TO PASSWORD PROTECT IT OR USE CONNECTORS   `),
+                    autoEOL: true,
+                    vAlign: "middle",
+                    hAlign: "middle",
+                    stretch: true
+                }
+            );
+            console.log(box)
+
+        }
     }
 }
 

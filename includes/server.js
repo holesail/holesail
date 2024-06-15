@@ -18,7 +18,6 @@ class Server {
 
     // Create seed from connector or set a key if it exists
     setupConnector(connector) {
-    console.log(connector)
 
         // If there is no connector provided in options, set it to null locally
         if (!connector) {

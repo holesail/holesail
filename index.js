@@ -7,8 +7,9 @@ const pkg = require('./package.json'); //holds info about current package
 const help = require('./includes/help.js');
 const Client = require('./includes/client.js');
 const Server = require('./includes/server.js');
-const { ValidateInput } = require('./includes/validateInput.js');
+const {ValidateInput} = require('./includes/validateInput.js');
 
+var colors = require('colors/safe');
 
 //validate every input and throw errors if incorrect input
 const validator = new ValidateInput(argv);
@@ -48,6 +49,6 @@ if (argv.live) {
     const client = new Client(keyInput, options);
     client.start();
 } else {
-    help.printHelp(help.helpMessage);
-    process.exit(-1);
+    console.log(colors.red(`Error: Invalid or Incorrect arguments specified. See holesail --help for a list of all valid arguments`));
+    process.exit(2);
 }

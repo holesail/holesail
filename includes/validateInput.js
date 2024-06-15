@@ -18,18 +18,41 @@ class ValidateInput {
     validateInput(args) {
         // Validation logic
 
-        //server and client are not supported at the same time
+        // Server and client are not supported at the same time
         if (args.live && (args.connect || args['_'][0])) {
             console.log(colors.red("Error: You can't start a server and client at the same time. Kindly check and fix your inputs, see holesail --help"));
             process.exit(2);
         }
 
-        //64 length string is considered a key not a connector
+        // 64 length string is considered a key not a connector
         if (args.connector && args.connector.length === 64) {
             console.log(colors.red("Error: Connectors can not be of length 64, any string with length 64 is considered a key, see holesail --help on how to use a connector"));
             process.exit(2);
         }
 
+        // Can't use two keys, can we?
+        if ((args.connect && args['_'][0])) {
+            console.log(colors.red("Error: Lmao, are you trying to use two keys at once? Get some holesail --help mate"));
+            process.exit(2);
+        }
+
+        // Throw error if specified connector is empty
+        if (args.connector && typeof (args.connector) === "boolean") {
+            console.log(colors.red("Error: You have specified an empty connector. Run holesail --help to see examples and how to use connectors"));
+            process.exit(2);
+        }
+
+        // Port should be a number
+        if (args.live && typeof (args.live) != "number") {
+            console.log(colors.red(`Error: Given port is not a valid number. Run holesail --help to see examples`));
+            process.exit(2);
+        }
+
+        // Port should be a number
+        if (args.port && typeof (args.port) != "number") {
+            console.log(colors.red(`Error: Given port is not a valid number. Run holesail --help to see examples`));
+            process.exit(2);
+        }
 
     }
 }

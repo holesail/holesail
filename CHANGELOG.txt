@@ -1,6 +1,9 @@
+v1.5.2
+-- Added QR code for connecting
 v1.5.1
 -- Split code into files
 -- Added input validation
+-- Fix many minor bugs
 v1.5.0
 -- Optimise code
 -- Write better help command

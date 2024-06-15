@@ -1,9 +1,10 @@
 const DHT = require('holesail-server'); // Core component for creating a server over HyperDHT
 
-const { createHash } = require('node:crypto'); // This will convert the connector to a seed of 64 length
+const {createHash} = require('node:crypto'); // This will convert the connector to a seed of 64 length
 
 const boxConsole = require('cli-box'); // Print pretty
 var colors = require('colors/safe');
+var qrcode = require('qrcode-terminal');
 
 class Server {
     // Set appropriate values from options
@@ -63,7 +64,14 @@ class Server {
                     stretch: true
                 }
             );
+
             console.log(box)
+            console.log("OR Scan the QR to connect: ")
+            let qrData = `{type: "holesail-cli", connectionMode: "key", value: ${this.options.connector}}`;
+            qrcode.generate(qrData, {small: true}, function (qrcode) {
+                console.log(qrcode);
+            });
+
 
         } else {
 
@@ -80,7 +88,11 @@ class Server {
                 }
             );
             console.log(box)
-
+            console.log("OR Scan the QR to connect: ")
+            let qrData = `{type: "holesail-cli", connectionMode: "key", value: ${this.localServer.getPublicKey()}}`;
+            qrcode.generate(qrData, {small: true}, function (qrcode) {
+                console.log(qrcode);
+            });
         }
 
     }

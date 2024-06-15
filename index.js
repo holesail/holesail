@@ -4,16 +4,16 @@ const argv = require('minimist')(process.argv.slice(2)); //required to parse cli
 const goodbye = require('graceful-goodbye');
 const pkg = require('./package.json'); //holds info about current package
 
+var colors = require('colors/safe');
+
+// Require all necessary files
 const help = require('./includes/help.js');
 const Client = require('./includes/client.js');
 const Server = require('./includes/server.js');
 const {ValidateInput} = require('./includes/validateInput.js');
 
-var colors = require('colors/safe');
-
 //validate every input and throw errors if incorrect input
 const validator = new ValidateInput(argv);
-
 
 //setting up the command hierarchy
 //display help and exit

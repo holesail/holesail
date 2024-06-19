@@ -95,92 +95,242 @@ class Filemanager {
         });
     }
 
-    listDirectory(fullPath, urlPath, res) {
-        fs.readdir(fullPath, { withFileTypes: true }, (err, files) => {
-            if (err) {
-                res.writeHead(500, { 'Content-Type': 'text/plain' });
-                res.end('Internal Server Error');
-                return;
-            }
-            const directoryList = files
-                .map(file => {
-                    const filePath = path.join(urlPath, file.name);
-                    const downloadButton = `<a href="${filePath}" download>Download</a>`;
-                    return `<tr><td><a href="${filePath}">${file.name}</a></td><td>${downloadButton}</td></tr>`;
-                })
-                .join('');
+  listDirectory(fullPath, urlPath, res) {
+    fs.readdir(fullPath, { withFileTypes: true }, (err, files) => {
+      if (err) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end("Internal Server Error");
+        return;
+      }
+      const directoryList = files
+        .map((file) => {
+          const filePath = path.join(urlPath, file.name);
+          const safeFileName = this.escapeHtml(file.name);
+          const isFolder = file.isDirectory();
+          const iconHtml = isFolder
+            ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4042bc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
+            : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E94E47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z"/><path d="M13 3v6h6"/></svg>`;
+          const downloadButton = isFolder
+            ? `<a class="open--btn" href="${filePath}">Enter</a>`
+            : `<a href="${filePath}">Download</a>`;
+          return `<tr><td class="file--name">${iconHtml}<a href="${filePath}">${safeFileName}</a></td><td class="download--btn">${downloadButton}</td></tr>`;
+        })
+        .join("");
 
-            let createFormHtml = '';
-            if (this.user === 'admin') {
-                createFormHtml = `
-                    <form method="POST" action="${urlPath}">
-                        <label for="item_type">New Item Type:</label>
+      let createFormHtml = "";
+      if (this.user === "admin") {
+        createFormHtml = `
+                <form method="POST" action="${urlPath}">
+                    <div>
+                        <label for="item_type">New Item Type</label>
                         <select name="item_type" id="item_type">
                             <option value="folder">Folder</option>
                             <option value="file">File</option>
                         </select>
-                        <label for="name">Name:</label>
-                        <input type="text" name="name" id="name" required>
-                        <label for="directory">Select Directory:</label>
+                        </div>
+                        <div>
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name" placeholder="Name of the file/folder*" required>
+                        </div>
+                        <div>
+                        <label for="directory">Select Directory</label>
                         <select name="directory" id="directory">
-                            ${this.getDirectoryOptions()}
+                            ${this.getDirectoryOptions(".")}
                             <option value="." selected>Current Directory</option>
                         </select>
+                        </div>
                         <button class="btn" type="submit">Create</button>
                     </form>`;
-            }
+      }
 
-            const htmlResponse = `
+      const htmlResponse = `
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Directory Listing: ${urlPath}</title>
+                    <title>Directory Listing | Holesail</title>
                     <style>
                         body {
-                            font-family: Arial, sans-serif;
-                            background-color: #f4f4f4;
+                            font-family: "Intern", sans-serif;
+                            background-color: #f3f3f3;
                             margin: 0;
                             padding: 0;
-                        }
-                        h1 {
                             color: #333;
                         }
+                            .go--back--btn{
+                            text-decoration: none;
+                            color: #444;
+                            cursor: pointer;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center; 
+                            margin-top: 2rem;
+                            }
+                            nav{
+                            padding: 0.1rem 2rem;
+                            display:flex;
+                            align-items: center;
+                            gap: 10px;
+                            }
+                            nav p{
+                            font-size: 1.4rem;}
+                            .nav--icon{
+                            width: 30px;
+                            }
+                        h1 {
+                            color: #444;
+                            font-size: 24px;
+                            padding: 0 2rem;
+                        }
+                        a {
+                            color: #333;
+                            font-size: 16px;
+                        }
+                            .open--btn{
+                            padding: 8px 14px;
+                            font-size: 16px;
+                            background: #242424 !important;
+                            }
                         table {
-                            width: 100%;
+                            width: -webkit-fill-available;
                             border-collapse: collapse;
-                            margin-bottom: 20px;
+                            margin: 1rem 0 2rem 0;
+                            // border: 0.5px solid #bbb;
+                            border-radius: 15px;
+                            background-color: #fff;
                         }
-                        th, td {
-                            padding: 8px;
+                        td {
                             text-align: left;
-                            border-bottom: 1px solid #ddd;
+                            font-weight: 700;
                         }
+                            td:nth-child(odd){
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            }
                         th {
-                            background-color: #f2f2f2;
+                        text-align: left;
+                            border-bottom: 1px solid #eee;
+                            font-weight: 300;
+                            font-size: 14px;
+                            background-color: #fff;
                         }
+                              table tr:first-child th:first-child {
+            border-top-left-radius: 15px;
+        }
+
+        table tr:first-child th:last-child {
+            border-top-right-radius: 15px;
+        }
+
+        table tr:last-child td:first-child {
+            border-bottom-left-radius: 15px;
+        }
+
+        table tr:last-child td:last-child {
+            border-bottom-right-radius: 15px;
+        }
+                            th:nth-child(1){
+                        padding: 0.5rem 2rem;
+                            }
                         tr:hover {
-                            background-color: #f5f5f5;
+                            background-color: #f3f3f3;
                         }
                         .btn {
-                            background-color: #4CAF50;
+                            background-color: #E94E47;
                             border: none;
-                            color: white;
-                            padding: 6px 12px;
+                            color: #fff;
+                            padding: 8px 14px;
                             text-align: center;
                             text-decoration: none;
                             display: inline-block;
-                            font-size: 14px;
-                            margin: 2px 0;
+                            font-size: 18px;
                             cursor: pointer;
                             border-radius: 4px;
                         }
                         .btn:hover {
-                            background-color: #45a049;
+                            background-color: #ca271f;
                         }
+                            .download--btn{
+                            width: 120px;
+                            }
+                            .download--btn a {
+                            background-color: #E94E47;
+                            padding: 10px;
+                            border-radius: 7px;
+                            text-decoration: none;
+                            color: #fff;
+                            display: flex;
+                            width: 80px !important;
+                            }
+                            .file--name{
+                            padding: 4px 14px;
+                            margin: 0.5rem 0;
+                            }
+                            .file--name a{
+                            text-decoration: none;
+                            color: #555;
+                            }
+
+                            form {
+                            padding: 1rem 1rem;
+                            border-radius: 15px;
+                            // width: -webkit-fill-available;
+                            width: 340px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 1rem;
+                            background: #fff;
+                            margin: 0.5rem 0 3rem 0;
+                            border: 0.5px solid #bbb;
+                            }
+                            input{
+                            padding: 0.8rem 1rem;
+                            border-radius: 7px;
+                            border: 0.5px solid #bbb;
+                            outline: none;
+                            }
+                            form div{
+                            width: 340px;
+                            display: flex;
+                            flex-direction: column;
+                            }
+                            form select{
+                            padding: 0.8rem 1rem;
+                            border-radius: 7px;
+                            border: 0.5px solid #bbb;
+                            outline: none;
+                            cursor: pointer;
+                            color: #777;
+                            }
+                            form label{
+                            color: #555;
+                            font-size: 14px;
+                            font-weight: 700;
+                            padding: 2px 10px;
+                            }
+                            form .btn{ 
+                            width: 340px;
+                            margin-top: 0rem;
+                            border-radius: 7px;
+                            }
+                            @media screen and (max-width: 650px){
+                            form{
+                            width: -webkit-fill-available;
+                            }
+                            form div, form button{
+                            width: 100%;
+                            }
+                            }
                     </style>
                 </head>
                 <body>
-                    <h1>Directory Listing: ${urlPath}</h1>
+                <nav>
+                <img class="nav--icon" src="../assets/icon.png" alt="icon"/>
+                <p>holesail</p>
+                </nav>
+                    <h1>Folder and Files:
+                    ${this.escapeHtml(urlPath)}
+                    <a class="go--back--btn" onclick="goback()">go back</a>
                     <table>
                         <tr>
                             <th>Name</th>
@@ -190,12 +340,17 @@ class Filemanager {
                     </table>
                     ${createFormHtml}
                 </body>
+                <script>
+                function goback(){
+                window.history.back()
+                }
+                </script>
                 </html>
             `;
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(htmlResponse);
-        });
-    }
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.end(htmlResponse);
+    });
+  }
 
     serveFile(fullPath, res) {
         const extension = path.extname(fullPath).toLowerCase();

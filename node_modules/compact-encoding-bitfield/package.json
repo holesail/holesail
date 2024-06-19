@@ -1,0 +1,34 @@
+{
+  "name": "compact-encoding-bitfield",
+  "version": "1.0.0",
+  "description": "Compact codec for bitfields",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "test": "standard && brittle test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/compact-encoding/compact-encoding-bitfield.git"
+  },
+  "author": "Kasper Isager Dalsgarð <kasper@funktionel.co>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/compact-encoding/compact-encoding-bitfield/issues"
+  },
+  "homepage": "https://github.com/compact-encoding/compact-encoding-bitfield#readme",
+  "dependencies": {
+    "compact-encoding": "^2.4.1"
+  },
+  "devDependencies": {
+    "brittle": "^1.3.5",
+    "standard": "^16.0.3"
+  },
+  "standard": {
+    "ignore": [
+      "__snapshots__/**"
+    ]
+  }
+}

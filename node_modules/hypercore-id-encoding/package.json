@@ -1,0 +1,33 @@
+{
+  "name": "hypercore-id-encoding",
+  "version": "1.3.0",
+  "description": "Convert Hypercore keys to/from z-base32 or hex",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && brittle test.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "b4a": "^1.5.3",
+    "z32": "^1.0.0"
+  },
+  "devDependencies": {
+    "brittle": "^3.1.1",
+    "hypercore": "^10.0.0",
+    "random-access-memory": "^6.0.0",
+    "standard": "^17.1.0"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holepunchto/hypercore-id-encoding.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/holepunchto/hypercore-id-encoding/issues"
+  },
+  "homepage": "https://github.com/holepunchto/hypercore-id-encoding#readme"
+}

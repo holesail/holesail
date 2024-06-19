@@ -1,0 +1,18 @@
+{
+  "name": "safety-catch",
+  "version": "1.0.2",
+  "description": "Small module that makes sure your catch, caught an actual error and not a programming mistake or assertion",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/safety-catch.git"
+  },
+  "author": "Mathias Buus (@mafintosh)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafintosh/safety-catch/issues"
+  },
+  "homepage": "https://github.com/mafintosh/safety-catch"
+}

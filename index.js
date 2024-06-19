@@ -3,6 +3,7 @@
 const argv = require('minimist')(process.argv.slice(2)); //required to parse cli arguments
 const goodbye = require('graceful-goodbye');
 const pkg = require('./package.json'); //holds info about current package
+const Filemanager = require('./includes/livefiles.js'); // Adjust the path as needed
 
 var colors = require('colors/safe');
 
@@ -28,6 +29,8 @@ if (argv.version) {
     process.exit(-1);
 }
 
+
+
 if (argv.live) {
     const options = {
         port: argv.live,
@@ -40,7 +43,33 @@ if (argv.live) {
         await server.destroy();
     });
 
-} else if (argv.connect || argv['_'][0]) {
+} else if (argv.filemanager) {
+    //taking inputs from user
+    const options = {
+        user: argv.user,
+        path: argv.filemanager,
+        port: argv.port || 5409,
+        connector: argv.connector,
+        username: argv.username || "admin", //if no username then by default admin
+        pass: argv.pass || "admin"  //if no password then by default admin
+    };
+    
+    //start files server
+    const fileServer = new Filemanager(options.path,options.user, options.username,  options.pass);
+    fileServer.start(options.port);
+
+    //start holesail server
+    const server = new Server(options);
+    server.start();
+    goodbye(async () => {
+        await server.destroy();
+    });
+    goodbye(async () => {
+        await fileServer.destroy();
+    });
+
+}
+else if (argv.connect || argv['_'][0]) {
     const keyInput = argv.connect || argv['_'][0];
     const options = {
         port: argv.port || 8989,

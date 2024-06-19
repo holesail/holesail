@@ -115,7 +115,7 @@ class Filemanager {
             : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E94E47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z"/><path d="M13 3v6h6"/></svg>`;
           const downloadButton = file.isDirectory()
             ? `<a class="open--btn" href="${filePath}">Enter</a>`
-            : `<a href="${filePath}">Download</a>`;
+            : `<a href="${filePath}" download>Download</a>`;
           return `<tr><td class="file--name">${iconHtml}<a href="${filePath}">${safeFileName}</a></td><td class="download--btn">${downloadButton}</td></tr>`;
         })
         .join("");

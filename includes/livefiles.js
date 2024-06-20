@@ -371,7 +371,7 @@ class Filemanager {
                     </style>
                 </head>
                 <body>
-                <div class="auth--container">
+                <div class="auth--container hide">
                 <form>
                 <div>
                     <label for="username">username</label>

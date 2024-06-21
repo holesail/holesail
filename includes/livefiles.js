@@ -123,26 +123,28 @@ class Filemanager {
       let createFormHtml = "";
       if (this.user === "admin") {
         createFormHtml = `
-                    <form method="POST" action="${urlPath}">
-                        <div>
-                            <label for="item_type">New Item Type</label>
-                            <select name="item_type" id="item_type">
-                                <option value="folder">Folder</option>
-                                <option value="file">File</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="name">Name</label>
-                            <input type="text" name="name" id="name" placeholder="Name of the file/folder*" required>
-                        </div>
-                        <div>
-                            <label for="directory">Select Directory</label>
-                            <select name="directory" id="directory">
-                                ${this.getDirectoryOptions()}
-                            </select>
-                        </div>
-                        <button class="btn" type="submit">Create</button>
-                    </form>`;
+    <form method="POST" action="${urlPath}">
+        <div>
+            <label for="item_type">New Item Type</label>
+            <select name="item_type" id="item_type">
+                <option value="folder">Folder</option>
+                <option value="file">File</option>
+            </select>
+        </div>
+        <div>
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" placeholder="Name of the file/folder*" required>
+        </div>
+        <div>
+            <label for="directory">Select Directory</label>
+            <select name="directory" id="directory">
+                <option value="">Current Directory</option>
+                ${this.getDirectoryOptions()}
+            </select>
+        </div>
+        <button class="btn" type="submit">Create</button>
+    </form>`;
+
       }
 
       const htmlResponse = `
@@ -157,11 +159,7 @@ class Filemanager {
                         margin: 0;
                         padding: 0;
                         color: #333;
-                        overflow-x: hidden;
-                        }
-                        .hide{
-                        display: none;
-                        }
+                    }
                         .go--back--btn{
                         text-decoration: none;
                         color: #444;
@@ -176,11 +174,9 @@ class Filemanager {
                         display:flex;
                         align-items: center;
                         gap: 10px;
-                        border-bottom: 0.5px solid #bbb;
                         }
                         nav p{
-                        font-size: 1.4rem;
-                        }
+                        font-size: 1.4rem;}
                         .nav--icon{
                         width: 30px;
                         }
@@ -211,10 +207,6 @@ class Filemanager {
     border-radius: 15px;
     background-color: #fff;
 }
-    .table--container{
-    border: 0.5px solid #bbb;
-    border-radius: 15px;
-    }
 
                     td {
                         text-align: left;
@@ -230,7 +222,7 @@ class Filemanager {
                         }
                     th {
                     text-align: left;
-                        border-bottom: 0.5px solid #bbb;
+                        border-bottom: 1px solid #eee;
                         font-weight: 300;
                         font-size: 14px;
                         background-color: #fff;
@@ -301,7 +293,6 @@ class Filemanager {
                         gap: 1rem;
                         background: #fff;
                         margin: 1rem 0 3rem 0;
-                        border: 0.5px solid #bbb;
                         }
                         input{
                         padding: 0.8rem 1rem;
@@ -335,63 +326,15 @@ class Filemanager {
                         }
                         @media screen and (max-width: 650px){
                         form{
-                        width: 100%;
+                        width: -webkit-fill-available;
                         }
                         form div, form button{
                         width: 100%;
                         }
                         }
-                        .auth--container{
-                        width: 100vw;
-                        height: 100vh;
-                        position: fixed;
-                        background-color: #ffffff73;
-                        z-index: 999;
-                        backdrop-filter: blur(30px);
-                        }
-                        .auth--container form{
-                         position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        }
-                        .auth--btn--container{
-                        display: flex;
-                        flex-direction: row;
-                        gap: 10px;
-                        }
-                        .auth--btn--container button{
-                        width: 100%;
-                        }
-                        .auth--container a {
-                        font-size: 12px;
-                        text-decoration: none;
-                        color: blue;
-                        }
                     </style>
                 </head>
                 <body>
-                <div class="auth--container hide">
-                <form>
-                <div>
-                    <label for="username">username</label>
-                    <input type="text" name="name" id="name" placeholder="username*" required>
-                </div>
-                <div>
-                    <label for="password">password</label>
-                    <input type="text" name="name" id="name" placeholder="password*" required>
-                </div>
-                <div class="auth--btn--container">
-                <button class="btn">Sign In</button>
-                <button style="background-color: #fff; border: 0.5px solid; color: #000;" class="btn">Cancel</button>
-                </div>
-                <div>
-                <p style="font-size: 14px;">or</p>
-                <a href="https://holesail.io">Read docs</a>
-                <a href="https://holesail.io">Contact Support?</a>
-                </div>
-                </form>
-                </div>
                 <nav>
                 <img class="nav--icon" src="https://holesail.io/img/icons/holesail--logo.webp"></img>
                 <p>holesail</p>
@@ -399,7 +342,6 @@ class Filemanager {
                 <h1>Folder and Files: ${this.escapeHtml(urlPath)}</h1>
                 <p class="go--back--btn" onclick="goback()">go back</p>
                     <div class="container">
-                    <div class="table--container">
                     <table>
                         <tr>
                             <th>Name</th>
@@ -407,7 +349,6 @@ class Filemanager {
                         </tr>
                         ${directoryList}
                     </table>
-                    </div>
                     ${createFormHtml}
                     </div>
                 </body>

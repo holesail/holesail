@@ -144,7 +144,6 @@ class Filemanager {
         </div>
         <button class="btn" type="submit">Create</button>
     </form>`;
-
       }
 
       const htmlResponse = `
@@ -207,6 +206,10 @@ class Filemanager {
     border-radius: 15px;
     background-color: #fff;
 }
+    .table--container{
+    border: 0.5px solid #bbb;
+    border-radius: 15px;
+    }
 
                     td {
                         text-align: left;
@@ -222,7 +225,7 @@ class Filemanager {
                         }
                     th {
                     text-align: left;
-                        border-bottom: 1px solid #eee;
+                        border-bottom: 0.5px solid #bbb;
                         font-weight: 300;
                         font-size: 14px;
                         background-color: #fff;
@@ -293,6 +296,7 @@ class Filemanager {
                         gap: 1rem;
                         background: #fff;
                         margin: 1rem 0 3rem 0;
+                        border: 0.5px solid #bbb;
                         }
                         input{
                         padding: 0.8rem 1rem;
@@ -342,6 +346,7 @@ class Filemanager {
                 <h1>Folder and Files: ${this.escapeHtml(urlPath)}</h1>
                 <p class="go--back--btn" onclick="goback()">go back</p>
                     <div class="container">
+                   <div class="table--container">
                     <table>
                         <tr>
                             <th>Name</th>
@@ -349,6 +354,7 @@ class Filemanager {
                         </tr>
                         ${directoryList}
                     </table>
+                   </div>
                     ${createFormHtml}
                     </div>
                 </body>

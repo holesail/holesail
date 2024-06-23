@@ -25,6 +25,7 @@
   "dependencies": {
     "archiver": "^7.0.1",
     "b4a": "^1.6.6",
+    "boxen": "^7.1.1",
     "cli-box": "^6.0.10",
     "colors": "^1.4.0",
     "formidable": "^3.5.1",

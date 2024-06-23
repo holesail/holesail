@@ -18,7 +18,7 @@ class Filemanager {
         console.error(`Failed to start server on port ${port}: ${err.message}`);
         process.exit(1);
       }
-      console.log(`Server is running on port ${port}`);
+      
     });
   }
 

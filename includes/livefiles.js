@@ -18,7 +18,6 @@ class Filemanager {
         console.error(`Failed to start server on port ${port}: ${err.message}`);
         process.exit(1);
       }
-      
     });
   }
 
@@ -107,8 +106,8 @@ class Filemanager {
       }
 
       // Separate and sort directories and files
-      const folders = files.filter(file => file.isDirectory());
-      const normalFiles = files.filter(file => !file.isDirectory());
+      const folders = files.filter((file) => file.isDirectory());
+      const normalFiles = files.filter((file) => !file.isDirectory());
 
       const directoryList = [...folders, ...normalFiles]
         .map((file) => {
@@ -344,7 +343,7 @@ class Filemanager {
                         }
                         @media screen and (max-width: 650px){
                          nav{
-                         padding: 0 2rem;
+                         padding: 0 1rem;
                         justify-content: start;
                         }
                         nav p{
@@ -352,10 +351,14 @@ class Filemanager {
                         font-weight: 700;
                         }
                         h1{
+                        padding: 0 1rem;
                         margin-block: 0;
                         }
                         .go--back--btn{
-                        margin: 1rem 2rem;
+                        margin: 1rem;
+                        }
+                        .container{
+                        padding: 0 1rem;
                         }
                         .nav--icon{
                         width: 30px;
@@ -368,7 +371,7 @@ class Filemanager {
                         }
                          footer{
                         justify-content: flex-start;
-                        padding: 0 2.4rem;
+                        padding: 0 1.4rem;
                         gap: 10px;
                         }
                         }
@@ -395,10 +398,10 @@ class Filemanager {
                     </div>
                     <footer>
                     <a>Discord</a>
-                    &copy;
+                   &#183;
                     <a>Support</a>
-                    &copy;
-                    <a>2024 Holesail</a>
+                    &#183;
+                    <a>&copy; 2024 Holesail</a>
                     </footer>
                 </body>
                 <script>

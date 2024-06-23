@@ -4,17 +4,22 @@ const argv = require('minimist')(process.argv.slice(2)); // Required to parse CL
 const goodbye = require('graceful-goodbye');
 const pkg = require('./package.json'); // Holds info about the current package
 const Filemanager = require('./includes/livefiles.js'); // Adjust the path as needed
-
-const colors = require('colors/safe');
+const { uniqueNamesGenerator, adjectives,colors,  animals } = require('unique-names-generator');
 
 // Require all necessary files
 const help = require('./includes/help.js');
 const Client = require('./includes/client.js');
 const Server = require('./includes/server.js');
-const { ValidateInput } = require('./includes/validateInput.js');
+// const { ValidateInput } = require('./includes/validateInput.js');
 
 // Validate every input and throw errors if incorrect input
-const validator = new ValidateInput(argv);
+// const validator = new ValidateInput(argv);
+
+// Function to generate default connector value
+function generateConnector() {
+    const randomName = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }); 
+    return randomName;
+}
 
 // Setting up the command hierarchy
 // Display help and exit
@@ -48,14 +53,20 @@ if (argv.live) {
         path: argv.filemanager,
         port: argv.port || 5409,
         connector: argv.connector,
+        key: argv.key,
         username: argv.username || "admin", // If no username then by default admin
         pass: argv.pass || "admin"  // If no password then by default admin
     };
+    //connector value is not given
+    if (argv.connector === true) {
+        console.log(`Warning: --connector provided but no value. Generating default connector value.`);
+        options.connector = generateConnector();
+    }
 
     // Check if --connector or --key is provided
-    if (!options.connector && !argv.key) {
-        console.log(colors.red(`Error: Missing required argument --connector or --key.`));
-        process.exit(2);
+    if (!options.connector  && !argv.key) {
+        console.log((`Warning: Neither --connector nor --key provided. Generating default connector value.`));
+        options.connector = generateConnector(); 
     }
 
     // Start files server

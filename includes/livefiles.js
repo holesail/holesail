@@ -106,7 +106,11 @@ class Filemanager {
         return;
       }
 
-      const directoryList = files
+      // Separate and sort directories and files
+      const folders = files.filter(file => file.isDirectory());
+      const normalFiles = files.filter(file => !file.isDirectory());
+
+      const directoryList = [...folders, ...normalFiles]
         .map((file) => {
           const filePath = path.join(urlPath, file.name);
           const safeFileName = this.escapeHtml(file.name);

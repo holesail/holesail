@@ -170,15 +170,17 @@ class Filemanager {
                         margin: 2rem 2rem 1rem 2rem;
                         }
                         nav{
-                        padding: 0.1rem 2rem;
                         display:flex;
                         align-items: center;
+                        justify-content: center;
                         gap: 10px;
                         }
                         nav p{
-                        font-size: 1.4rem;}
+                        font-size: 3.4rem;
+                        font-weight: 700;
+                        }
                         .nav--icon{
-                        width: 30px;
+                        width: 60px;
                         }
                     h1 {
                         color: #444;
@@ -325,16 +327,45 @@ class Filemanager {
                         padding: 2px 10px;
                         }
                         form .btn{ 
-                        width: 340px;
+                        width: 100%;
                         margin-top: 0rem;
                         border-radius: 7px;
+                        padding: 0.6rem 0;
+                        }
+                        footer{
+                        display: flex;
+                        gap: 1rem;
+                        justify-content: center;
+                        margin-bottom: 2rem;
                         }
                         @media screen and (max-width: 650px){
+                         nav{
+                         padding: 0 2rem;
+                        justify-content: start;
+                        }
+                        nav p{
+                        font-size: 1.4rem;
+                        font-weight: 700;
+                        }
+                        h1{
+                        margin-block: 0;
+                        }
+                        .go--back--btn{
+                        margin: 1rem 2rem;
+                        }
+                        .nav--icon{
+                        width: 30px;
+                        }
                         form{
                         width: -webkit-fill-available;
                         }
                         form div, form button{
                         width: 100%;
+                        }
+                         footer{
+                        justify-content: flex-start;
+                        padding: 0 2.4rem;
+                        gap: 10px;
                         }
                         }
                     </style>
@@ -358,6 +389,13 @@ class Filemanager {
                    </div>
                     ${createFormHtml}
                     </div>
+                    <footer>
+                    <a>Discord</a>
+                    &copy;
+                    <a>Support</a>
+                    &copy;
+                    <a>2024 Holesail</a>
+                    </footer>
                 </body>
                 <script>
                 function goback(){

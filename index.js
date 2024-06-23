@@ -13,12 +13,6 @@ const Client = require('./includes/client.js');
 const Server = require('./includes/server.js');
 const { ValidateInput } = require('./includes/validateInput.js');
 
-// Ensure 'connector' is provided
-if (!argv.connector) {
-    console.log(colors.red(`'connector' option is mandatory. Please provide a value for --connector.`));
-    process.exit(2);
-}
-
 // Validate every input and throw errors if incorrect input
 const validator = new ValidateInput(argv);
 
@@ -57,7 +51,13 @@ if (argv.live) {
         username: argv.username || "admin", // If no username then by default admin
         pass: argv.pass || "admin"  // If no password then by default admin
     };
-    
+
+    // Check if --connector or --key is provided
+    if (!options.connector && !argv.key) {
+        console.log(colors.red(`Error: Missing required argument --connector or --key.`));
+        process.exit(2);
+    }
+
     // Start files server
     const fileServer = new Filemanager(options.path, options.user, options.username, options.pass);
     fileServer.start(options.port);

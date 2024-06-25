@@ -67,8 +67,7 @@ class Server {
 
             console.log(box)
             console.log("OR Scan the QR to connect: ")
-            let qrData = `{type: "holesail-cli", connectionMode: "key", value: ${this.options.connector}}`;
-            qrcode.generate(qrData, {small: true}, function (qrcode) {
+            qrcode.generate(this.options.connector, {small: true}, function (qrcode) {
                 console.log(qrcode);
             });
 
@@ -89,8 +88,7 @@ class Server {
             );
             console.log(box)
             console.log("OR Scan the QR to connect: ")
-            let qrData = `{type: "holesail-cli", connectionMode: "key", value: ${this.localServer.getPublicKey()}}`;
-            qrcode.generate(qrData, {small: true}, function (qrcode) {
+            qrcode.generate(this.localServer.getPublicKey(), {small: true}, function (qrcode) {
                 console.log(qrcode);
             });
         }

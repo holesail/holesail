@@ -1,6 +1,5 @@
 # Ignore node_modules directory
 node_modules/
-
 # Ignore any logs or npm-debug.log files
 npm-debug.log*
 
@@ -12,3 +11,7 @@ npm-debug.log*
 
 # Optionally, ignore yarn.lock if you're using npm instead of Yarn
 yarn.lock
+
+node_modules
+*.exe
+.idea

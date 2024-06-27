@@ -1,4 +1,6 @@
 const DHT = require('holesail-server'); // Core component for creating a server over HyperDHT
+const libKeys = require('hyper-cmd-lib-keys') // generate a random seed
+const b4a = require('b4a') //generate random connector
 
 const {createHash} = require('node:crypto'); // This will convert the connector to a seed of 64 length
 
@@ -12,27 +14,34 @@ class Server {
     constructor(options) {
         this.options = options;
         this.host = options.host || '127.0.0.1';
+        this.public = options.public;
         this.connector = this.setupConnector(options.connector);
         this.localServer = new DHT();
         this.isConnectorSet; // To enable different logic for connector/keys
+
+        this.service = options.service;
     }
 
-    // Create seed from connector or set a key if it exists
+    // Logic for handling default (connector) mode and public mode
     setupConnector(connector) {
 
-        // If there is no connector provided in options, set it to null locally
-        if (!connector) {
+        // Use keys if public mode is enabled
+        if (this.public){
             this.isConnectorSet = false;
-            return null;
+            return null; // Set the connector null locally will result in a key generation by holesail-client
         }
 
-        // Strings with 64 length are treated as keys, logic for holesail <key>
-        if (connector.length === 64) {
-            this.isConnectorSet = false;
-            return connector;
-        } else {
+        // generate seed from, if a custom connector is supplied.
+        if (connector && typeof(connector) != "boolean") {
             this.isConnectorSet = true;
             return createHash('sha256').update(connector.toString()).digest('hex'); // Create seed from connector
+        }else{
+            let buffer = Buffer.from(libKeys.randomBytes(32).toString('hex'), 'hex');// Generate a random buffer
+            let connectorSeed = b4a.toString(buffer, 'hex').substring(0,60); // Generate connector from buffer and trim to 60 chars
+            this.options.connector = connectorSeed // Hi-jack connector parameter so the code for QR code and printbox passes.
+
+            this.isConnectorSet = true;
+            return createHash('sha256').update(connectorSeed.toString()).digest('hex'); // Create seed from connector
         }
     }
 
@@ -52,12 +61,12 @@ class Server {
         // Pretty output in the terminal
         if (this.isConnectorSet) {
             var box = boxConsole("100x10", {
-                    text: colors.cyan.underline.bold("Holesail Server Started") + " ⛵️" + "\n" +
-                        colors.magenta("Connection Mode: ") + colors.cyan("Super Secret connector") + "\n" +
+                    text: colors.cyan.underline.bold(`Holesail ${this.service} Started`) + " ⛵️" + "\n" +
+                        colors.magenta("Connection Mode: ") + colors.cyan("Private Connection String") + "\n" +
                         colors.magenta(`Holesail is now listening on `) + `${this.host}:` + this.options.port + "\n" +
-                        "Connect with connector: " + colors.white(`${this.options.connector}`) + "\n" +
+                        "Connect with connection string: " + colors.white(`${this.options.connector}`) + "\n" +
                         colors.gray(`Public key is: ${this.localServer.getPublicKey()}`) + "\n" +
-                        colors.gray(`   NOTE: TREAT CONNECTORS HOW YOU WOULD TREAT SSH KEY, DO NOT SHARE IT WITH ANYONE YOU DO NOT TRUST    `),
+                        colors.gray(`   NOTE: TREAT PRIVATE CONNECTION STRINGS HOW YOU WOULD TREAT SSH KEY, DO NOT SHARE IT WITH ANYONE YOU DO NOT TRUST    `),
                     autoEOL: true,
                     vAlign: "middle",
                     hAlign: "middle",
@@ -75,11 +84,11 @@ class Server {
         } else {
 
             var box = boxConsole("100x10", {
-                    text: colors.cyan.underline.bold("Holesail Server Started") + " ⛵️" + "\n" +
-                        colors.magenta("Connection Mode: ") + colors.yellow("Publicly Sharable Key \n") +
+                    text: colors.cyan.underline.bold(`Holesail ${this.service} Started`) + " ⛵️" + "\n" +
+                        colors.magenta("Connection Mode: ") + colors.yellow("Public Connection String \n") +
                         colors.magenta(`Holesail is now listening on `) + `${this.host}:` + this.options.port + "\n" +
-                        "Connect with key: " + colors.white(`${this.localServer.getPublicKey()}`) + "\n" +
-                        colors.gray(`   NOTICE: TREAT PUBLIC KEYS LIKE YOU WOULD TREAT A DOMAIN NAME ON PUBLIC SERVER, IF THERE IS ANYTHING PRIVATE ON IT, IT IS YOUR RESPONSIBILITY TO PASSWORD PROTECT IT OR USE CONNECTORS   \n`),
+                        "Connect with connection string: " + colors.white(`${this.localServer.getPublicKey()}`) + "\n" +
+                        colors.gray(`   NOTICE: TREAT PUBLIC STRING LIKE YOU WOULD TREAT A DOMAIN NAME ON PUBLIC SERVER, IF THERE IS ANYTHING PRIVATE ON IT, IT IS YOUR RESPONSIBILITY TO PASSWORD PROTECT IT OR USE PRIVATE MODE   \n`),
                     autoEOL: true,
                     vAlign: "middle",
                     hAlign: "middle",

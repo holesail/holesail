@@ -29,6 +29,7 @@
     "graceful-goodbye": "^1.3.0",
     "holesail-client": "^1.1.1",
     "holesail-server": "latest",
+    "hyper-cmd-lib-keys": "^0.1.1",
     "hyperdht": "^6.13.1",
     "minimist": "^1.2.8",
     "qrcode-terminal": "^0.12.0"

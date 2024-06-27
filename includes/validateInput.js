@@ -54,6 +54,8 @@ class ValidateInput {
             process.exit(2);
         }
 
+        // Handle file manager
+
     }
 }
 

@@ -22,6 +22,7 @@ class Filemanager {
         this.connector = (options.connector && typeof (options.connector) != "boolean") ? options.connector : false;
         this.isConnectorSet = !!(options.connector && typeof (options.connector) != "boolean");
         this.public = options.public;
+        this.service = options.service;
 
     }
 
@@ -40,17 +41,18 @@ class Filemanager {
         let options = {
             port: this.port,
             host: "127.0.0.1",
-            connector: this.connector
+            connector: this.connector,
+            service: this.service
         };
 
         //enable public mode on demand
         if (this.public) {
             options.connector = false;
-        } else if(this.connector && this.isConnectorSet){ // let user use a custom connector
+        } else if (this.connector && this.isConnectorSet) { // let user use a custom connector
             options.connector = this.connector;
-        }else{
+        } else {
             let buffer = Buffer.from(libKeys.randomBytes(32).toString('hex'), 'hex') // generate a random connector if not provided by user
-            options.connector = b4a.toString(buffer, 'hex').substring(0,60)
+            options.connector = b4a.toString(buffer, 'hex').substring(0, 60)
         }
 
         //expose the server with holesail-server
@@ -124,7 +126,22 @@ class Filemanager {
             const itemType = formData["item_type"];
             const name = formData["name"];
             const directory = formData["directory"];
-            const newFullPath = path.join(this.basePath, directory, name);
+
+            // Basic validation
+            if (!itemType || !name || typeof name !== "string" || !["folder", "file"].includes(itemType)) {
+                res.writeHead(400, {"Content-Type": "text/plain"});
+                res.end("Bad Request: Missing or invalid form data.");
+                return;
+            }
+
+            // Check user type for folder creation
+            if (itemType === "folder" && this.role !== "admin") {
+                res.writeHead(403, {"Content-Type": "text/plain"});
+                res.end("Forbidden: Only admin users can create folders.");
+                return;
+            }
+
+            const newFullPath = path.join(this.basePath, directory || ".", name);
 
             if (itemType === "folder") {
                 this.createFolder(newFullPath, res, urlPath);
@@ -473,7 +490,7 @@ class Filemanager {
     }
 
     createFolder(newFullPath, res, urlPath) {
-        fs.mkdir(newFullPath, (err) => {
+        fs.mkdir(newFullPath, {recursive: true}, (err) => {
             if (err) {
                 res.writeHead(500, {"Content-Type": "text/plain"});
                 res.end("Error creating folder.");

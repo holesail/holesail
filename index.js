@@ -12,11 +12,10 @@ const help = require('./includes/help.js');
 const Client = require('./includes/client.js');
 const Server = require('./includes/server.js');
 const Filemanager = require('./includes/livefiles.js'); // Adjust the path as needed
-
-// const { ValidateInput } = require('./includes/validateInput.js');
+const { ValidateInput } = require('./includes/validateInput.js');
 
 // Validate every input and throw errors if incorrect input
-// const validator = new ValidateInput(argv);
+const validator = new ValidateInput(argv);
 
 
 // Setting up the command hierarchy
@@ -32,11 +31,14 @@ if (argv.version) {
     process.exit(-1);
 }
 
+// Set a port live
 if (argv.live) {
     const options = {
         port: argv.live,
         host: argv.host,
-        connector: argv.connector
+        connector: argv.connector,
+        public: argv.public,
+        service: "Server"
     };
     const server = new Server(options);
     server.start();
@@ -44,7 +46,7 @@ if (argv.live) {
         await server.destroy();
     });
 
-} else if (argv.connect || argv['_'][0]) {
+} else if (argv.connect || argv['_'][0]) { // Establish connection with a peer
     const keyInput = argv.connect || argv['_'][0];
     const options = {
         port: argv.port || 8989,
@@ -53,7 +55,7 @@ if (argv.live) {
     };
     const client = new Client(keyInput, options);
     client.start();
-} else if (argv.filemanager) {
+} else if (argv.filemanager) { // Start server with a filemanager
 
     const options = {
 
@@ -66,7 +68,8 @@ if (argv.live) {
         //options for holesail-server
         port: argv.port,
         connector: argv.connector,
-        public: argv.public
+        public: argv.public,
+        service: "Filemanager"
     };
 
     // Start files server
@@ -77,7 +80,7 @@ if (argv.live) {
         await fileServer.destroy();
     });
 
-} else {
+} else { // Default if no correct option is chosen
     console.log(colors.red(`Error: Invalid or Incorrect arguments specified. See holesail --help for a list of all valid arguments`));
     process.exit(2);
 }

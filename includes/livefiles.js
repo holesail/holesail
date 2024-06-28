@@ -42,7 +42,8 @@ class Filemanager {
             port: this.port,
             host: "127.0.0.1",
             connector: this.connector,
-            service: this.service
+            service: this.service,
+            public: this.public
         };
 
         //enable public mode on demand

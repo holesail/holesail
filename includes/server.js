@@ -28,7 +28,7 @@ class Server {
         // Use keys if public mode is enabled
         if (this.public){
             this.isConnectorSet = false;
-            return null; // Set the connector null locally will result in a key generation by holesail-client
+            return null; // Setting the connector null locally will result in a key generation by holesail-client
         }
 
         // generate seed from, if a custom connector is supplied.

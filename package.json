@@ -1,7 +1,7 @@
 {
   "name": "holesail",
   "version": "1.5.2",
-  "description": "A P2P based node package to expose your local ports on the Holepunch protocol",
+  "description": "Holesail let's you instantly share any application running on a specific port from your local computer.",
   "main": "index.js",
   "scripts": {
     "test": "npm test",
@@ -26,7 +26,6 @@
     "b4a": "^1.6.6",
     "cli-box": "^6.0.10",
     "colors": "^1.4.0",
-    "fs": "^0.0.1-security",
     "graceful-goodbye": "^1.3.0",
     "holesail-client": "^1.1.1",
     "holesail-server": "latest",

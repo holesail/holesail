@@ -53,9 +53,14 @@ class ValidateInput {
             console.log(colors.red(`Error: Given port is not a valid number. Run holesail --help to see examples`));
             process.exit(2);
         }
-
         // Port should be a number
-        if (args.port && typeof (args.port) != "number") {
+        // This if else because empty strings are falsy values, can also be replaced with args.hasOwnProperty("port")
+        if (args.port) {
+            if (typeof(args.port) !== "number") {
+                console.log(colors.red(`Error: Given port is not a valid number. Run holesail --help to see examples`));
+                process.exit(2);
+            }
+        } else if (args.port === "") {
             console.log(colors.red(`Error: Given port is not a valid number. Run holesail --help to see examples`));
             process.exit(2);
         }
@@ -66,7 +71,9 @@ class ValidateInput {
             process.exit(2);
         }
 
+        //
         // Handle file manager
+        //
 
         //Can't create a server and start filemanager at the same time
         if (args.live && args.filemanager) {
@@ -88,7 +95,12 @@ class ValidateInput {
                 console.log(colors.red(`Error: Given path does not exist`));
                 process.exit(2);
             }
+        }
 
+        // Set correct roles only
+        if (args.role && ((args.role !== "admin") && (args.role !== "user"))) {
+            console.log(colors.red(`Error: Incorrect role set. Role can be either "admin" or "user" `));
+            process.exit(2);
         }
 
     }

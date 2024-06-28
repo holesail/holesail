@@ -13,7 +13,7 @@ class Filemanager {
     constructor(options) {
         //set options specific to filemanager
         this.basePath = (typeof (options.path) != "boolean") ? options.path : "./"; // Base path for file operations
-        this.role = options.role === "admin" ? "admin" : false; // User type (admin/normal)
+        this.role = options.role === "admin" ? "admin" : "user"; // User type (admin/normal)
         this.authUsername = (options.username && typeof (options.username) != "boolean") ? options.username : "admin"; // Basic auth username
         this.authPassword = (options.password && typeof (options.password) != "boolean") ? options.password : "admin"; // Basic auth password
 
@@ -43,7 +43,9 @@ class Filemanager {
             host: "127.0.0.1",
             connector: this.connector,
             service: this.service,
-            public: this.public
+            public: this.public,
+
+            customText: `Username: ${this.authUsername} Password: ${this.authPassword} Role: ${this.role} \n`
         };
 
         //enable public mode on demand
@@ -59,6 +61,7 @@ class Filemanager {
         //expose the server with holesail-server
         const server = new Server(options);
         server.start();
+
     }
 
     destroy() {

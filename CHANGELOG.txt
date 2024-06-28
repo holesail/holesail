@@ -1,3 +1,10 @@
+v1.6.0
+-- Changed terminology for easier understanding
+-- Refactored core to be modular
+-- Connection strings are now private by default
+-- Added a file manager
+-- QR code is now smaller
+-- Fixed input validation bugs
 v1.5.2
 -- Added QR code for connecting
 v1.5.1

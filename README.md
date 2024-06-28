@@ -1,10 +1,10 @@
  # Holesail
 
-[Join our Discord Support Server](https://discord.gg/TQVacE7Vnj)
+[Join our Discord Support Server](https://discord.gg/TQVacE7Vnj) [Join our Reddit Community](https://www.reddit.com/r/holesail/)
 
 ## Overview
 
-Holesail is a simple and flexible solution for creating a distributed hash table (DHT) server. It allows you to expose your local port to the network, making it accessible to other nodes.
+Holesail lets you share any locally running application on a specific port with third parties securely and with a single command. No static IP or port forwarding required.
 
 ## Installation
 
@@ -16,7 +16,7 @@ Once Node.js is installed, you can install Holesail Server using npm (Node Packa
 npm i holesail -g
 ```
 
-## Usage
+## Quick Usage
 
 To start a local Holesail Server, use the following command:
 
@@ -25,34 +25,15 @@ holesail --live port
 ```
 Replace `port` with the desired port number you want to expose to the network.
 
-This will give you a seed to connect to, use that to acess this server from anywhere:
-
-```js
-holesail --connect SEED --port
-```
-Available options:
-
-`--live PORT`: Create a tunnel on this port
-
-`--connect SEED`: Connect to a tunnel using the seed generated from --live command
-
-`--host ADDRESS`: Default address is 127.0.0.1, use it to change address to localhost or other
-
-`--port PORT`: Use this option with --connect to set a custom port instead of the default port `8989`
-
-
-### Example
-
-To start a local Holesail Server on port 8080, use the following command:
+This will give you a connection string to connect to, use that to access this server from anywhere:
 
 ```
-holesail --live 8080
+holesail <connection-string> 
 ```
 
-## Help
+## All commands
 
-If you need help or want to see the usage instructions, use the following command:
-
+To view full usage instructions and all set of commands, run:
 ```
 holesail --help
 ```

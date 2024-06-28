@@ -52,11 +52,10 @@ class Client {
 
             var box = boxConsole("100x10", {
                     text: colors.cyan.underline.bold("Holesail Client Started") + " ⛵️" + "\n" +
-                        colors.magenta("Connection Mode: ") + colors.green("Super Secret Connector") + "\n" +
+                        colors.magenta("Connection Mode: ") + colors.green("Private Connection String") + "\n" +
                         colors.magenta(`Access application on http://${this.host}:${this.port}/`) + "\n" +
-                        "Connected to Secret Connector: " + colors.white(this.keyInput) + "\n" +
-                        colors.gray(`Public key: ${this.connector}`) + "\n" +
-                        colors.gray(`   NOTE: TREAT CONNECTORS HOW YOU WOULD TREAT SSH KEY, DO NOT SHARE IT WITH ANYONE YOU DO NOT TRUST    `),
+                        colors.gray(`Connection string: ${this.keyInput}`) + "\n" +
+                        colors.gray(`   NOTE: TREAT PRIVATE CONNECTION STRINGS HOW YOU WOULD TREAT SSH KEY, DO NOT SHARE IT WITH ANYONE YOU DO NOT TRUST    `),
                     autoEOL: true,
                     vAlign: "middle",
                     hAlign: "middle",
@@ -69,10 +68,10 @@ class Client {
 
             var box = boxConsole("100x10", {
                     text: colors.cyan.underline.bold("Holesail Client Started") + " ⛵️" + "\n" +
-                        colors.magenta("Connection Mode: ") + colors.yellow("Publicly Sharable Key") + "\n" +
+                        colors.magenta("Connection Mode: ") + colors.yellow("Public Connection String") + "\n" +
                         colors.magenta(`Access application on http://${this.host}:${this.port}/`) + "\n" +
-                        colors.gray(`Public key: ${this.connector}`) + "\n" +
-                        colors.gray(`   NOTICE: TREAT PUBLIC KEYS LIKE YOU WOULD TREAT A DOMAIN NAME ON PUBLIC SERVER, IF THERE IS ANYTHING PRIVATE ON IT, IT IS YOUR RESPONSIBILITY TO PASSWORD PROTECT IT OR USE CONNECTORS   `),
+                        colors.gray(`Connection String: ${this.connector}`) + "\n" +
+                        colors.gray(`   NOTICE: TREAT PUBLIC STRING LIKE YOU WOULD TREAT A DOMAIN NAME ON PUBLIC SERVER, IF THERE IS ANYTHING PRIVATE ON IT, IT IS YOUR RESPONSIBILITY TO PASSWORD PROTECT IT OR USE PRIVATE MODE   `),
                     autoEOL: true,
                     vAlign: "middle",
                     hAlign: "middle",

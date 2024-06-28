@@ -55,7 +55,7 @@ if (argv.live) {
     };
     const client = new Client(keyInput, options);
     client.start();
-} else if (argv.filemanager) { // Start server with a filemanager
+} else if ( argv.filemanager ) { // Start server with a filemanager
 
     const options = {
 

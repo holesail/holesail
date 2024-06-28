@@ -55,6 +55,25 @@ class ValidateInput {
         }
 
         // Handle file manager
+        if (args.live && args.filemanager) {
+            console.log(colors.red(`Error: You can't start holesail server and filemanager at the same time. If you are trying to use filemanager on a specific local port use --port instead or see holesail --help`));
+            process.exit(2);
+        }
+
+        if (args.filemanager && (args.connect || args['_'][0])) {
+            console.log(colors.red(`Error: You tried to create a connection and start filemanager at once. Start them separately and check your command for mistakes. See holesail --help`));
+            process.exit(2);
+        }
+
+        if (args.filemanager && typeof (args.filemanager) !== 'boolean') {
+            //check if the given path is correct
+            const fs = require('fs');
+            if (!fs.existsSync(args.filemanager)) {
+                console.log(colors.red(`Error: Given path does not exist`));
+                process.exit(2);
+            }
+
+        }
 
     }
 }

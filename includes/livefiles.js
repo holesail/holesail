@@ -29,7 +29,7 @@ class Filemanager {
     start() {
         //initialise local http server
         this.server = http.createServer(this.handleRequest.bind(this));
-
+        //TODO: Check if port is busy and throw error
         //start listening for requests on specified port
         this.server.listen(this.port, (err) => {
             if (err) {

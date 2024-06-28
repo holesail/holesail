@@ -64,8 +64,7 @@ class Server {
                     text: colors.cyan.underline.bold(`Holesail ${this.service} Started`) + " ⛵️" + "\n" +
                         colors.magenta("Connection Mode: ") + colors.cyan("Private Connection String") + "\n" +
                         colors.magenta(`Holesail is now listening on `) + `${this.host}:` + this.options.port + "\n" +
-                        "Connect with connection string: " + colors.white(`${this.options.connector}`) + "\n" +
-                        colors.gray(`Public key is: ${this.localServer.getPublicKey()}`) + "\n" +
+                        "Connection string: " + colors.white(`${this.options.connector}`) + "\n" +
                         colors.gray(`   NOTE: TREAT PRIVATE CONNECTION STRINGS HOW YOU WOULD TREAT SSH KEY, DO NOT SHARE IT WITH ANYONE YOU DO NOT TRUST    `),
                     autoEOL: true,
                     vAlign: "middle",
@@ -87,7 +86,7 @@ class Server {
                     text: colors.cyan.underline.bold(`Holesail ${this.service} Started`) + " ⛵️" + "\n" +
                         colors.magenta("Connection Mode: ") + colors.yellow("Public Connection String \n") +
                         colors.magenta(`Holesail is now listening on `) + `${this.host}:` + this.options.port + "\n" +
-                        "Connect with connection string: " + colors.white(`${this.localServer.getPublicKey()}`) + "\n" +
+                        "Connection string: " + colors.white(`${this.localServer.getPublicKey()}`) + "\n" +
                         colors.gray(`   NOTICE: TREAT PUBLIC STRING LIKE YOU WOULD TREAT A DOMAIN NAME ON PUBLIC SERVER, IF THERE IS ANYTHING PRIVATE ON IT, IT IS YOUR RESPONSIBILITY TO PASSWORD PROTECT IT OR USE PRIVATE MODE   \n`),
                     autoEOL: true,
                     vAlign: "middle",

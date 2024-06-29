@@ -7,7 +7,7 @@ const b4a = require('b4a') //generate random connector
 
 //import server module
 const Server = require('./server.js');
-
+const logo = require('./logo.js'); // Require logo code
 
 class Filemanager {
     constructor(options) {
@@ -437,7 +437,7 @@ class Filemanager {
                 </head>
                 <body>
                 <nav>
-                <img class="nav--icon" src="./includes/assets/icon.png"></img>
+                <img class="nav--icon" src="${logo.base64Logo}"></img>
                 <p>holesail</p>
                 </nav>
                 <h1>Folder and Files: ${this.escapeHtml(urlPath)}</h1>

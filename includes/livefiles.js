@@ -177,7 +177,11 @@ class Filemanager {
                     const downloadButton = file.isDirectory()
                         ? `<a class="open--btn" href="${filePath}">Enter</a>`
                         : `<a href="${filePath}" download>Download</a>`;
-                    return `<tr><td class="file--name">${iconHtml}<a href="${filePath}">${safeFileName}</a></td><td class="download--btn">${downloadButton}</td></tr>`;
+
+                           // Get file or folder size
+                const stats = fs.statSync(path.join(fullPath, file.name));
+                const size = this.formatBytes(stats.size);
+                    return `<tr><td class="file--name">${iconHtml}<a href="${filePath}">${safeFileName}</a></td><td class="download--btn">${downloadButton}</td><td>${size}</td></tr>`;
                 })
                 .join("");
 
@@ -448,6 +452,8 @@ class Filemanager {
                         <tr>
                             <th>Name</th>
                             <th>Actions</th>
+                            <th>Size</th>
+
                         </tr>
                         ${directoryList}
                     </table>
@@ -474,24 +480,46 @@ class Filemanager {
         });
     }
 
-    serveFile(fullPath, res) {
-        const extension = path.extname(fullPath).toLowerCase();
-        const contentType = this.getContentType(extension);
-        if (contentType) {
-            fs.readFile(fullPath, (err, data) => {
-                if (err) {
-                    res.writeHead(500, {"Content-Type": "text/plain"});
-                    res.end("Error reading file.");
-                    return;
-                }
-                res.writeHead(200, {"Content-Type": contentType});
-                res.end(data);
-            });
-        } else {
-            res.writeHead(500, {"Content-Type": "text/plain"});
-            res.end("Unsupported file type.");
-        }
+    formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
+
+   serveFile(fullPath, res) {
+    const extension = path.extname(fullPath).toLowerCase();
+    const contentType = this.getContentType(extension);
+    if (contentType) {
+        fs.stat(fullPath, (err, stats) => {
+            if (err) {
+                res.writeHead(500, {"Content-Type": "text/plain"});
+                res.end("Error reading file.");
+                return;
+            }
+            const fileSize = stats.size;
+            res.writeHead(200, {
+                "Content-Type": contentType,
+                "Content-Length": fileSize,
+            });
+
+            const stream = fs.createReadStream(fullPath);
+            let downloaded = 0;
+            stream.on('data', (chunk) => {
+                downloaded += chunk.length;
+                const percentage = ((downloaded / fileSize) * 100).toFixed(2);
+                console.log(`Downloaded: ${percentage}%`);
+            });
+
+            stream.pipe(res);
+        });
+    } else {
+        res.writeHead(500, {"Content-Type": "text/plain"});
+        res.end("Unsupported file type.");
+    }
+}
 
     createFolder(newFullPath, res, urlPath) {
         fs.mkdir(newFullPath, {recursive: true}, (err) => {

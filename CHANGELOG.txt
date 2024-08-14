@@ -1,3 +1,6 @@
+v1.7.0
+-- New feature: Holesail manager
+-- Bug Fix: Fixed filemanager not working with some extensions
 v1.6.2
 -- Bumped modules
 v1.6.1

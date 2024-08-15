@@ -1,6 +1,6 @@
 {
   "name": "holesail",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "description": "Holesail let's you instantly share any application running on a specific port from your local computer.",
   "main": "index.js",
   "scripts": {
@@ -32,9 +32,11 @@
     "hyper-cmd-lib-keys": "^0.1.1",
     "hyperdht": "^6.16.2",
     "minimist": "^1.2.8",
+    "pm2": "^5.4.2",
     "qrcode-terminal": "^0.12.0"
   },
   "bin": {
-    "holesail": "./index.js"
+    "holesail": "./index.js",
+    "holesail-manager": "./manager.js"
   }
 }

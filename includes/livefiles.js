@@ -155,6 +155,24 @@ class Filemanager {
         });
     }
 
+    calculateDirectorySize(dirPath) {
+        let totalSize = 0;
+        
+        const items = fs.readdirSync(dirPath, { withFileTypes: true });
+        
+        items.forEach((item) => {
+            const itemPath = path.join(dirPath, item.name);
+            if (item.isDirectory()) {
+                totalSize += this.calculateDirectorySize(itemPath); // Recursively add directory size
+            } else {
+                totalSize += fs.statSync(itemPath).size; // Add file size
+            }
+        });
+        
+        return totalSize;
+    }
+    
+
     listDirectory(fullPath, urlPath, res) {
         fs.readdir(fullPath, {withFileTypes: true}, (err, files) => {
             if (err) {
@@ -179,8 +197,9 @@ class Filemanager {
                         : `<a href="${filePath}" download>Download</a>`;
 
                            // Get file or folder size
-                const stats = fs.statSync(path.join(fullPath, file.name));
-                const size = this.formatBytes(stats.size);
+                           const size = file.isDirectory()
+                           ? this.formatBytes(this.calculateDirectorySize(path.join(fullPath, file.name)))
+                           : this.formatBytes(fs.statSync(path.join(fullPath, file.name)).size);
                     return `<tr><td class="file--name">${iconHtml}<a href="${filePath}">${safeFileName}</a></td><td class="download--btn">${downloadButton}</td><td>${size}</td></tr>`;
                 })
                 .join("");
@@ -491,8 +510,7 @@ class Filemanager {
 
    serveFile(fullPath, res) {
     const extension = path.extname(fullPath).toLowerCase();
-    const contentType = this.getContentType(extension);
-    if (contentType) {
+    const contentType = this.getContentType(extension) || 'application/octet-stream';    if (contentType) {
         fs.stat(fullPath, (err, stats) => {
             if (err) {
                 res.writeHead(500, {"Content-Type": "text/plain"});
@@ -587,6 +605,7 @@ class Filemanager {
             ".wmv": "video/x-ms-wmv",
             ".flv": "video/x-flv",
             ".mkv": "video/x-matroska",
+            ".exe": "application/x-msdownload",
         };
         return mimeTypes[extension] || null;
     }

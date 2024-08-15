@@ -2,6 +2,8 @@ const colors = require('colors/safe');
 
 module.exports = {
     helpMessage: `
+${colors.cyan.bold('Now manage and run holesail connections in background with holesail-manager')}
+    
 ${colors.cyan.bold('Holesail Help')}
 
 ${colors.bold('Description:')}

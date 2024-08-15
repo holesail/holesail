@@ -2,9 +2,8 @@
 
 const pm2 = require('pm2');
 const minimist = require('minimist');
-const {
-    exec
-} = require('child_process');
+const { spawn } = require('child_process');
+
 const path = require('path');
 const fs = require('fs');
 
@@ -106,14 +105,25 @@ if (command === 'create') {
 
 } else if (command === 'list') {
     // List all the running holesail connections
-    // Need to for color or else PM2 will display full black and white
-    exec(`FORCE_COLOR=1 ${pm2Binary} list`, (err, stdout, stderr) => {
-        if (err) {
-            console.error('Error listing PM2 processes:', stderr);
-            process.exit(2);
-        }
-        console.log(stdout);
-    });
+    // Need to spwan or else PM2 will display full black and white
+  const child = spawn('node', [pm2Binary, 'list'], {
+    shell: true,
+    stdio: 'inherit',
+    env: { ...process.env, FORCE_COLOR: 'true' } // Force color output
+  });
+
+  child.on('error', (err) => {
+    console.error('Error listing PM2 processes:', err);
+    process.exit(2);
+  });
+
+  child.on('exit', (code) => {
+    if (code !== 0) {
+      console.error(`PM2 exited with code ${code}`);
+      process.exit(code);
+    }
+  });
+
 
 } else if (command === 'delete') {
     // Handle deletion of connections

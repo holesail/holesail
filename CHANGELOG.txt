@@ -1,3 +1,5 @@
+v1.7.3
+-- Removing newer path bug added by 1.7.2
 v1.7.2
 -- Fixing incorrect path again
 v1.7.1

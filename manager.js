@@ -16,7 +16,7 @@ const customName = args.name; // Custom name for the PM2 process
 // Path to the local pm2 binary
 const pm2Binary = path.join(__dirname, 'node_modules', 'pm2', 'bin', 'pm2');
 
-const holesail = require(path.resolve(__dirname, './index.js'));
+const holesail = path.resolve(__dirname, './index.js');
 
 // Helper function to filter out `--name` and its associated value
 // We don't want to pass --name or it's value to holesail or the client will bug out

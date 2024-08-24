@@ -58,7 +58,7 @@ if (command === 'create') {
 
         pm2.start({
             name: name,
-            script: 'index.js', // Run the holesail script through index.js
+            script: './index.js', // Run the holesail script through index.js
             args: holesailArgs,
         }, (err) => {
             if (err) {

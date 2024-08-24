@@ -1,6 +1,6 @@
 {
   "name": "holesail",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "Holesail let's you instantly share any application running on a specific port from your local computer.",
   "main": "index.js",
   "scripts": {

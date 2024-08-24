@@ -1,3 +1,5 @@
+v1.7.2
+-- Fixing incorrect path again
 v1.7.1
 --Fix incorrect script path in holesail maanger
 v1.7.0

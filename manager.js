@@ -16,6 +16,9 @@ const customName = args.name; // Custom name for the PM2 process
 // Path to the local pm2 binary
 const pm2Binary = path.join(__dirname, 'node_modules', 'pm2', 'bin', 'pm2');
 
+const path = require('path');
+const holesail = require(path.resolve(__dirname, './holesail'));
+
 // Helper function to filter out `--name` and its associated value
 // We don't want to pass --name or it's value to holesail or the client will bug out
 function filterArgs(argv) {
@@ -58,7 +61,7 @@ if (command === 'create') {
 
         pm2.start({
             name: name,
-            script: './index.js', // Run the holesail script through index.js
+            script: holesail, // Run the holesail script through index.js
             args: holesailArgs,
         }, (err) => {
             if (err) {

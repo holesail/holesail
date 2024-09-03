@@ -42,6 +42,10 @@ holesail --help
 
 Holesail Server includes graceful goodbye functionality, which ensures that the server is properly shut down when you close the terminal or interrupt the process.
 
+## Documentation
+
+Documentation for Holesail can be found at https://docs.holesail.io/
+
 ## License
 
 Holesail Server is released under the GPL-3.0 License. See the [LICENSE](https://www.gnu.org/licenses/gpl-3.0.en.html) file for more information.

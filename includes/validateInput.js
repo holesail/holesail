@@ -5,10 +5,10 @@
 // 4 (internal error): The process encountered an internal error.
 // 5 (unknown error): The process encountered an unknown error.
 
-var colors = require('colors/safe');
+import colors from 'colors/safe.js';
 
 // ValidateInput class definition
-class ValidateInput {
+export class ValidateInput {
     // Constructor
     constructor(args) {
         this.validateInput(args);
@@ -105,5 +105,3 @@ class ValidateInput {
 
     }
 }
-
-module.exports = {ValidateInput};

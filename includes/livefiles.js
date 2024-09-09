@@ -1,13 +1,13 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
-const qs = require("querystring");
-const libKeys = require('hyper-cmd-lib-keys') // generate a random seed
-const b4a = require('b4a') //generate random connector
+import http from "http";
+import fs from "fs";
+import path from "path";
+import qs from "querystring";
+import libKeys from 'hyper-cmd-lib-keys'; // generate a random seed
+import b4a from 'b4a'; //generate random connector
 
 //import server module
-const Server = require('./server.js');
-const logo = require('./logo.js'); // Require logo code
+import Server from './server.js';
+import * as logo from './logo.js'; // Require logo code
 
 class Filemanager {
     constructor(options) {
@@ -157,9 +157,9 @@ class Filemanager {
 
     calculateDirectorySize(dirPath) {
         let totalSize = 0;
-        
+
         const items = fs.readdirSync(dirPath, { withFileTypes: true });
-        
+
         items.forEach((item) => {
             const itemPath = path.join(dirPath, item.name);
             if (item.isDirectory()) {
@@ -168,10 +168,10 @@ class Filemanager {
                 totalSize += fs.statSync(itemPath).size; // Add file size
             }
         });
-        
+
         return totalSize;
     }
-    
+
 
     listDirectory(fullPath, urlPath, res) {
         fs.readdir(fullPath, {withFileTypes: true}, (err, files) => {
@@ -250,7 +250,7 @@ class Filemanager {
                         cursor: pointer;
                         display: flex;
                         flex-direction: row;
-                        align-items: center; 
+                        align-items: center;
                         margin: 2rem 2rem 1rem 2rem;
                         }
                         nav{
@@ -284,7 +284,7 @@ class Filemanager {
 
                         }
                        .container{
-    padding: 0 2rem 2rem 2rem; 
+    padding: 0 2rem 2rem 2rem;
                        }
                    table {
     width: 100%;
@@ -410,7 +410,7 @@ class Filemanager {
                         font-weight: 700;
                         padding: 2px 10px;
                         }
-                        form .btn{ 
+                        form .btn{
                         width: 100%;
                         margin-top: 0rem;
                         border-radius: 7px;
@@ -639,4 +639,4 @@ class Filemanager {
     }
 }
 
-module.exports = Filemanager;
+export default Filemanager;

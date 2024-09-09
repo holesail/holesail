@@ -2,6 +2,7 @@
   "name": "holesail",
   "version": "1.7.3",
   "description": "Holesail let's you instantly share any application running on a specific port from your local computer.",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "npm test",
@@ -29,6 +30,7 @@
     "graceful-goodbye": "^1.3.0",
     "holesail-client": "^1.1.3",
     "holesail-server": "^1.4.1",
+    "hyper-address": "^0.1.3",
     "hyper-cmd-lib-keys": "^0.1.1",
     "hyperdht": "^6.16.2",
     "minimist": "^1.2.8",

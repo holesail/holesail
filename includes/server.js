@@ -1,12 +1,13 @@
-const DHT = require('holesail-server'); // Core component for creating a server over HyperDHT
-const libKeys = require('hyper-cmd-lib-keys') // generate a random seed
-const b4a = require('b4a') //generate random connector
+import DHT from 'holesail-server'; // Core component for creating a server over HyperDHT
+import libKeys from 'hyper-cmd-lib-keys'; // generate a random seed
+import b4a from 'b4a'; //generate random connector
+import { encodeAddress } from 'hyper-address'; // encode connection string to .hyper address
 
-const {createHash} = require('node:crypto'); // This will convert the connector to a seed of 64 length
+import { createHash } from 'node:crypto'; // This will convert the connector to a seed of 64 length
 
-const boxConsole = require('cli-box'); // Print pretty
-var colors = require('colors/safe');
-var qrcode = require('qrcode-terminal');
+import boxConsole from 'cli-box'; // Print pretty
+import colors from 'colors/safe.js';
+import qrcode from 'qrcode-terminal';
 
 class Server {
     // Set appropriate values from options
@@ -84,12 +85,14 @@ class Server {
 
         } else {
 
+            var pubkey = this.localServer.getPublicKey();
             var box = boxConsole("100x10", {
                     text: colors.cyan.underline.bold(`Holesail ${this.service} Started`) + " ⛵️" + "\n" +
                         colors.magenta("Connection Mode: ") + colors.yellow("Public Connection String \n") +
                         colors.magenta(`Holesail is now listening on `) + `${this.host}:` + this.options.port + "\n" +
                         colors.green(this.customText) +
-                        "Connection string: " + colors.white(`${this.localServer.getPublicKey()}`) + "\n" +
+                        "Connection string: " + colors.white(`${pubkey}`) + "\n" +
+                        "Hyper Address: " + colors.white(`${encodeAddress(pubkey)}`) + "\n" +
                         colors.gray(`   NOTICE: TREAT PUBLIC STRING LIKE YOU WOULD TREAT A DOMAIN NAME ON PUBLIC SERVER, IF THERE IS ANYTHING PRIVATE ON IT, IT IS YOUR RESPONSIBILITY TO PASSWORD PROTECT IT OR USE PRIVATE MODE   \n`),
                     autoEOL: true,
                     vAlign: "middle",
@@ -99,7 +102,7 @@ class Server {
             );
             console.log(box)
             console.log("OR Scan the QR to connect: ")
-            qrcode.generate(this.localServer.getPublicKey(), {small: true}, function (qrcode) {
+            qrcode.generate(pubkey, {small: true}, function (qrcode) {
                 console.log(qrcode);
             });
         }
@@ -112,4 +115,4 @@ class Server {
     }
 }
 
-module.exports = Server;
+export default Server;

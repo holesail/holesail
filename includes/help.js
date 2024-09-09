@@ -1,9 +1,8 @@
-const colors = require('colors/safe');
+import colors from 'colors/safe.js';
 
-module.exports = {
-    helpMessage: `
+export const helpMessage = `
 ${colors.cyan.bold('Now manage and run holesail connections in background with holesail-manager')}
-    
+
 ${colors.cyan.bold('Holesail Help')}
 
 ${colors.bold('Description:')}
@@ -50,7 +49,7 @@ ${colors.yellow('- --live <port>')}
 ${colors.white('  Set a port <port> live. This will generate a connection string')}
 
 ${colors.yellow('- --connector <connection-string>')}
-${colors.white('  Set a custom connection string for the server. Connection string length should be at least 32 chars for security reasons. Custom connection string can not be of exactly 64 chars.')}  
+${colors.white('  Set a custom connection string for the server. Connection string length should be at least 32 chars for security reasons. Custom connection string can not be of exactly 64 chars.')}
 
 ${colors.bold('Holesail Client (Connect to a Peer):')}
 
@@ -107,9 +106,8 @@ ${colors.bold('Notes:')}
 
 ${colors.white('- Treat Private connection strings like SSH keys. Do not share them with anyone you do not trust.')}
 ${colors.white('- Public connection strings should be treated like domain names on public servers. If there is any private information, it is your responsibility to protect it using passwords or connectors.')}
-`,
+`;
 
-    printHelp: function(helpMessage) {
-        console.log(helpMessage);
-    }
-};
+export function printHelp(helpMessage) {
+    console.log(helpMessage);
+}

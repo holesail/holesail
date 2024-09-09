@@ -1,10 +1,11 @@
-const holesailClient = require('holesail-client');
+import holesailClient from 'holesail-client';
+import { decodeAddress } from 'hyper-address';
 
-const b4a = require('b4a');
-const {createHash} = require('node:crypto');
+import b4a from 'b4a';
+import { createHash } from 'node:crypto';
 
-const boxConsole = require('cli-box');
-var colors = require('colors/safe');
+import boxConsole from 'cli-box';
+import colors from 'colors/safe.js';
 
 class Client {
     constructor(keyInput, options) {
@@ -21,7 +22,12 @@ class Client {
         if (keyInput.length === 64) {
             this.isConnectorSet = false;
             return keyInput;
-        } else {
+        }
+        else if(keyInput.endsWith('.hyper')){
+            const seed = Buffer.from(decodeAddress(keyInput));
+            return b4a.toString(seed, 'hex')
+        }
+        else {
             const connector = createHash('sha256').update(keyInput.toString()).digest('hex');
             this.isConnectorSet = true;
             const seed = Buffer.from(connector, 'hex');
@@ -84,4 +90,4 @@ class Client {
     }
 }
 
-module.exports = Client;
+export default Client

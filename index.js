@@ -1,18 +1,21 @@
 #!/usr/bin/env node
 
-const argv = require('minimist')(process.argv.slice(2)); // Required to parse CLI arguments
-const goodbye = require('graceful-goodbye');
-const pkg = require('./package.json'); // Holds info about the current package
+import minimist from 'minimist'; // Required to parse CLI arguments
+import goodbye from 'graceful-goodbye';
+import fs from 'node:fs';
+import pkg from './package.json' assert { type: 'json' }; // Holds info about the current package
 
-var colors = require('colors/safe');
+import colors from 'colors/safe.js';
 
+// Parse CLI arguments
+const argv = minimist(process.argv.slice(2));
 
 // Require all necessary files
-const help = require('./includes/help.js');
-const Client = require('./includes/client.js');
-const Server = require('./includes/server.js');
-const Filemanager = require('./includes/livefiles.js'); // Adjust the path as needed
-const { ValidateInput } = require('./includes/validateInput.js');
+import { helpMessage, printHelp } from './includes/help.js';
+import Client from './includes/client.js';
+import Server from './includes/server.js';
+import Filemanager from './includes/livefiles.js'; // Adjust the path as needed
+import { ValidateInput } from './includes/validateInput.js';
 
 // Validate every input and throw errors if incorrect input
 const validator = new ValidateInput(argv);
@@ -21,7 +24,7 @@ const validator = new ValidateInput(argv);
 // Setting up the command hierarchy
 // Display help and exit
 if (argv.help) {
-    help.printHelp(help.helpMessage);
+    printHelp(helpMessage);
     process.exit(-1);
 }
 

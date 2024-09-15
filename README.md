@@ -2,6 +2,11 @@
 
 [Join our Discord Support Server](https://discord.gg/TQVacE7Vnj) [Join our Reddit Community](https://www.reddit.com/r/holesail/)
 
+To support the development of this project:
+
+Lightning BTC: linenbird5@primal.net
+BTC Address: 183Pfn4fxuMJMSvZXdBdYsNKWSnWHCdBdA
+
 ## Overview
 
 Holesail lets you share any locally running application on a specific port with third parties securely and with a single command. No static IP or port forwarding required.

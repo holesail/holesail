@@ -108,7 +108,7 @@ if (command === 'create') {
 } else if (command === 'list') {
     // List all the running holesail connections
     // Need to spwan or else PM2 will display full black and white
-  const child = spawn('node', [pm2Binary, 'list'], {
+  const child = spawn(process.execPath, [pm2Binary, 'list'], {
     shell: true,
     stdio: 'inherit',
     env: { ...process.env, FORCE_COLOR: 'true' } // Force color output

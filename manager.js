@@ -62,6 +62,7 @@ if (command === 'create') {
             name: name,
             script: holesail, // Run the holesail script through index.js
             args: holesailArgs,
+            interpreter: process.execPath,
         }, (err) => {
             if (err) {
                 pm2.disconnect();
@@ -108,7 +109,7 @@ if (command === 'create') {
 } else if (command === 'list') {
     // List all the running holesail connections
     // Need to spwan or else PM2 will display full black and white
-  const child = spawn('node', [pm2Binary, 'list'], {
+  const child = spawn(process.execPath, [pm2Binary, 'list'], {
     shell: true,
     stdio: 'inherit',
     env: { ...process.env, FORCE_COLOR: 'true' } // Force color output
@@ -164,7 +165,7 @@ if (command === 'create') {
             process.exit(2);
         }
 
-        pm2.start(processName, (err) => {
+        pm2.start(processName, {interpreter: process.execPath}, (err) => {
             pm2.disconnect();
             if (err) {
                 console.error(`Failed to start holesail session with name: ${processName}`, err);

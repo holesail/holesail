@@ -62,6 +62,7 @@ if (command === 'create') {
             name: name,
             script: holesail, // Run the holesail script through index.js
             args: holesailArgs,
+            interpreter: process.execPath,
         }, (err) => {
             if (err) {
                 pm2.disconnect();
@@ -164,7 +165,7 @@ if (command === 'create') {
             process.exit(2);
         }
 
-        pm2.start(processName, (err) => {
+        pm2.start(processName, {interpreter: process.execPath}, (err) => {
             pm2.disconnect();
             if (err) {
                 console.error(`Failed to start holesail session with name: ${processName}`, err);

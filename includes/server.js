@@ -61,11 +61,11 @@ class Server {
   printBox () {
     // Pretty output in the terminal
     if (this.isConnectorSet) {
-      var protocol
+      let protocol
       if (this.udp) {
-        protocol = "UDP"
+        protocol = 'UDP'
       } else {
-        protocol = "TCP"
+        protocol = 'TCP'
       }
       var box = boxConsole('100x10', {
         text: colors.cyan.underline.bold(`Holesail ${protocol} ${this.service} Started`) + ' ⛵️' + '\n' +

@@ -1,212 +1,209 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
-const qs = require("querystring");
+const http = require('http')
+const fs = require('fs')
+const path = require('path')
+const qs = require('querystring')
 const libKeys = require('hyper-cmd-lib-keys') // generate a random seed
-const b4a = require('b4a') //generate random connector
+const b4a = require('b4a') // generate random connector
 
-//import server module
-const Server = require('./server.js');
-const logo = require('./logo.js'); // Require logo code
+// import server module
+const Server = require('./server.js')
+const logo = require('./logo.js') // Require logo code
 
 class Filemanager {
-    constructor(options) {
-        //set options specific to filemanager
-        this.basePath = (typeof (options.path) != "boolean") ? options.path : "./"; // Base path for file operations
-        this.role = options.role === "admin" ? "admin" : "user"; // User type (admin/normal)
-        this.authUsername = (options.username && typeof (options.username) != "boolean") ? options.username : "admin"; // Basic auth username
-        this.authPassword = (options.password && typeof (options.password) != "boolean") ? options.password : "admin"; // Basic auth password
+  constructor (options) {
+    // set options specific to filemanager
+    this.basePath = (typeof (options.path) !== 'boolean') ? options.path : './' // Base path for file operations
+    this.role = options.role === 'admin' ? 'admin' : 'user' // User type (admin/normal)
+    this.authUsername = (options.username && typeof (options.username) !== 'boolean') ? options.username : 'admin' // Basic auth username
+    this.authPassword = (options.password && typeof (options.password) !== 'boolean') ? options.password : 'admin' // Basic auth password
 
-        //set options specific to calling holesail-server
-        this.port = (options.port && typeof (options.port) != "boolean") ? options.port : 5409;
-        this.connector = (options.connector && typeof (options.connector) != "boolean") ? options.connector : false;
-        this.isConnectorSet = !!(options.connector && typeof (options.connector) != "boolean");
-        this.public = options.public;
-        this.service = options.service;
+    // set options specific to calling holesail-server
+    this.port = (options.port && typeof (options.port) !== 'boolean') ? options.port : 5409
+    this.connector = (options.connector && typeof (options.connector) !== 'boolean') ? options.connector : false
+    this.isConnectorSet = !!(options.connector && typeof (options.connector) !== 'boolean')
+    this.public = options.public
+    this.service = options.service
+  }
 
+  start () {
+    // initialise local http server
+    this.server = http.createServer(this.handleRequest.bind(this))
+    // TODO: Check if port is busy and throw error
+    // start listening for requests on specified port
+    this.server.listen(this.port, (err) => {
+      if (err) {
+        console.error(`Failed to start server on port ${this.port}: ${err.message}`)
+        process.exit(1)
+      }
+    })
+
+    const options = {
+      port: this.port,
+      host: '127.0.0.1',
+      connector: this.connector,
+      service: this.service,
+      public: this.public,
+
+      customText: `Username: ${this.authUsername} Password: ${this.authPassword} Role: ${this.role} \n`
     }
 
-    start() {
-        //initialise local http server
-        this.server = http.createServer(this.handleRequest.bind(this));
-        //TODO: Check if port is busy and throw error
-        //start listening for requests on specified port
-        this.server.listen(this.port, (err) => {
-            if (err) {
-                console.error(`Failed to start server on port ${this.port}: ${err.message}`);
-                process.exit(1);
-            }
-        });
-
-        let options = {
-            port: this.port,
-            host: "127.0.0.1",
-            connector: this.connector,
-            service: this.service,
-            public: this.public,
-
-            customText: `Username: ${this.authUsername} Password: ${this.authPassword} Role: ${this.role} \n`
-        };
-
-        //enable public mode on demand
-        if (this.public) {
-            options.connector = false;
-        } else if (this.connector && this.isConnectorSet) { // let user use a custom connector
-            options.connector = this.connector;
-        } else {
-            let buffer = Buffer.from(libKeys.randomBytes(32).toString('hex'), 'hex') // generate a random connector if not provided by user
-            options.connector = b4a.toString(buffer, 'hex').substring(0, 60)
-        }
-
-        //expose the server with holesail-server
-        const server = new Server(options);
-        server.start();
-
+    // enable public mode on demand
+    if (this.public) {
+      options.connector = false
+    } else if (this.connector && this.isConnectorSet) { // let user use a custom connector
+      options.connector = this.connector
+    } else {
+      const buffer = Buffer.from(libKeys.randomBytes(32).toString('hex'), 'hex') // generate a random connector if not provided by user
+      options.connector = b4a.toString(buffer, 'hex').substring(0, 60)
     }
 
-    destroy() {
-        return new Promise((resolve, reject) => {
-            this.server.close((err) => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
+    // expose the server with holesail-server
+    const server = new Server(options)
+    server.start()
+  }
+
+  destroy () {
+    return new Promise((resolve, reject) => {
+      this.server.close((err) => {
+        if (err) reject(err)
+        else resolve()
+      })
+    })
+  }
+
+  handleRequest (req, res) {
+    const urlPath = decodeURIComponent(req.url)
+    const fullPath = path.join(this.basePath, urlPath)
+
+    // Basic authentication check
+    if (!this.authenticate(req)) {
+      res.writeHead(401, { 'WWW-Authenticate': 'Basic realm="Filemanager"' })
+      res.end('Authentication required.')
+      return
     }
 
-    handleRequest(req, res) {
-        const urlPath = decodeURIComponent(req.url);
-        const fullPath = path.join(this.basePath, urlPath);
-
-        // Basic authentication check
-        if (!this.authenticate(req)) {
-            res.writeHead(401, {"WWW-Authenticate": 'Basic realm="Filemanager"'});
-            res.end("Authentication required.");
-            return;
-        }
-
-        if (req.method === "GET") {
-            this.handleGetRequest(fullPath, urlPath, res);
-        } else if (req.method === "POST") {
-            this.handlePostRequest(req, res, urlPath);
-        }
+    if (req.method === 'GET') {
+      this.handleGetRequest(fullPath, urlPath, res)
+    } else if (req.method === 'POST') {
+      this.handlePostRequest(req, res, urlPath)
     }
+  }
 
-    authenticate(req) {
-        const authHeader = req.headers.authorization;
-        if (authHeader) {
-            const encodedCredentials = authHeader.split(" ")[1];
-            const credentials = Buffer.from(encodedCredentials, "base64").toString(
-                "utf-8"
-            );
-            const [username, password] = credentials.split(":");
-            return username === this.authUsername && password === this.authPassword;
-        }
-        return false;
+  authenticate (req) {
+    const authHeader = req.headers.authorization
+    if (authHeader) {
+      const encodedCredentials = authHeader.split(' ')[1]
+      const credentials = Buffer.from(encodedCredentials, 'base64').toString(
+        'utf-8'
+      )
+      const [username, password] = credentials.split(':')
+      return username === this.authUsername && password === this.authPassword
     }
+    return false
+  }
 
-    handleGetRequest(fullPath, urlPath, res) {
-        fs.stat(fullPath, (err, stats) => {
-            if (err) {
-                res.writeHead(500, {"Content-Type": "text/plain"});
-                res.end("Internal Server Error");
-                return;
-            }
+  handleGetRequest (fullPath, urlPath, res) {
+    fs.stat(fullPath, (err, stats) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' })
+        res.end('Internal Server Error')
+        return
+      }
 
-            if (stats.isDirectory()) {
-                this.listDirectory(fullPath, urlPath, res);
-            } else if (stats.isFile()) {
-                this.serveFile(fullPath, res);
-            }
-        });
-    }
+      if (stats.isDirectory()) {
+        this.listDirectory(fullPath, urlPath, res)
+      } else if (stats.isFile()) {
+        this.serveFile(fullPath, res)
+      }
+    })
+  }
 
-    handlePostRequest(req, res, urlPath) {
-        let body = "";
-        req.on("data", (chunk) => {
-            body += chunk.toString();
-        });
-        req.on("end", () => {
-            const formData = qs.parse(body);
-            const itemType = formData["item_type"];
-            const name = formData["name"];
-            const directory = formData["directory"];
+  handlePostRequest (req, res, urlPath) {
+    let body = ''
+    req.on('data', (chunk) => {
+      body += chunk.toString()
+    })
+    req.on('end', () => {
+      const formData = qs.parse(body)
+      const itemType = formData.item_type
+      const name = formData.name
+      const directory = formData.directory
 
-            // Basic validation
-            if (!itemType || !name || typeof name !== "string" || !["folder", "file"].includes(itemType)) {
-                res.writeHead(400, {"Content-Type": "text/plain"});
-                res.end("Bad Request: Missing or invalid form data.");
-                return;
-            }
+      // Basic validation
+      if (!itemType || !name || typeof name !== 'string' || !['folder', 'file'].includes(itemType)) {
+        res.writeHead(400, { 'Content-Type': 'text/plain' })
+        res.end('Bad Request: Missing or invalid form data.')
+        return
+      }
 
-            // Check user type for folder creation
-            if (itemType === "folder" && this.role !== "admin") {
-                res.writeHead(403, {"Content-Type": "text/plain"});
-                res.end("Forbidden: Only admin users can create folders.");
-                return;
-            }
+      // Check user type for folder creation
+      if (itemType === 'folder' && this.role !== 'admin') {
+        res.writeHead(403, { 'Content-Type': 'text/plain' })
+        res.end('Forbidden: Only admin users can create folders.')
+        return
+      }
 
-            const newFullPath = path.join(this.basePath, directory || ".", name);
+      const newFullPath = path.join(this.basePath, directory || '.', name)
 
-            if (itemType === "folder") {
-                this.createFolder(newFullPath, res, urlPath);
-            } else if (itemType === "file") {
-                this.createFile(newFullPath, res, urlPath);
-            }
-        });
-    }
+      if (itemType === 'folder') {
+        this.createFolder(newFullPath, res, urlPath)
+      } else if (itemType === 'file') {
+        this.createFile(newFullPath, res, urlPath)
+      }
+    })
+  }
 
-    calculateDirectorySize(dirPath) {
-        let totalSize = 0;
-        
-        const items = fs.readdirSync(dirPath, { withFileTypes: true });
-        
-        items.forEach((item) => {
-            const itemPath = path.join(dirPath, item.name);
-            if (item.isDirectory()) {
-                totalSize += this.calculateDirectorySize(itemPath); // Recursively add directory size
-            } else {
-                totalSize += fs.statSync(itemPath).size; // Add file size
-            }
-        });
-        
-        return totalSize;
-    }
-    
+  calculateDirectorySize (dirPath) {
+    let totalSize = 0
 
-    listDirectory(fullPath, urlPath, res) {
-        fs.readdir(fullPath, {withFileTypes: true}, (err, files) => {
-            if (err) {
-                res.writeHead(500, {"Content-Type": "text/plain"});
-                res.end("Internal Server Error");
-                return;
-            }
+    const items = fs.readdirSync(dirPath, { withFileTypes: true })
 
-            // Separate and sort directories and files
-            const folders = files.filter((file) => file.isDirectory());
-            const normalFiles = files.filter((file) => !file.isDirectory());
+    items.forEach((item) => {
+      const itemPath = path.join(dirPath, item.name)
+      if (item.isDirectory()) {
+        totalSize += this.calculateDirectorySize(itemPath) // Recursively add directory size
+      } else {
+        totalSize += fs.statSync(itemPath).size // Add file size
+      }
+    })
 
-            const directoryList = [...folders, ...normalFiles]
-                .map((file) => {
-                    const filePath = path.join(urlPath, file.name);
-                    const safeFileName = this.escapeHtml(file.name);
-                    const iconHtml = file.isDirectory()
-                        ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4042bc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
-                        : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E94E47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z"/><path d="M13 3v6h6"/></svg>`;
-                    const downloadButton = file.isDirectory()
-                        ? `<a class="open--btn" href="${filePath}">Enter</a>`
-                        : `<a href="${filePath}" download>Download</a>`;
+    return totalSize
+  }
 
-                           // Get file or folder size
-                           const size = file.isDirectory()
-                           ? this.formatBytes(this.calculateDirectorySize(path.join(fullPath, file.name)))
-                           : this.formatBytes(fs.statSync(path.join(fullPath, file.name)).size);
-                    return `<tr><td class="file--name">${iconHtml}<a href="${filePath}">${safeFileName}</a></td><td class="download--btn">${downloadButton}</td><td>${size}</td></tr>`;
-                })
-                .join("");
+  listDirectory (fullPath, urlPath, res) {
+    fs.readdir(fullPath, { withFileTypes: true }, (err, files) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' })
+        res.end('Internal Server Error')
+        return
+      }
 
-            let createFormHtml = "";
-            if (this.role === "admin") {
-                createFormHtml = `
+      // Separate and sort directories and files
+      const folders = files.filter((file) => file.isDirectory())
+      const normalFiles = files.filter((file) => !file.isDirectory())
+
+      const directoryList = [...folders, ...normalFiles]
+        .map((file) => {
+          const filePath = path.join(urlPath, file.name)
+          const safeFileName = this.escapeHtml(file.name)
+          const iconHtml = file.isDirectory()
+            ? '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4042bc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E94E47" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V9l-7-7z"/><path d="M13 3v6h6"/></svg>'
+          const downloadButton = file.isDirectory()
+            ? `<a class="open--btn" href="${filePath}">Enter</a>`
+            : `<a href="${filePath}" download>Download</a>`
+
+          // Get file or folder size
+          const size = file.isDirectory()
+            ? this.formatBytes(this.calculateDirectorySize(path.join(fullPath, file.name)))
+            : this.formatBytes(fs.statSync(path.join(fullPath, file.name)).size)
+          return `<tr><td class="file--name">${iconHtml}<a href="${filePath}">${safeFileName}</a></td><td class="download--btn">${downloadButton}</td><td>${size}</td></tr>`
+        })
+        .join('')
+
+      let createFormHtml = ''
+      if (this.role === 'admin') {
+        createFormHtml = `
     <form method="POST" action="${urlPath}">
         <div>
             <label for="item_type">New Item Type</label>
@@ -227,10 +224,10 @@ class Filemanager {
             </select>
         </div>
         <button class="btn" type="submit">Create</button>
-    </form>`;
-            }
+    </form>`
+      }
 
-            const htmlResponse = `
+      const htmlResponse = `
                 <!DOCTYPE html>
                 <html>
                 <head>
@@ -493,150 +490,150 @@ class Filemanager {
                 }
                 </script>
                 </html>
-            `;
-            res.writeHead(200, {"Content-Type": "text/html"});
-            res.end(htmlResponse);
-        });
-    }
+            `
+      res.writeHead(200, { 'Content-Type': 'text/html' })
+      res.end(htmlResponse)
+    })
+  }
 
-    formatBytes(bytes, decimals = 2) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const dm = decimals < 0 ? 0 : decimals;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-    }
+  formatBytes (bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+  }
 
-   serveFile(fullPath, res) {
-    const extension = path.extname(fullPath).toLowerCase();
-    const contentType = this.getContentType(extension) || 'application/octet-stream';    if (contentType) {
-        fs.stat(fullPath, (err, stats) => {
-            if (err) {
-                res.writeHead(500, {"Content-Type": "text/plain"});
-                res.end("Error reading file.");
-                return;
-            }
-            const fileSize = stats.size;
-            res.writeHead(200, {
-                "Content-Type": contentType,
-                "Content-Length": fileSize,
-            });
+  serveFile (fullPath, res) {
+    const extension = path.extname(fullPath).toLowerCase()
+    const contentType = this.getContentType(extension) || 'application/octet-stream'; if (contentType) {
+      fs.stat(fullPath, (err, stats) => {
+        if (err) {
+          res.writeHead(500, { 'Content-Type': 'text/plain' })
+          res.end('Error reading file.')
+          return
+        }
+        const fileSize = stats.size
+        res.writeHead(200, {
+          'Content-Type': contentType,
+          'Content-Length': fileSize
+        })
 
-            const stream = fs.createReadStream(fullPath);
-            let downloaded = 0;
-            stream.on('data', (chunk) => {
-                downloaded += chunk.length;
-                const percentage = ((downloaded / fileSize) * 100).toFixed(2);
-                console.log(`Downloaded: ${percentage}%`);
-            });
+        const stream = fs.createReadStream(fullPath)
+        let downloaded = 0
+        stream.on('data', (chunk) => {
+          downloaded += chunk.length
+          const percentage = ((downloaded / fileSize) * 100).toFixed(2)
+          console.log(`Downloaded: ${percentage}%`)
+        })
 
-            stream.pipe(res);
-        });
+        stream.pipe(res)
+      })
     } else {
-        res.writeHead(500, {"Content-Type": "text/plain"});
-        res.end("Unsupported file type.");
+      res.writeHead(500, { 'Content-Type': 'text/plain' })
+      res.end('Unsupported file type.')
     }
+  }
+
+  createFolder (newFullPath, res, urlPath) {
+    fs.mkdir(newFullPath, { recursive: true }, (err) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' })
+        res.end('Error creating folder.')
+        return
+      }
+      res.writeHead(302, { Location: urlPath })
+      res.end()
+    })
+  }
+
+  createFile (newFullPath, res, urlPath) {
+    fs.writeFile(newFullPath, '', (err) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' })
+        res.end('Error creating file.')
+        return
+      }
+      res.writeHead(302, { Location: urlPath })
+      res.end()
+    })
+  }
+
+  getContentType (extension) {
+    const mimeTypes = {
+      '.html': 'text/html',
+      '.css': 'text/css',
+      '.js': 'application/javascript',
+      '.json': 'application/json',
+      '.xml': 'application/xml',
+      '.txt': 'text/plain',
+      '.md': 'text/markdown',
+      '.py': 'text/x-python',
+      '.c': 'text/x-c',
+      '.cpp': 'text/x-c++src',
+      '.h': 'text/x-c',
+      '.sh': 'text/x-shellscript',
+      '.pdf': 'application/pdf',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.png': 'image/png',
+      '.gif': 'image/gif',
+      '.ico': 'image/x-icon',
+      '.svg': 'image/svg+xml',
+      '.mp3': 'audio/mpeg',
+      '.bmp': 'image/bmp',
+      '.webp': 'image/webp',
+      '.zip': 'application/zip',
+      '.rar': 'application/x-rar-compressed',
+      '.tar': 'application/x-tar',
+      '.gz': 'application/x-gzip',
+      '.bz2': 'application/x-bzip2',
+      '.7z': 'application/x-7z-compressed',
+      '.wav': 'audio/x-wav',
+      '.ogg': 'audio/ogg',
+      '.flac': 'audio/x-flac',
+      '.m4a': 'audio/x-m4a',
+      '.mp4': 'video/mp4',
+      '.webm': 'video/webm',
+      '.ogv': 'video/ogg',
+      '.avi': 'video/x-msvideo',
+      '.mov': 'video/quicktime',
+      '.wmv': 'video/x-ms-wmv',
+      '.flv': 'video/x-flv',
+      '.mkv': 'video/x-matroska',
+      '.exe': 'application/x-msdownload'
+    }
+    return mimeTypes[extension] || null
+  }
+
+  getDirectoryOptions () {
+    const basePath = this.basePath
+    const traverseDirectory = (dir, depth = 0) => {
+      let options = ''
+      const items = fs.readdirSync(dir, { withFileTypes: true })
+      items.forEach((item) => {
+        if (item.isDirectory()) {
+          const itemPath = path.join(dir, item.name)
+          const displayPath = itemPath.replace(basePath, '')
+          const indent = '&nbsp;'.repeat(depth * 4)
+          options += `<option value="${displayPath}">${indent}${item.name}</option>`
+          options += traverseDirectory(itemPath, depth + 1)
+        }
+      })
+      return options
+    }
+    return traverseDirectory(basePath)
+  }
+
+  escapeHtml (unsafe) {
+    return unsafe
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
+  }
 }
 
-    createFolder(newFullPath, res, urlPath) {
-        fs.mkdir(newFullPath, {recursive: true}, (err) => {
-            if (err) {
-                res.writeHead(500, {"Content-Type": "text/plain"});
-                res.end("Error creating folder.");
-                return;
-            }
-            res.writeHead(302, {Location: urlPath});
-            res.end();
-        });
-    }
-
-    createFile(newFullPath, res, urlPath) {
-        fs.writeFile(newFullPath, "", (err) => {
-            if (err) {
-                res.writeHead(500, {"Content-Type": "text/plain"});
-                res.end("Error creating file.");
-                return;
-            }
-            res.writeHead(302, {Location: urlPath});
-            res.end();
-        });
-    }
-
-    getContentType(extension) {
-        const mimeTypes = {
-            ".html": "text/html",
-            ".css": "text/css",
-            ".js": "application/javascript",
-            ".json": "application/json",
-            ".xml": "application/xml",
-            ".txt": "text/plain",
-            ".md": "text/markdown",
-            ".py": "text/x-python",
-            ".c": "text/x-c",
-            ".cpp": "text/x-c++src",
-            ".h": "text/x-c",
-            ".sh": "text/x-shellscript",
-            ".pdf": "application/pdf",
-            ".jpg": "image/jpeg",
-            ".jpeg": "image/jpeg",
-            ".png": "image/png",
-            ".gif": "image/gif",
-            ".ico": "image/x-icon",
-            ".svg": "image/svg+xml",
-            ".mp3": "audio/mpeg",
-            ".bmp": "image/bmp",
-            ".webp": "image/webp",
-            ".zip": "application/zip",
-            ".rar": "application/x-rar-compressed",
-            ".tar": "application/x-tar",
-            ".gz": "application/x-gzip",
-            ".bz2": "application/x-bzip2",
-            ".7z": "application/x-7z-compressed",
-            ".wav": "audio/x-wav",
-            ".ogg": "audio/ogg",
-            ".flac": "audio/x-flac",
-            ".m4a": "audio/x-m4a",
-            ".mp4": "video/mp4",
-            ".webm": "video/webm",
-            ".ogv": "video/ogg",
-            ".avi": "video/x-msvideo",
-            ".mov": "video/quicktime",
-            ".wmv": "video/x-ms-wmv",
-            ".flv": "video/x-flv",
-            ".mkv": "video/x-matroska",
-            ".exe": "application/x-msdownload",
-        };
-        return mimeTypes[extension] || null;
-    }
-
-    getDirectoryOptions() {
-        const basePath = this.basePath;
-        const traverseDirectory = (dir, depth = 0) => {
-            let options = "";
-            const items = fs.readdirSync(dir, {withFileTypes: true});
-            items.forEach((item) => {
-                if (item.isDirectory()) {
-                    const itemPath = path.join(dir, item.name);
-                    const displayPath = itemPath.replace(basePath, "");
-                    const indent = "&nbsp;".repeat(depth * 4);
-                    options += `<option value="${displayPath}">${indent}${item.name}</option>`;
-                    options += traverseDirectory(itemPath, depth + 1);
-                }
-            });
-            return options;
-        };
-        return traverseDirectory(basePath);
-    }
-
-    escapeHtml(unsafe) {
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-}
-
-module.exports = Filemanager;
+module.exports = Filemanager

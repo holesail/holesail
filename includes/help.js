@@ -1,7 +1,7 @@
-const colors = require('colors/safe');
+const colors = require('colors/safe')
 
 module.exports = {
-    helpMessage: `
+  helpMessage: `
 ${colors.cyan.bold('Now manage and run holesail connections in background with holesail-manager')}
     
 ${colors.cyan.bold('Holesail Help')}
@@ -101,7 +101,7 @@ ${colors.yellow('- Start a filemanager session in a custom directory with custom
 ${colors.white('  holesail --filemanager "/Users/supersu" --username "holesail"')}
 
 ${colors.yellow('- Start a filemanager session in a custom directory with custom username and password and admin role:')}
-${colors.white('  holesail --filemanager "/Users/supersu" --username "holesail" --password "securepass@99#123" --role admin' )}
+${colors.white('  holesail --filemanager "/Users/supersu" --username "holesail" --password "securepass@99#123" --role admin')}
 
 ${colors.bold('Notes:')}
 
@@ -109,7 +109,7 @@ ${colors.white('- Treat Private connection strings like SSH keys. Do not share t
 ${colors.white('- Public connection strings should be treated like domain names on public servers. If there is any private information, it is your responsibility to protect it using passwords or connectors.')}
 `,
 
-    printHelp: function(helpMessage) {
-        console.log(helpMessage);
-    }
-};
+  printHelp: function (helpMessage) {
+    console.log(helpMessage)
+  }
+}

@@ -9,7 +9,10 @@ BTC Address: 183Pfn4fxuMJMSvZXdBdYsNKWSnWHCdBdA
 
 ## Overview
 
+Holesail is a truly peer-to-peer network tunneling and reverse proxy software that supports both TCP and UDP protocols.
+
 Holesail lets you share any locally running application on a specific port with third parties securely and with a single command. No static IP or port forwarding required.
+
 
 ## Installation
 
@@ -61,10 +64,7 @@ Contributions are welcome! If you find any issues or have suggestions for improv
 
 ## Acknowledgments
 
-Holesail is built using the following open-source projects:
+Holesail is built on and inspired by following open-source projects:
 
 - hypertele: https://github.com/bitfinexcom/hypertele
 - holepunch: https://holepunch.to
-- holesail-server: https://github.com/holesail/holesail-server)
-
-and other node packages.

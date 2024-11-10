@@ -32,8 +32,11 @@ ${colors.white('  holesail --filemanager')}
 
 ${colors.bold('Options:')}
 
+${colors.yellow('- --udp')}
+${colors.white('  Set this flag to use UDP instead of TCP.\n  Default: TCP')}
+
 ${colors.yellow('- --port <port>')}
-${colors.white('  Specify a custom port for the client and filemanager to listen on.\n  Default: 8989. Filemanager: 5409.')}
+${colors.white('  Specify a custom port for the client and filemanager to listen on.\n  Default: 8989. Filemanager: 5409')}
 
 ${colors.yellow('- --host <host>')}
 ${colors.white('  Specifies the host address for the server or client connection.\n  Default: 127.0.0.1.')}

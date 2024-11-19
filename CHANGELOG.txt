@@ -1,3 +1,5 @@
+v1.8.1
+-- Bumped HyperDHT
 v1.8.0
 -- Added UDP support
 v1.7.3

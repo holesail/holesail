@@ -1,3 +1,5 @@
+v1.8.2
+-- Bump modules
 v1.8.1
 -- Bumped HyperDHT
 v1.8.0

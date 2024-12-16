@@ -1,3 +1,6 @@
+v1.8.3
+-- Bump modules
+-- Patch UDP
 v1.8.2
 -- Bump modules
 v1.8.1

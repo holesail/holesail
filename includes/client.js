@@ -52,7 +52,7 @@ class Client {
     if (this.isConnectorSet) {
       let protocol
       if (this.udp) {
-        protocol = 'UDP'
+        protocol = 'UDP [BETA]'
       } else {
         protocol = 'TCP'
       }

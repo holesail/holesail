@@ -61,7 +61,6 @@
     "pm2": "^5.4.2",
     "qrcode-terminal": "^0.12.0",
     "querystring": "npm:bare-querystring@^1.0.0",
-    "standard": "^17.1.2",
     "tty": "npm:bare-tty@^5.0.1",
     "util": "npm:bare-utils@^1.1.1",
     "which-runtime": "^1.2.1"
@@ -69,5 +68,8 @@
   "bin": {
     "holesail": "./index.js",
     "holesail-manager": "./manager.js"
+  },
+  "devDependencies": {
+    "standard": "^17.1.2"
   }
 }

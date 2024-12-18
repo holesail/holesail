@@ -1,3 +1,5 @@
+v1.8.4
+-- Add Bare support
 v1.8.3
 -- Bump modules
 -- Patch UDP

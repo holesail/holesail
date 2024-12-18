@@ -1,7 +1,7 @@
 const holesailClient = require('holesail-client')
 
 const b4a = require('b4a')
-const { createHash } = require('node:crypto')
+const { createHash } = require('crypto')
 
 const boxConsole = require('cli-box')
 const colors = require('colors/safe')

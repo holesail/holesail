@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-
+const { runtime } = require('which-runtime')
+runtime === 'bare' && (process = require('bare-process'));
 const pm2 = require('pm2')
 const minimist = require('minimist')
 const { spawn } = require('child_process')

@@ -41,7 +41,7 @@ ${colors.white('  Specify a custom port for the client and filemanager to listen
 ${colors.yellow('- --host <host>')}
 ${colors.white('  Specifies the host address for the server or client connection.\n  Default: 127.0.0.1.')}
 
-${colors.yellow('- --public <port>')}
+${colors.yellow('- --public')}
 ${colors.white('  Starts a Holesail server or Filemanager with Public connection string. The generated connection string can be shared with third parties. Default is private connection string')}
 
 ${colors.yellow('- --force')}

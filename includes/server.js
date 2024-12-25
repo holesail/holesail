@@ -50,7 +50,7 @@ class Server {
     this.localServer.serve({
       port: this.options.port,
       address: this.host,
-      buffSeed: this.connector,
+      buffSeed: this.connector || (typeof (this.options.public) === 'string' ? this.options.public.trim().toLowerCase() : null),
       secure: this.isConnectorSet,
       udp: this.udp
     }, () => {

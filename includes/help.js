@@ -41,8 +41,8 @@ ${colors.white('  Specify a custom port for the client and filemanager to listen
 ${colors.yellow('- --host <host>')}
 ${colors.white('  Specifies the host address for the server or client connection.\n  Default: 127.0.0.1.')}
 
-${colors.yellow('- --public')}
-${colors.white('  Starts a Holesail server or Filemanager with Public connection string. The generated connection string can be shared with third parties. Default is private connection string')}
+${colors.yellow('- --public [secret-seed]')}
+${colors.white('  Starts a Holesail server or Filemanager with Public connection string. The generated connection string can be shared with third parties. Default is private connection string. If secret-seed is provided, it must be a 64 character long string of hex characters generated randomly by the user, and it will be used for generating the connection string, which could be shared with third parties (unlike the seed that must be kept private). If secret-seed is not provided, a random one will be generated internally.')}
 
 ${colors.yellow('- --force')}
 ${colors.white('  Bypass custom connection string length limit')}

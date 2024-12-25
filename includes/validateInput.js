@@ -70,6 +70,11 @@ class ValidateInput {
       process.exit(2)
     }
 
+    if (typeof (args.public) === 'string' && !(/^[0-9a-f]{64}$/i).test(args.public)) {
+      console.log(colors.red('Error: --public secret-seed must be a 64 character long string of hex characters.'))
+      process.exit(2)
+    }
+
     //
     // Handle file manager
     //

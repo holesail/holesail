@@ -13,7 +13,6 @@ const Client = require('./includes/client.js')
 const Server = require('./includes/server.js')
 const Filemanager = require('./includes/livefiles.js') // Adjust the path as needed
 const { ValidateInput } = require('./includes/validateInput.js')
-const { PM2logs } = require('barely-pm2')
 
 // Validate every input and throw errors if incorrect input
 const validator = new ValidateInput(argv)
@@ -37,7 +36,7 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
     process.exit(1)
   }
 
-  const { PM2list, PM2delete, PM2stop, PM2start, PM2create } = require('barely-pm2')
+  const { PM2list, PM2delete, PM2stop, PM2start, PM2create, PM2logs } = require('barely-pm2')
   if (argv.list) {
     PM2list()
     process.exit(1)

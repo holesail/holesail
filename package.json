@@ -41,7 +41,8 @@
     "bare-querystring": "^1.0.0",
     "bare-subprocess": "^5.0.2",
     "bare-tty": "^5.0.1",
-    "bare-utils": "^1.1.1",
+    "bare-utils": "1.1.1",
+    "barely-pm2": "^0.0.2",
     "child_process": "npm:bare-subprocess@^5.0.2",
     "cli-box": "^6.0.10",
     "colors": "^1.4.0",
@@ -59,6 +60,7 @@
     "os": "npm:bare-os@^3.3.0",
     "path": "npm:bare-path@^3.0.0",
     "pm2": "^5.4.2",
+    "process": "npm:bare-process@^4.0.0",
     "qrcode-terminal": "^0.12.0",
     "querystring": "npm:bare-querystring@^1.0.0",
     "tty": "npm:bare-tty@^5.0.1",
@@ -66,8 +68,7 @@
     "which-runtime": "^1.2.1"
   },
   "bin": {
-    "holesail": "./index.js",
-    "holesail-manager": "./manager.js"
+    "holesail": "./index.js"
   },
   "devDependencies": {
     "standard": "^17.1.2"

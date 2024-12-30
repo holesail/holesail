@@ -38,8 +38,7 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
 
   const { PM2list, PM2delete, PM2stop, PM2start, PM2create, PM2logs } = require('barely-pm2')
   if (argv.list) {
-    PM2list()
-    process.exit(1)
+    PM2list({raw: true, name: 'holesail'})
   }
 
   if (argv.delete) {
@@ -59,7 +58,7 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
   }
 
   if (argv.background) {
-    let arr = ['list', 'delete', 'stop', 'start', 'background', 'name']
+    let arr = ['list', 'delete', 'stop', 'start', 'background']
     arr.forEach(key => {
       delete argv[key]
     })
@@ -68,7 +67,7 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       return key === '_' ? value : [`--${key}`, value]
     })
 
-    PM2create({ name: argv.name || `holesail-${Date.now()}`, script: './index.js', args: scriptArgs, timeout: '5000' })
+    PM2create({ name: argv.name || `holesail-${Date.now()}`, script: './', args: scriptArgs, timeout: '5000' })
   }
 
 } else {

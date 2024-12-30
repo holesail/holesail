@@ -4,6 +4,7 @@ runtime === 'bare' && (process = require('bare-process'))
 const argv = require('minimist')(process.argv.slice(2)) // Required to parse CLI arguments
 const goodbye = require('graceful-goodbye')
 const pkg = require('./package.json') // Holds info about the current package
+const path = require('path');
 
 const colors = require('colors/safe')
 
@@ -63,13 +64,11 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       delete argv[key]
     })
 
-    console.log(argv)
-
     let scriptArgs = Object.entries(argv).flatMap(([key, value]) => {
       return key === '_' ? value : [`--${key}`, value]
     })
 
-    PM2create({ name: argv.name || `holesail-${Date.now()}`, script: './', args: scriptArgs, timeout: '5000' })
+    PM2create({ name: argv.name || `holesail-${Date.now()}`, script: __filename, args: scriptArgs, timeout: '5000' })
   }
 
 } else {

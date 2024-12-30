@@ -63,6 +63,8 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       delete argv[key]
     })
 
+    console.log(argv)
+
     let scriptArgs = Object.entries(argv).flatMap(([key, value]) => {
       return key === '_' ? value : [`--${key}`, value]
     })

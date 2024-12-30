@@ -16,12 +16,10 @@ class ValidateInput {
 
   // Function to validate input
   validateInput (args) {
-    // Handle server and client
-    // Server and client are not supported at the same time
-    if (args.live && (args.connect || args._[0])) {
-      console.log(colors.red("Error: You can't start a server and client at the same time. Kindly check and fix your inputs, see holesail --help"))
-      process.exit(2)
-    }
+    // if (args.live && (args.connect || args._[0])) {
+    //   console.log(colors.red("Error: You can't start a server and client at the same time. Kindly check and fix your inputs, see holesail --help"))
+    //   process.exit(2)
+    // }
 
     // 64 length string is considered a key not a connector
     if (args.connector && args.connector.length === 64) {

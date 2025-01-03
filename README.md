@@ -29,7 +29,7 @@ npm i holesail -g
 To start a local Holesail Server, use the following command:
 
 ```
-holesail --live port
+holesail --live <port>
 ```
 Replace `port` with the desired port number you want to expose to the network.
 

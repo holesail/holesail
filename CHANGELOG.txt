@@ -1,3 +1,5 @@
+v1.9.2
+-- Bump holesail-server
 v1.9.1
 -- Fix path bug
 v1.9.0

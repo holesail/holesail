@@ -1,3 +1,5 @@
+v1.10.0
+-- Pear support
 v1.9.2
 -- Bump holesail-server
 v1.9.1

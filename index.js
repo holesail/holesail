@@ -4,7 +4,7 @@ runtime === 'bare' && (process = require('bare-process'))
 const argv = require('minimist')(process.argv.slice(2)) // Required to parse CLI arguments
 const goodbye = require('graceful-goodbye')
 const pkg = require('./package.json') // Holds info about the current package
-// const path = require('path');
+const path = require('path');
 
 const colors = require('colors/safe')
 

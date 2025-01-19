@@ -55,7 +55,7 @@
     "bare-subprocess": "^5.0.2",
     "bare-tty": "^5.0.1",
     "bare-utils": "1.1.1",
-    "barely-pm2": "^0.0.3",
+    "barely-pm2": "^0.0.4",
     "child_process": "npm:bare-subprocess@^5.0.2",
     "cli-box": "^6.0.10",
     "colors": "^1.4.0",

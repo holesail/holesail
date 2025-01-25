@@ -41,6 +41,14 @@ jobs:
         elif [ "${{ matrix.platform }}" == "win32" ]; then
           nexe index.js -r "includes/*" --build --target windows-${{ matrix.arch }}-20.14.0 --verbose
         fi
+      shell: bash
+    - run: |
+        if ($env:PLATFORM -eq "win32") {
+          nexe index.js -r "includes/*" --build --target windows-$($env:ARCH)-20.14.0 --verbose
+        } else {
+          nexe index.js -r "includes/*" --build --target $env:PLATFORM-$($env:ARCH)-20.14.0 --verbose
+        }
+      shell: pwsh
     - uses: actions/upload-artifact@v4
       with:
         name: holesail-${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}

@@ -35,11 +35,11 @@ jobs:
     - run: npm install
     - run: |
         if [ "${{ matrix.platform }}" == "linux" ]; then
-          nexe index.js -r "includes/*" --build --target linux-${{ matrix.arch }}-16.20.2 --verbose
+          nexe index.js -r "includes/*" --build --target linux-${{ matrix.arch }}-16.20.2 --verbose --python=$(which python3)
         elif [ "${{ matrix.platform }}" == "darwin" ]; then
-          nexe index.js -r "includes/*" --build --target darwin-${{ matrix.arch }}-16.20.2 --verbose
+          nexe index.js -r "includes/*" --build --target darwin-${{ matrix.arch }}-16.20.2 --verbose --python=$(which python3)
         elif [ "${{ matrix.platform }}" == "win32" ]; then
-          nexe index.js -r "includes/*" --build --target windows-${{ matrix.arch }}-16.20.2 --verbose
+          nexe index.js -r "includes/*" --build --target windows-${{ matrix.arch }}-16.20.2 --verbose --python=$(where python3)
         fi
       shell: bash
     - run: |

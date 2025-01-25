@@ -46,7 +46,7 @@ jobs:
         name: holesail-${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
         path: builds/*
   merge:
-    needs: builds
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4

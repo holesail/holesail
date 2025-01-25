@@ -30,23 +30,23 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: 20.14.0
+        node-version: 16.20.2
     - run: npm install -g nexe
     - run: npm install
     - run: |
         if [ "${{ matrix.platform }}" == "linux" ]; then
-          nexe index.js -r "includes/*" --build --target linux-${{ matrix.arch }}-20.14.0 --verbose
+          nexe index.js -r "includes/*" --build --target linux-${{ matrix.arch }}-16.20.2 --verbose
         elif [ "${{ matrix.platform }}" == "darwin" ]; then
-          nexe index.js -r "includes/*" --build --target darwin-${{ matrix.arch }}-20.14.0 --verbose
+          nexe index.js -r "includes/*" --build --target darwin-${{ matrix.arch }}-16.20.2 --verbose
         elif [ "${{ matrix.platform }}" == "win32" ]; then
-          nexe index.js -r "includes/*" --build --target windows-${{ matrix.arch }}-20.14.0 --verbose
+          nexe index.js -r "includes/*" --build --target windows-${{ matrix.arch }}-16.20.2 --verbose
         fi
       shell: bash
     - run: |
         if ($env:PLATFORM -eq "win32") {
-          nexe index.js -r "includes/*" --build --target windows-$($env:ARCH)-20.14.0 --verbose
+          nexe index.js -r "includes/*" --build --target windows-$($env:ARCH)-16.20.2 --verbose
         } else {
-          nexe index.js -r "includes/*" --build --target $env:PLATFORM-$($env:ARCH)-20.14.0 --verbose
+          nexe index.js -r "includes/*" --build --target $env:PLATFORM-$($env:ARCH)-16.20.2 --verbose
         }
       shell: pwsh
     - uses: actions/upload-artifact@v4

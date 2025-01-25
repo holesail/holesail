@@ -55,5 +55,5 @@ jobs:
           merge-multiple: true
       - uses: actions/upload-artifact@v4
         with:
-          name: prebuilds
-          path: prebuilds
+          name: builds
+          path: builds

@@ -44,9 +44,9 @@ jobs:
       shell: bash
     - run: |
         if ($env:PLATFORM -eq "win32") {
-          nexe index.js -r "includes/*" --build --target windows-$($env:ARCH)-16.20.2 --verbose
+          nexe index.js -r "includes/*" --build --target windows-$($env:ARCH)-16.20.2 --verbose openssl-no-asm
         } else {
-          nexe index.js -r "includes/*" --build --target $env:PLATFORM-$($env:ARCH)-16.20.2 --verbose
+          nexe index.js -r "includes/*" --build --target $env:PLATFORM-$($env:ARCH)-16.20.2 --verbose 
         }
       shell: pwsh
     - uses: actions/upload-artifact@v4

@@ -42,7 +42,7 @@ jobs:
       shell: bash
     - run: |
         if ($env:PLATFORM -eq "win32") {
-          pkg index.js --targets node16-win-$($env:ARCH) --output builds/holesail-$($env:PLATFORM)-$($env:ARCH)
+          pkg . --targets node16-win-$($env:ARCH) --output builds/holesail-$($env:PLATFORM)-$($env:ARCH)
         }
       shell: pwsh
     - uses: actions/upload-artifact@v4

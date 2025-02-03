@@ -5,7 +5,15 @@
   "main": "index.js",
   "pear": {
     "name": "holesail",
-    "type": "terminal"
+    "type": "terminal",
+    "stage": {
+      "ignore": [
+        ".github",
+        ".gitignore",
+        ".idea",
+        ".vscode"
+      ]
+    }
   },
   "imports": {
     "util": {

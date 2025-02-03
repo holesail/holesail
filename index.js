@@ -68,7 +68,7 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       return key === '_' ? value : [`--${key}`, value]
     })
 
-    PM2create({ name: argv.name || `holesail-${Date.now()}`, script: __filename, args: scriptArgs, timeout: '5000' })
+    PM2create({ name: "holesail-" + argv.name || `holesail-${Date.now()}`, script: __filename, args: scriptArgs, timeout: '5000' })
   }
 
 } else {

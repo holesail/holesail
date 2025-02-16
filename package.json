@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "b4a": "^1.6.6",
-    "bare-crypto": "^1.3.1",
+    "bare-crypto": "^1.4.0",
     "bare-events": "^2.5.0",
     "bare-fs": "^4.0.1",
     "bare-http1": "^4.0.2",
@@ -64,6 +64,8 @@
     "bare-tty": "^5.0.1",
     "bare-utils": "1.1.1",
     "barely-pm2": "^0.0.4",
+    "barely-sha256": "^0.0.1",
+    "brittle": "^3.10.0",
     "child_process": "npm:bare-subprocess@^5.0.2",
     "cli-box": "^6.0.10",
     "colors": "^1.4.0",
@@ -83,12 +85,13 @@
     "process": "npm:bare-process@^4.0.0",
     "qrcode-terminal": "^0.12.0",
     "querystring": "npm:bare-querystring@^1.0.0",
+    "ready-resource": "^1.1.1",
     "tty": "npm:bare-tty@^5.0.1",
     "util": "npm:bare-utils@^1.1.1",
     "which-runtime": "^1.2.1"
   },
   "bin": {
-    "holesail": "./index.js"
+    "holesail": "./holesail.js"
   },
   "devDependencies": {
     "standard": "^17.1.2"

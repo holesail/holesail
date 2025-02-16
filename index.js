@@ -1,129 +1,113 @@
-#!/usr/bin/env node
-const { runtime } = require('which-runtime')
-runtime === 'bare' && (process = require('bare-process'))
-const argv = require('minimist')(process.argv.slice(2)) // Required to parse CLI arguments
+const ReadyResource = require('ready-resource')
+const HolesailServer = require('holesail-server')
+const HolesailClient = require('holesail-client')
 const goodbye = require('graceful-goodbye')
-const pkg = require('./package.json') // Holds info about the current package
-const path = require('path');
-
-const colors = require('colors/safe')
-
-// Require all necessary files
-const help = require('./includes/help.js')
-const Client = require('./includes/client.js')
-const Server = require('./includes/server.js')
-const Filemanager = require('./includes/livefiles.js') // Adjust the path as needed
-const { ValidateInput } = require('./includes/validateInput.js')
-
-// Validate every input and throw errors if incorrect input
-const validator = new ValidateInput(argv)
-
-// Setting up the command hierarchy
-// Display help and exit
-if (argv.help) {
-  help.printHelp(help.helpMessage)
-  process.exit(-1)
-}
-
-// Display version and exit
-if (argv.version) {
-  console.log(pkg.version)
-  process.exit(-1)
-}
-
-if (argv.list || argv.delete || argv.stop || argv.start || argv.background || argv.logs) {
-  if (runtime === 'bare') {
-    console.log('Info: Running Holesail in background is not supported on bare')
-    process.exit(1)
-  }
-
-  const { PM2list, PM2delete, PM2stop, PM2start, PM2create, PM2logs } = require('barely-pm2')
-  if (argv.list) {
-    PM2list({raw: true, name: 'holesail'})
-  }
-
-  if (argv.delete) {
-    PM2delete(argv.delete)
-  }
-
-  if (argv.stop) {
-    PM2stop(argv.stop)
-  }
-
-  if (argv.start) {
-    PM2start(argv.start)
-  }
-
-  if (argv.logs) {
-    PM2logs(argv.logs)
-  }
-
-  if (argv.background) {
-    let arr = ['list', 'delete', 'stop', 'start', 'background']
-    arr.forEach(key => {
-      delete argv[key]
-    })
-
-    let scriptArgs = Object.entries(argv).flatMap(([key, value]) => {
-      return key === '_' ? value : [`--${key}`, value]
-    })
-
-    PM2create({ name: "holesail-" + argv.name || `holesail-${Date.now()}`, script: __filename, args: scriptArgs, timeout: '5000' })
-  }
-
+const b4a = require('b4a')
+const { runtime } = require('which-runtime')
+let createHash
+if (runtime === 'bare') {
+  createHash = require('bare-crypto').createHash
 } else {
+  createHash = require('node:crypto').createHash
+}
 
-// Set a port live
-  if (argv.live) {
+const libKeys = require('hyper-cmd-lib-keys') // generate a random seed
+class Holesail extends ReadyResource {
+  constructor (opts = {}) {
+    super()
 
-    const options = {
-      port: argv.live,
-      host: argv.host,
-      connector: argv.connector,
-      public: argv.public,
-      service: 'Server',
-      udp: argv.udp
+    this.verifyOpts(opts)
+
+    this.server = opts.mode === 'server'
+    this.seed = opts.seed
+    this.connector = opts.key
+    this.udp = opts.udp || false
+    this.port = opts.port || 8989
+    this.host = opts.host || '127.0.0.1'
+    this.protocol = opts.protocol === 'udp' ? 'udp' : 'tcp'
+    this.secure = opts.secure
+    this.dht = null
+    this.running = false
+  }
+
+  #initialiseKey (key) {
+    if (this.server) {
+      return this.seed ? createHash('sha256').update(this.seed.toString()).digest('hex') : null
+    } else {
+      return this.secure ? b4a.toString(Buffer.from(createHash('sha256').update(key.toString()).digest('hex'), 'hex'), 'hex') : key
     }
-    const server = new Server(options)
-    server.start()
-    goodbye(async () => {
-      await server.destroy()
-    })
-  } else if (argv.connect || argv._[0]) { // Establish connection with a peer
-    const keyInput = argv.connect || argv._[0]
-    const options = {
-      port: argv.port || 8989,
-      host: argv.host || '127.0.0.1',
-      connector: argv.connector,
-      udp: argv.udp
+  }
+
+  get key () {
+    if (this.server) {
+      return this.secure ? this.seed : this.dht.getPublicKey()
+    } else {
+      return this.connector
     }
-    const client = new Client(keyInput, options)
-    client.start()
-  } else if (argv.filemanager) { // Start server with a filemanager
-    const options = {
+  }
 
-      // options for the file manager
-      path: argv.filemanager,
-      username: argv.username,
-      password: argv.password,
-      role: argv.role,
+  async _open () {
+    if (this.server) {
+      this.dht = new HolesailServer()
+    } else {
+      this.dht = new HolesailClient(this.#initialiseKey(this.connector), this.secure)
+    }
+  }
 
-      // options for holesail-server
-      port: argv.port,
-      connector: argv.connector,
-      public: argv.public,
-      service: 'Filemanager'
+  async connect (callback) {
+    await this.ready()
+    if (this.running) throw new Error('Already connected')
+
+    if (this.server) {
+      this.#handleServer(callback)
+    } else {
+      this.#handleClient(callback)
     }
 
-    // Start files server
-    const fileServer = new Filemanager(options)
-    fileServer.start()
-    // destroy before exiting
-    goodbye(async () => {
-      await fileServer.destroy()
-    })
-  } else { // Default if no correct option is chosen
-    console.log(colors.red('Error: Invalid or Incorrect arguments specified. See holesail --help for a list of all valid arguments'))
-    process.exit(2)
+    this.running = true
+  }
+
+  #handleServer (callback) {
+    this.dht.serve({
+      port: this.port,
+      address: this.host,
+      buffSeed: this.#initialiseKey(this.seed),
+      secure: this.secure,
+      udp: this.udp
+    }, callback)
+  }
+
+  #handleClient (callback) {
+    this.dht.connect({ port: this.port, address: this.host, udp: this.udp }, callback)
+  }
+
+  verifyOpts (opts) {
+    if (opts.mode === 'client' && !opts.key) {
+      throw new Error('Connection string not set for client')
+    }
+
+    if (opts.protocol !== undefined && (opts.protocol !== 'udp' && opts.protocol !== 'tcp')) {
+      throw new Error('Incorrect protocol set')
+    }
+  }
+
+  get info () {
+    return {
+      server: this.server,
+      secure: this.secure,
+      port: this.port,
+      host: this.host,
+      key: this.key,
+      protocol: this.protocol,
+      seed: this.seed
+    }
+  }
+
+  async _close () {
+    this.dht.destroy()
   }
 }
+
+function noop () {}
+
+module.exports = Holesail

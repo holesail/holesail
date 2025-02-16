@@ -1,4 +1,4 @@
-const colors = require('colors/safe');
+const colors = require('colors/safe')
 
 module.exports = {
   helpMessage: `
@@ -40,6 +40,6 @@ ${colors.bold('Notes:')}
 `,
 
   printHelp: function (helpMessage) {
-    console.log(helpMessage);
+    console.log(helpMessage)
   }
-};
+}

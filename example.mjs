@@ -1,10 +1,16 @@
-// code is poetry
+// // code is poetry
 import Holesail from './index.js'
 
-const instance = new Holesail({mode: 'server', port: '12345'})
+const server = new Holesail({ server: true, port: 4545, host: '127.0.0.1', udp: true, secure: true})
+await server.ready()
+console.log(server.info)
 
-await instance.connect(() => {
-  console.log("I am thus runnning a holesail connection to Holesail.")
-})
 
-console.log(instance.info)
+const client = new Holesail({ client: true, port: 3434, key: server.info.url})
+await client.ready()
+console.log(client.info)
+setInterval(() => {
+    console.log(client.info);
+}, 5000);
+
+

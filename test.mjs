@@ -2,7 +2,7 @@ import test from 'brittle'
 import Holesail from './index.js' // Adjust the import path as necessary
 
 test('Holesail class initialization', function (t) {
-  const instance = new Holesail({ mode: 'server', seed: 'test-seed' })
+  const instance = new Holesail({ server: true, seed: 'test-seed' })
 
   t.is(instance.server, true, 'should be server mode')
   t.is(instance.seed, 'test-seed', 'should set seed correctly')
@@ -12,7 +12,7 @@ test('Holesail class initialization', function (t) {
 })
 
 test('Holesail class client mode', function (t) {
-  const instance = new Holesail({ mode: 'client', key: 'test-key' })
+  const instance = new Holesail({ client: true, key: 'test-key' })
 
   t.is(instance.server, false, 'should be client mode')
   t.is(instance.connector, 'test-key', 'should set connector key correctly')
@@ -20,60 +20,51 @@ test('Holesail class client mode', function (t) {
 
 test('Holesail class connection validation', async function (t) {
   await t.exception(async () => {
-    new Holesail({ mode: 'client' }) // Missing key
-  }, { message: 'Connection string not set for client' })
+    const instance = new Holesail({ client: true }) // Missing key
+  }, { message: 'Key is empty' })
 
   await t.exception(async () => {
-    new Holesail({ mode: 'server', protocol: 'invalid' }) // Invalid protocol
+    const instance = new Holesail({ client: true, key: '' }) // Missing key
+  }, { message: 'Key is empty' })
+
+  await t.exception(async () => {
+    const instance = new Holesail({ server: true, seed: '' }) // Missing key
+  }, { message: 'Seed is empty' })
+
+  await t.exception(async () => {
+    new Holesail({ server: true, protocol: 'invalid' }) // Invalid protocol
   }, { message: 'Incorrect protocol set' })
 })
 
 test('Holesail class server connection', async function (t) {
-  const instance = new Holesail({ mode: 'server', seed: 'test-seed' })
-  await instance._open()
-
+  const instance = new Holesail({ server: true, seed: 'test-seed' })
+  await instance.connect()
   t.is(instance.dht.constructor.name, 'holesailServer', 'should initialize HolesailServer in server mode')
-
-  await new Promise((resolve, reject) => {
-    instance.connect((err) => {
-      if (err) reject(err)
-      else resolve()
-    })
-  })
-
+  await instance.close()
   t.pass('should connect without error')
 })
 
 test('Holesail class client connection', async function (t) {
-  const instance = new Holesail({ mode: 'client', key: 'test-key' })
-  await instance._open()
-
+  const instance = new Holesail({ client: true, key: 'test-key' })
+  await instance.connect()
   t.is(instance.dht.constructor.name, 'holesailClient', 'should initialize HolesailClient in client mode')
-
-  await new Promise((resolve, reject) => {
-    instance.connect((err) => {
-      if (err) reject(err)
-      else resolve()
-    })
-  })
-
+  await instance.close()
   t.pass('should connect without error')
 })
 
 test('Holesail class connection error', async function (t) {
-  const instance = new Holesail({ mode: 'server', seed: 'test-seed' })
-  await instance._open()
+  const instance = new Holesail({ server: true, seed: 'test-seed' })
 
-  instance.running = true // Simulate already connected
+  instance.running = true
   await t.exception(async () => {
-    instance.connect(() => {})
+    await instance.connect(() => {})
   }, { message: 'Already connected' })
+  instance.close()
 })
 
 test('Holesail class info method', async function (t) {
-  const instance = new Holesail({ mode: 'server', seed: 'test-seed' })
-  await instance.ready()
-  instance.connect()
+  const instance = new Holesail({ server: true, seed: 'test-seed' })
+  await instance.connect()
   const info = instance.info
   t.is(info.server, true, 'info should indicate server mode')
   t.is(info.seed, 'test-seed', 'info should return correct seed')
@@ -82,9 +73,9 @@ test('Holesail class info method', async function (t) {
 })
 
 test('Holesail class close method', async function (t) {
-  const instance = new Holesail({ mode: 'server', seed: 'test-seed' })
+  const instance = new Holesail({ server: true, seed: 'test-seed' })
   await instance._open()
-
   await instance._close()
+  t.is(instance.dht, null, 'should clear dht after closing')
   t.pass('should close without errors')
 })

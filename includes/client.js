@@ -1,10 +1,11 @@
-const holesailClient = require('holesail-client')
+const HolesailClient = require('holesail-client')
 
 const b4a = require('b4a')
 const { createHash } = require('crypto')
 
 const boxConsole = require('cli-box')
 const colors = require('colors/safe')
+const z32 =  require('z32')
 
 class Client {
   constructor (keyInput, options) {
@@ -12,8 +13,8 @@ class Client {
     this.options = options
     this.isConnectorSet = false
     this.connector = this.setupConnector(keyInput)
-    this.host = options.host || '127.0.0.1'
-    this.port = options.port || 8989
+    this.host = options.host
+    this.port = options.port
     this.pubClient = this.initializeClient()
     this.udp = options.udp
   }
@@ -25,21 +26,22 @@ class Client {
     } else {
       const connector = createHash('sha256').update(keyInput.toString()).digest('hex')
       this.isConnectorSet = true
+      console.log(connector)
       const seed = Buffer.from(connector, 'hex')
-      return b4a.toString(seed, 'hex')
+      return z32.encode(seed)
     }
   }
 
   initializeClient () {
     if (this.isConnectorSet) {
-      return new holesailClient(this.connector, 'secure')
+      return new HolesailClient({ key: this.connector, secure: true })
     } else {
-      return new holesailClient(this.connector)
+      return new HolesailClient({ key: this.connector })
     }
   }
 
   start () {
-    this.pubClient.connect({ port: this.port, address: this.host, udp: this.udp }, () => {
+    this.pubClient.connect({ port: this.port, host: this.host, udp: this.udp }, () => {
       if (this.isConnectorSet) {
         this.printBox('Super Secret Connector', 'Connected to Secret Connector: ' + colors.white(this.keyInput))
       } else {
@@ -57,10 +59,10 @@ class Client {
         protocol = 'TCP'
       }
 
-      var box = boxConsole('100x10', {
+      const box = boxConsole('100x10', {
         text: colors.cyan.underline.bold(`Holesail ${protocol} Client Started`) + ' ⛵️' + '\n' +
                         colors.magenta('Connection Mode: ') + colors.green('Private Connection String') + '\n' +
-                        colors.magenta(`Access application on http://${this.host}:${this.port}/`) + '\n' +
+                        colors.magenta(`Access application on http://${this.pubClient.info.host}:${this.pubClient.info.port}/`) + '\n' +
                         colors.gray(`Connection string: ${this.keyInput}`) + '\n' +
                         colors.gray('   NOTE: TREAT PRIVATE CONNECTION STRINGS HOW YOU WOULD TREAT SSH KEY, DO NOT SHARE IT WITH ANYONE YOU DO NOT TRUST    '),
         autoEOL: true,
@@ -77,7 +79,7 @@ class Client {
       } else {
         protocol = 'TCP'
       }
-      var box = boxConsole('100x10', {
+      const box = boxConsole('100x10', {
         text: colors.cyan.underline.bold(`Holesail ${protocol} Client Started`) + ' ⛵️' + '\n' +
                         colors.magenta('Connection Mode: ') + colors.yellow('Public Connection String') + '\n' +
                         colors.magenta(`Access application on http://${this.host}:${this.port}/`) + '\n' +

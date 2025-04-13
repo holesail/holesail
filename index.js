@@ -24,12 +24,15 @@ class Holesail extends ReadyResource {
     this.port = opts.port
     this.host = opts.host
 
-    this.secure = opts.secure
-
     const data = Holesail.urlParser(opts.key)
-    if (this.secure === undefined) {
+    console.log(data)
+    if (data.secure === undefined) {
+      console.log('I exec')
+      this.secure = opts.secure
+    } else {
       this.secure = data.secure
     }
+
     this.key = data.key
 
     this.udp = opts.udp
@@ -42,14 +45,14 @@ class Holesail extends ReadyResource {
 
   #initialise () {
     if (this.server) {
-      if (this.key && this.secure) {
+      if (this.key) {
         this.seed = createHash('sha256').update(this.key.toString()).digest('hex')
       } else if (this.secure) {
         this.key = libKeys.randomBytes(32).toString('hex')
         this.seed = createHash('sha256').update(this.key.toString()).digest('hex')
       }
     } else {
-      this.seed = this.secure ? z32.encode(createHash('sha256').update(this.key.toString()).digest('buffer')) : this.key
+      this.seed = this.secure ? z32.encode(createHash('sha256').update(this.key.toString()).digest()) : this.key
     }
   }
 
@@ -115,14 +118,15 @@ class Holesail extends ReadyResource {
     await this.dht.pause()
   }
 
-  async resume (){
+  async resume () {
     await this.dht.resume()
   }
 
   get info () {
     const info = this.dht.info
+    console.log(info)
     let key
-
+    console.log(this.key)
     if (this.key && this.secure) {
       key = this.key
     } else {
@@ -138,7 +142,8 @@ class Holesail extends ReadyResource {
     }
 
     if (this.secure && this.client) {
-      info.seed = this.seed
+      const key = this.key
+      info.seed = createHash('sha256').update(key.toString()).digest('hex')
     }
 
     return {

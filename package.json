@@ -81,6 +81,7 @@
     "minimist": "^1.2.8",
     "net": "npm:bare-net@^2.0.0",
     "os": "npm:bare-os@^3.3.0",
+    "paparam": "^1.8.0",
     "path": "npm:bare-path@^3.0.0",
     "process": "npm:bare-process@^4.0.0",
     "qrcode-terminal": "^0.12.0",

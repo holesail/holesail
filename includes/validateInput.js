@@ -1,11 +1,4 @@
-// 0 (success): The process completed successfully.
-// 1 (general error): The process encountered an error or failed to complete.
-// 2 (invalid argument): The process received an invalid argument.
-// 3 (fatal error): The process encountered a fatal error.
-// 4 (internal error): The process encountered an internal error.
-// 5 (unknown error): The process encountered an unknown error.
-
-const colors = require('colors/safe')
+const colors = require('barely-colours')
 
 module.exports = function ValidateInput (args) {
   // if (args.live && (args.connect || args._[0])) {

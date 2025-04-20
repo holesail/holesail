@@ -1,7 +1,7 @@
-const colors = require('colors/safe')
+const colors = require('barely-colours')
 
 function printHelp (opts) {
-  const header = `${colors.cyan.bold('Holesail CLI - Instantly share and connect to servers')}`
+  const header = `${colors.cyan('Holesail CLI - Instantly share and connect to servers')}`
   let message = `
 
 ${colors.bold('Usage:')}
@@ -28,7 +28,7 @@ ${colors.bold('Options:')}
 
 ${colors.bold('Examples:')}
   ${colors.yellow('holesail --live 3000')}           Start a server on port 3000.
-  ${colors.yellow('holesail --filemanager')}         Start filemanager in current directory.
+  ${colors.yellow('holesail --filemanager .')}         Start filemanager in current directory.
   ${colors.yellow('holesail <connection string>')}   Connect to a server.
 
 ${colors.bold('Notes:')}
@@ -37,7 +37,7 @@ ${colors.bold('Notes:')}
 
   if (opts && opts === 'live') {
     message = `
-  ${colors.cyan.bold('\nReverse proxy a specific port')}    
+  ${colors.cyan('\nReverse proxy a specific port')}    
   ${colors.bold('Usage:')}
   ${colors.yellow('holesail --live <port> [options]')}
   ${colors.bold('Options:')}
@@ -50,7 +50,7 @@ ${colors.bold('Notes:')}
 
   if (opts && opts === 'background') {
     message = `
-  ${colors.cyan.bold('\nRun in background')}    
+  ${colors.cyan('\nRun in background')}    
   ${colors.bold('Usage:')}
   ${colors.yellow('holesail <args> --background [options]')}
   ${colors.bold('Options:')}
@@ -60,7 +60,7 @@ ${colors.bold('Notes:')}
 
     if (opts && opts === 'connect') {
     message = `
-  ${colors.cyan.bold('\nConnect to a Holesail server')}    
+  ${colors.cyan('\nConnect to a Holesail server')}    
   ${colors.bold('Usage:')}
   ${colors.yellow('holesail --connect <key> [options]')}
   ${colors.yellow('holesail <key> [options]')}
@@ -75,7 +75,7 @@ ${colors.bold('Notes:')}
 
     if (opts && opts === 'filemanager') {
     message = `
-  ${colors.cyan.bold('\nStart a file server at given location.')}    
+  ${colors.cyan('\nStart a file server at given location.')}    
   ${colors.bold('Usage:')}
   ${colors.yellow('holesail --filemanager <dir> [options]')}
   

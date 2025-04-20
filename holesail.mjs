@@ -1,27 +1,25 @@
 #!/usr/bin/env node
 import { runtime } from 'which-runtime'
-
-runtime === 'bare' && (process = require('bare-process'))
 import minimist from 'minimist' // Required to parse CLI arguments
 import goodbye from 'graceful-goodbye'
-import { createRequire } from 'node:module'
+import Holesail from './index.js'
+import Livefiles from 'livefiles'
 
+import printHelp from './includes/help.js'
+import validateInput from './includes/validateInput.js'
+
+import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
 const { version } = require('./package.json')
+let process
+if (runtime === 'bare') {
+  process = require('bare-process')
+} else {
+  process = require('node:process')
+}
 
-import Holesail from './index.js'
-
-import colors from 'colors/safe.js'
-
+runtime === 'bare' && (process = require('bare-process'))
 const argv = minimist(process.argv.slice(2))
-// Require all necessary files
-import printHelp from './includes/help.js'
-import Client from './includes/client.js'
-import Server from './includes/server.js'
-import Filemanager from './includes/livefiles.js' // Adjust the path as needed
-
-// Validate every input and throw errors if incorrect input
-import validateInput from './includes/validateInput.js'
 
 validateInput(argv)
 
@@ -86,13 +84,11 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
   if (argv.live) {
     let secure
     if (argv.public !== undefined) {
-      console.log("I exec")
       secure = !argv.public
     } else {
       secure = true
     }
 
-    console.log(secure)
     const conn = new Holesail({
       server: true,
       port: argv.live,
@@ -102,9 +98,6 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       key: argv.key
     })
     await conn.ready()
-    setInterval(() => {
-      console.log(conn.info)
-    }, 5000) // 5000 milliseconds = 5 seconds
   } else if (argv.connect || argv._[0]) {
     const key = argv.connect || argv._[0]
 
@@ -117,35 +110,47 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       secure: argv.public
     })
     await conn.ready()
-    console.log(conn.info)
-    setInterval(() => {
-      console.log(conn.info)
-    }, 5000) // 5000 milliseconds = 5 seconds
+
 
   } else if (argv.filemanager) { // Start server with a filemanager
-    const options = {
-      // options for the file manager
+
+    const fileOptions = {
       path: argv.filemanager,
+      role: argv.role,
       username: argv.username,
       password: argv.password,
-      role: argv.role,
-
-      // options for holesail-server
-      port: argv.port,
-      connector: argv.connector,
-      public: argv.public,
-      service: 'Filemanager'
+      host: argv.host,
+      port: argv.port
     }
 
     // Start files server
-    const fileServer = new Filemanager(options)
-    fileServer.start()
+    const fileServer = new Livefiles(fileOptions)
+    await fileServer.ready()
+
+    let secure
+    if (argv.public !== undefined) {
+      secure = !argv.public
+    } else {
+      secure = true
+    }
+
+    const connOptions = {
+      server: true,
+      port: argv.port || 5409,
+      host: argv.host || '127.0.0.1',
+      secure: secure,
+      key: argv.key
+    }
+    const conn = new Holesail(connOptions)
+    await conn.ready()
+
     // destroy before exiting
     goodbye(async () => {
-      await fileServer.destroy()
+      await conn.close()
+      await fileServer.close()
     })
   } else { // Default if no correct option is chosen
-    console.log(colors.red('Error: Invalid or Incorrect arguments specified. See holesail --help for a list of all valid arguments'))
-    process.exit(2)
+    printHelp(argv.help)
+    process.exit(0)
   }
 }

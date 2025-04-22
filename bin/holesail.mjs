@@ -2,16 +2,16 @@
 import { runtime } from 'which-runtime'
 import minimist from 'minimist' // Required to parse CLI arguments
 import goodbye from 'graceful-goodbye'
-import Holesail from './index.js'
+import Holesail from '../index.js'
 import Livefiles from 'livefiles'
 
-import printHelp from './includes/help.js'
-import validateInput from './includes/validateInput.js'
-import stdout from './includes/stdout.js'
+import printHelp from '../lib/help.js'
+import validateInput from '../lib/validateInput.js'
+import stdout from '../lib/stdout.js'
 
 import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
-const { version } = require('./package.json')
+const { version } = require('../package.json')
 let process
 if (runtime === 'bare') {
   process = require('bare-process')
@@ -146,7 +146,6 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
     }
     const conn = new Holesail(connOptions)
     await conn.ready()
-
 
     const dhtInfo = conn.info
     stdout(dhtInfo.protocol, fsInfo.type, dhtInfo.secure, dhtInfo.host, dhtInfo.port, dhtInfo.url, { username: fsInfo.username, password: fsInfo.password, role: fsInfo.role })

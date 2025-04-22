@@ -3,7 +3,6 @@ const HolesailServer = require('holesail-server')
 const HolesailClient = require('holesail-client')
 const libKeys = require('hyper-cmd-lib-keys')
 const z32 = require('z32')
-
 const { runtime } = require('which-runtime')
 
 let createHash

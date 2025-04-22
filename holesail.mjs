@@ -7,6 +7,7 @@ import Livefiles from 'livefiles'
 
 import printHelp from './includes/help.js'
 import validateInput from './includes/validateInput.js'
+import stdout from './includes/stdout.js'
 
 import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
@@ -94,10 +95,12 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       port: argv.live,
       host: argv.host || '127.0.0.1',
       udp: argv.udp,
-      secure: secure,
+      secure,
       key: argv.key
     })
     await conn.ready()
+    const info = conn.info
+    stdout(info.protocol, info.type, info.secure, info.host, info.port, info.url)
   } else if (argv.connect || argv._[0]) {
     const key = argv.connect || argv._[0]
 
@@ -105,15 +108,14 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       client: true,
       port: argv.port,
       host: argv.host,
-      key: key,
+      key,
       udp: argv.udp,
       secure: argv.public
     })
     await conn.ready()
-
-
+    const info = conn.info
+    stdout(info.protocol, info.type, info.secure, info.host, info.port, info.url)
   } else if (argv.filemanager) { // Start server with a filemanager
-
     const fileOptions = {
       path: argv.filemanager,
       role: argv.role,
@@ -126,6 +128,7 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
     // Start files server
     const fileServer = new Livefiles(fileOptions)
     await fileServer.ready()
+    const fsInfo = fileServer.info
 
     let secure
     if (argv.public !== undefined) {
@@ -138,11 +141,15 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       server: true,
       port: argv.port || 5409,
       host: argv.host || '127.0.0.1',
-      secure: secure,
+      secure,
       key: argv.key
     }
     const conn = new Holesail(connOptions)
     await conn.ready()
+
+
+    const dhtInfo = conn.info
+    stdout(dhtInfo.protocol, fsInfo.type, dhtInfo.secure, dhtInfo.host, dhtInfo.port, dhtInfo.url, { username: fsInfo.username, password: fsInfo.password, role: fsInfo.role })
 
     // destroy before exiting
     goodbye(async () => {

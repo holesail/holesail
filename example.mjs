@@ -1,7 +1,7 @@
 // // code is poetry
 import Holesail from './index.js'
 
-const server = new Holesail({ server: true, port: 4545,  secure: true})
+const server = new Holesail({ server: true, port: 4545, secure: true })
 await server.ready()
 console.log(server.info)
 

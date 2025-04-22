@@ -25,9 +25,7 @@ class Holesail extends ReadyResource {
     this.host = opts.host
 
     const data = Holesail.urlParser(opts.key)
-    console.log(data)
     if (data.secure === undefined) {
-      console.log('I exec')
       this.secure = opts.secure
     } else {
       this.secure = data.secure
@@ -71,7 +69,7 @@ class Holesail extends ReadyResource {
       secure = true
     }
 
-    return { key: key, secure: secure }
+    return { key, secure }
   }
 
   verifyOpts (opts) {
@@ -124,9 +122,7 @@ class Holesail extends ReadyResource {
 
   get info () {
     const info = this.dht.info
-    console.log(info)
     let key
-    console.log(this.key)
     if (this.key && this.secure) {
       key = this.key
     } else {
@@ -154,8 +150,8 @@ class Holesail extends ReadyResource {
       host: info.host,
       protocol: info.protocol,
       seed: info.seed,
-      key: key,
-      url: url,
+      key,
+      url,
       publicKey: info.publicKey
     }
   }

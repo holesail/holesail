@@ -58,7 +58,7 @@ ${colors.bold('Notes:')}
     `
   }
 
-    if (opts && opts === 'connect') {
+  if (opts && opts === 'connect') {
     message = `
   ${colors.cyan('\nConnect to a Holesail server')}    
   ${colors.bold('Usage:')}
@@ -73,7 +73,7 @@ ${colors.bold('Notes:')}
     `
   }
 
-    if (opts && opts === 'filemanager') {
+  if (opts && opts === 'filemanager') {
     message = `
   ${colors.cyan('\nStart a file server at given location.')}    
   ${colors.bold('Usage:')}

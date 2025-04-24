@@ -5,6 +5,8 @@ const libKeys = require('hyper-cmd-lib-keys')
 const z32 = require('z32')
 const { runtime } = require('which-runtime')
 
+const { validateOpts } = require('./lib/validateInput')
+
 let createHash
 if (runtime === 'bare') {
   createHash = require('bare-crypto').createHash
@@ -16,7 +18,7 @@ class Holesail extends ReadyResource {
   constructor (opts = {}) {
     super()
 
-    this.verifyOpts(opts)
+    validateOpts(opts)
 
     this.server = opts.server || false
     this.client = opts.client || false
@@ -69,24 +71,6 @@ class Holesail extends ReadyResource {
     }
 
     return { key, secure }
-  }
-
-  verifyOpts (opts) {
-    if (opts.client && !opts.key || opts.key === '') {
-      throw new Error('Key is empty')
-    }
-
-    if (opts.protocol !== undefined && (opts.protocol !== 'udp' && opts.protocol !== 'tcp')) {
-      throw new Error('Incorrect protocol set')
-    }
-
-    if (opts.server && opts.client) {
-      throw new Error('Can not set both server and client at once')
-    }
-
-    if (opts.server && opts.seed === '') {
-      throw new Error('Seed is empty')
-    }
   }
 
   async _open () {
@@ -160,5 +144,7 @@ class Holesail extends ReadyResource {
     this.running = false
   }
 }
+
+function noop () {}
 
 module.exports = Holesail

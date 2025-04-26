@@ -10,7 +10,10 @@ import printHelp from '../lib/help.js'
 import { validateInput } from '../lib/validateInput.js'
 import stdout from '../lib/stdout.js'
 
+import { fileURLToPath } from 'url'
 import { createRequire } from 'node:module'
+
+const __filename = fileURLToPath(import.meta.url)
 const require = createRequire(import.meta.url)
 const { version } = require('../package.json')
 const argv = minimist(process.argv.slice(2))
@@ -18,7 +21,7 @@ const argv = minimist(process.argv.slice(2))
 validateInput(argv)
 
 // Display help and exit
-if (argv.help) {
+if (argv.help || argv.h) {
   printHelp(argv.help)
   process.exit(0)
 }
@@ -66,8 +69,10 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
       return key === '_' ? value : [`--${key}`, value]
     })
 
+    const name = argv.name ? 'holesail-' + argv.name : `holesail-${Date.now()}`
+
     PM2create({
-      name: 'holesail-' + argv.name || `holesail-${Date.now()}`,
+      name,
       script: __filename,
       args: scriptArgs,
       timeout: '5000'

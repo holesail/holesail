@@ -1,4 +1,11 @@
  # Holesail
+ ```
+ _   _       _                 _ _   _       
+| | | | ___ | | ___  ___  __ _(_) | (_) ___  
+| |_| |/ _ \| |/ _ \/ __|/ _` | | | | |/ _ \ 
+|  _  | (_) | |  __/\__ \ (_| | | |_| | (_) |
+|_| |_|\___/|_|\___||___/\__,_|_|_(_)_|\___/ 
+ ```
 
 [Join our Discord Support Server](https://discord.gg/TQVacE7Vnj) [Join our Reddit Community](https://www.reddit.com/r/holesail/)
 
@@ -45,10 +52,77 @@ To view full usage instructions and all set of commands, run:
 ```
 holesail --help
 ```
+## API
 
-## Graceful Goodbye
+### Usage
 
-Holesail Server includes graceful goodbye functionality, which ensures that the server is properly shut down when you close the terminal or interrupt the process.
+```js
+const Holesail = require('holesail')
+
+const hs = new Holesail({
+  server: true, // act as a server
+  secure: true  // use secure mode
+})
+
+await hs.ready()
+
+console.log('Server is ready:', hs.info.url)
+
+```
+
+Or as a client:
+
+```js
+const Holesail = require('holesail')
+
+const hs = new Holesail({
+  client: true,
+  key: 'hs://s000abcdef...', // URL or raw key
+})
+
+await hs.ready()
+
+console.log('Client connected:', hs.info)
+
+```
+
+**API**
+
+`new Holesail(opts)`
+
+Options:
+
+- server	Boolean	Start as server (default false)
+- client	Boolean	Start as client (default false)
+- key	String	Optional. URL or raw key for connecting
+- secure	Boolean	Enable secure mode (default false)
+- port	Number	Optional. Specific port to bind/connect
+- host	String	Optional. Specific host to bind/connect
+- udp	Boolean	Optional. Force UDP usage (advanced)
+
+`.ready()`
+Wait for Holesail to initialize and connect.
+
+`.pause()`
+
+`.resume()`
+
+`.info()`
+Get metadata about the current Holesail instance:
+
+`.close()`
+Gracefully shuts down the connection and releases resources.
+
+## URL Format
+
+Holesail uses a simple URL format for sharing server locations:
+
+- Secure server: hs://s000<key>
+
+- Insecure server: hs://0000<key>
+
+The parser will auto-detect and split the prefix for you.
+If you pass a full hs:// URL to the constructor, it'll Just Work
 
 ## Documentation
 

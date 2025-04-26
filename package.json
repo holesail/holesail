@@ -60,6 +60,7 @@
     "bare-process": "^4.2.1",
     "bare-querystring": "^1.0.0",
     "barely-colours": "^1.0.0",
+    "barely-pm2": "^0.0.4",
     "child_process": "npm:bare-subprocess@^5.0.3",
     "cli-box": "6.0.10",
     "colors": "^1.4.0",

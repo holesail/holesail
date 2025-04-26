@@ -145,6 +145,7 @@ class Holesail extends ReadyResource {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function noop () {}
 
 module.exports = Holesail

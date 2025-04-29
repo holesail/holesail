@@ -3,16 +3,10 @@ const HolesailServer = require('holesail-server')
 const HolesailClient = require('holesail-client')
 const libKeys = require('hyper-cmd-lib-keys')
 const z32 = require('z32')
-const { runtime } = require('which-runtime')
 
 const { validateOpts } = require('./lib/validateInput')
 
-let createHash
-if (runtime === 'bare') {
-  createHash = require('bare-crypto').createHash
-} else {
-  createHash = require('node:crypto').createHash
-}
+const createHash = require('crypto').createHash
 
 class Holesail extends ReadyResource {
   constructor (opts = {}) {

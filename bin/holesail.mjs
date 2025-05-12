@@ -32,7 +32,10 @@ if (argv.version) {
   process.exit(0)
 }
 
-if (argv.list || argv.delete || argv.stop || argv.start || argv.background || argv.logs) {
+// -------------------------------------
+// Removed argv.background
+// -------------------------------------
+if (argv.list || argv.delete || argv.stop || argv.start || argv.logs) {
   if (runtime === 'bare') {
     console.log('Info: Running Holesail in background is not supported on bare')
     process.exit(0)
@@ -59,25 +62,28 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
     PM2logs(argv.logs)
   }
 
-  if (argv.background) {
-    const arr = ['list', 'delete', 'stop', 'start', 'background']
-    arr.forEach(key => {
-      delete argv[key]
-    })
+  // ------------------------------------
+  // Commented argv.background condition
+  // ------------------------------------
+  // if (argv.background) {
+  //   const arr = ['list', 'delete', 'stop', 'start', 'background']
+  //   arr.forEach(key => {
+  //     delete argv[key]
+  //   })
 
-    const scriptArgs = Object.entries(argv).flatMap(([key, value]) => {
-      return key === '_' ? value : [`--${key}`, value]
-    })
+  //   const scriptArgs = Object.entries(argv).flatMap(([key, value]) => {
+  //     return key === '_' ? value : [`--${key}`, value]
+  //   })
 
-    const name = argv.name ? 'holesail-' + argv.name : `holesail-${Date.now()}`
+  //   const name = argv.name ? 'holesail-' + argv.name : `holesail-${Date.now()}`
 
-    PM2create({
-      name,
-      script: __filename,
-      args: scriptArgs,
-      timeout: '5000'
-    })
-  }
+  //   PM2create({
+  //     name,
+  //     script: __filename,
+  //     args: scriptArgs,
+  //     timeout: '5000'
+  //   })
+  // }
 } else {
   // Set a port live
   if (argv.live) {
@@ -158,3 +164,6 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
     process.exit(0)
   }
 }
+
+// Removed the line from help.js
+// ${colors.yellow('--background')}            Run in the background.

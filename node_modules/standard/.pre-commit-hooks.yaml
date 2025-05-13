@@ -1,8 +1,0 @@
-- id: standard
-  name: standard
-  entry: standard --fix
-  language: node
-  files: "\\.(\
-    js|jsx\
-    |mjs|cjs\
-    )$"

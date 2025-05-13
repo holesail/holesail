@@ -12,7 +12,6 @@ import stdout from '../lib/stdout.js'
 
 import { fileURLToPath } from 'url'
 import { createRequire } from 'node:module'
-import ProcessManager from '../lib/ProcessManager.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const require = createRequire(import.meta.url)
@@ -33,53 +32,12 @@ if (argv.version) {
   process.exit(0)
 }
 
-if (argv.list || argv.delete || argv.stop || argv.start || argv.background || argv.logs) {
+if (argv.list || argv.delete || argv.stop || argv.start || argv.logs) {
   if (runtime === 'bare') {
     console.log('Info: Running Holesail in background is not supported on bare')
     process.exit(0)
   }
 
-  const processManager = new ProcessManager()
-  if (argv.list) {
-    console.log(processManager.list())
-  }
-
-  if (argv.delete) {
-    processManager.delete(argv.delete)
-  }
-
-  if (argv.stop) {
-    processManager.stop(argv.stop)
-  }
-
-  if (argv.start) {
-    processManager.start(argv.start)
-  }
-
-  if (argv.logs) {
-    processManager.logs(argv.logs)
-  }
-
-  if (argv.background) {
-    const arr = ['list', 'delete', 'stop', 'start', 'background']
-    arr.forEach(key => {
-      delete argv[key]
-    })
-
-    const scriptArgs = Object.entries(argv).flatMap(([key, value]) => {
-      return key === '_' ? value : [`--${key}`, value]
-    })
-
-    const name = argv.name ? 'holesail-' + argv.name : `holesail-${Date.now()}`
-
-    processManager.create({
-      name,
-      script: __filename,
-      args: scriptArgs,
-      timeout: '5000'
-    })
-  }
-} else {
   // Set a port live
   if (argv.live) {
     let secure
@@ -147,7 +105,11 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
     await conn.ready()
 
     const dhtInfo = conn.info
-    stdout(dhtInfo.protocol, fsInfo.type, dhtInfo.secure, dhtInfo.host, dhtInfo.port, dhtInfo.url, { username: fsInfo.username, password: fsInfo.password, role: fsInfo.role })
+    stdout(dhtInfo.protocol, fsInfo.type, dhtInfo.secure, dhtInfo.host, dhtInfo.port, dhtInfo.url, {
+      username: fsInfo.username,
+      password: fsInfo.password,
+      role: fsInfo.role
+    })
 
     // destroy before exiting
     goodbye(async () => {

@@ -1,0 +1,28 @@
+{
+  "name": "noise-handshake",
+  "version": "4.1.0",
+  "description": "Noise protocol handshake",
+  "main": "noise.js",
+  "files": [
+    "*.js"
+  ],
+  "scripts": {
+    "test": "standard && brittle test/*.js"
+  },
+  "author": "Holepunch",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holepunchto/noise-handshake.git"
+  },
+  "dependencies": {
+    "b4a": "^1.1.0",
+    "nanoassert": "^2.0.0",
+    "sodium-universal": "^5.0.0"
+  },
+  "devDependencies": {
+    "brittle": "^3.3.2",
+    "noise-protocol": "chm-diederichs/noise-protocol.git#xx-ephemeral-key",
+    "standard": "^16.0.3"
+  }
+}

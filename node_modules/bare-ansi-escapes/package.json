@@ -1,0 +1,52 @@
+{
+  "name": "bare-ansi-escapes",
+  "version": "2.2.3",
+  "description": "Parse and produce ANSI escape sequences",
+  "exports": {
+    "./package": "./package.json",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./key-decoder": {
+      "types": "./key-decoder.d.ts",
+      "default": "./key-decoder.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "key-decoder.js",
+    "key-decoder.d.ts"
+  ],
+  "scripts": {
+    "test": "prettier . --check && bare test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holepunchto/bare-ansi-escapes.git"
+  },
+  "author": "Holepunch",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/holepunchto/bare-ansi-escapes/issues"
+  },
+  "homepage": "https://github.com/holepunchto/bare-ansi-escapes#readme",
+  "dependencies": {
+    "bare-stream": "^2.6.5"
+  },
+  "devDependencies": {
+    "bare-buffer": "^3.0.2",
+    "brittle": "^3.3.2",
+    "prettier": "^3.4.2",
+    "prettier-config-standard": "^7.0.0"
+  },
+  "peerDependencies": {
+    "bare-buffer": "*"
+  },
+  "peerDependenciesMeta": {
+    "bare-buffer": {
+      "optional": true
+    }
+  }
+}

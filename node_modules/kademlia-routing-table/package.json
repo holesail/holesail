@@ -1,0 +1,45 @@
+{
+  "name": "kademlia-routing-table",
+  "version": "1.0.6",
+  "description": "XOR based routing table used for P2P networks such as a Kademlia DHT.",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "imports": {
+    "events": {
+      "bare": "bare-events",
+      "default": "events"
+    }
+  },
+  "dependencies": {
+    "bare-events": "^2.2.0"
+  },
+  "devDependencies": {
+    "brittle": "^3.3.2",
+    "standard": "^17.1.0"
+  },
+  "scripts": {
+    "test": "standard && brittle test.js"
+  },
+  "keywords": [
+    "kademlia",
+    "p2p",
+    "k-bucket",
+    "k-buckets",
+    "xor",
+    "routing",
+    "distributed",
+    "systems"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/kademlia-routing-table.git"
+  },
+  "author": "Mathias Buus (@mafintosh)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafintosh/kademlia-routing-table/issues"
+  },
+  "homepage": "https://github.com/mafintosh/kademlia-routing-table"
+}

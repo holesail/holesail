@@ -12,6 +12,7 @@ import stdout from '../lib/stdout.js'
 
 import { fileURLToPath } from 'url'
 import { createRequire } from 'node:module'
+import ProcessManager from '../lib/ProcessManager.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const require = createRequire(import.meta.url)
@@ -32,58 +33,52 @@ if (argv.version) {
   process.exit(0)
 }
 
-// -------------------------------------
-// Removed argv.background
-// -------------------------------------
-if (argv.list || argv.delete || argv.stop || argv.start || argv.logs) {
+if (argv.list || argv.delete || argv.stop || argv.start || argv.background || argv.logs) {
   if (runtime === 'bare') {
     console.log('Info: Running Holesail in background is not supported on bare')
     process.exit(0)
   }
 
-  const { PM2list, PM2delete, PM2stop, PM2start, PM2create, PM2logs } = await import('barely-pm2')
+  const processManager = new ProcessManager()
   if (argv.list) {
-    PM2list({ raw: true, name: 'holesail' })
+    console.log(processManager.list())
   }
 
   if (argv.delete) {
-    PM2delete(argv.delete)
+    processManager.delete(argv.delete)
   }
 
   if (argv.stop) {
-    PM2stop(argv.stop)
+    processManager.stop(argv.stop)
   }
 
   if (argv.start) {
-    PM2start(argv.start)
+    processManager.start(argv.start)
   }
 
   if (argv.logs) {
-    PM2logs(argv.logs)
+    processManager.logs(argv.logs)
   }
 
-  // ------------------------------------
-  // Commented argv.background condition
-  // ------------------------------------
-  // if (argv.background) {
-  //   const arr = ['list', 'delete', 'stop', 'start', 'background']
-  //   arr.forEach(key => {
-  //     delete argv[key]
-  //   })
+  if (argv.background) {
+    const arr = ['list', 'delete', 'stop', 'start', 'background']
+    arr.forEach(key => {
+      delete argv[key]
+    })
 
-  //   const scriptArgs = Object.entries(argv).flatMap(([key, value]) => {
-  //     return key === '_' ? value : [`--${key}`, value]
-  //   })
+    const scriptArgs = Object.entries(argv).flatMap(([key, value]) => {
+      return key === '_' ? value : [`--${key}`, value]
+    })
 
-  //   const name = argv.name ? 'holesail-' + argv.name : `holesail-${Date.now()}`
+    const name = argv.name ? 'holesail-' + argv.name : `holesail-${Date.now()}`
 
-  //   PM2create({
-  //     name,
-  //     script: __filename,
-  //     args: scriptArgs,
-  //     timeout: '5000'
-  //   })
-  // }
+    processManager.create({
+      name,
+      script: __filename,
+      args: scriptArgs,
+      timeout: '5000'
+    })
+  }
 } else {
   // Set a port live
   if (argv.live) {
@@ -164,6 +159,3 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.logs) {
     process.exit(0)
   }
 }
-
-// Removed the line from help.js
-// ${colors.yellow('--background')}            Run in the background.

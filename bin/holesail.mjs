@@ -99,7 +99,7 @@ if (argv.live) {
   await conn.ready()
 
   const dhtInfo = conn.info
-  stdout(dhtInfo.protocol, fsInfo.type, dhtInfo.secure, dhtInfo.host,dhtInfo.port, dhtInfo.url, {
+  stdout(dhtInfo.protocol, fsInfo.type, dhtInfo.secure, dhtInfo.host, dhtInfo.port, dhtInfo.url, {
     username: fsInfo.username,
     password: fsInfo.password,
     role: fsInfo.role

@@ -18,6 +18,7 @@ ${colors.bold('Commands:')}
   ${colors.yellow('--stop <name>')}        Stop a background connection.
   ${colors.yellow('--start <name>')}       Start a stopped connection.
   ${colors.yellow('--logs <name>')}        View logs of a background task.
+  ${colors.yellow('--lookup <key>')}       Lookup details for a given connection key.
 
 ${colors.bold('Options:')}
   ${colors.yellow('--host <host>')}        Specify the host address (default: 127.0.0.1).

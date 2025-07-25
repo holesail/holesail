@@ -92,6 +92,10 @@ class Client {
       console.log(box)
     }
   }
+
+  static async lookup (key) {
+    return await holesailClient.ping(key)
+  }
 }
 
 module.exports = Client

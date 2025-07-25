@@ -122,6 +122,24 @@ if (argv.list || argv.delete || argv.stop || argv.start || argv.background || ar
     goodbye(async () => {
       await fileServer.destroy()
     })
+  } else if (argv.lookup) {
+    (async () => {
+      try {
+        const key = argv.lookup;
+        const result = await Client.lookup(key);
+        if (result) {
+          console.log(colors.cyan.underline.bold('Holesail Lookup Result') + ' 🔍');
+          console.log(colors.magenta('Host: ') + colors.green(result.host || 'N/A'));
+          console.log(colors.magenta('Port: ') + colors.green(result.port || 'N/A'));
+          console.log(colors.magenta('Protocol: ') + colors.green(result.protocol || 'N/A'));
+        } else {
+          console.log(colors.red('No record found for the provided key.'));
+        }
+      } catch (error) {
+        console.error(colors.red('Error during lookup:'), error.message);
+      }
+      process.exit(0);
+    })();
   } else { // Default if no correct option is chosen
     console.log(colors.red('Error: Invalid or Incorrect arguments specified. See holesail --help for a list of all valid arguments'))
     process.exit(2)

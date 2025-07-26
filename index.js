@@ -71,9 +71,7 @@ class Holesail extends ReadyResource {
     const { key: keyStr, secure: specifiedSecure } = Holesail.urlParser(url)
     let keyForPing
 
-    const isSecure = specifiedSecure !== undefined 
-      ? specifiedSecure 
-      : keyStr.length === 64 && /^[0-9a-f]+$/i.test(keyStr)
+    const isSecure = specifiedSecure !== undefined ? specifiedSecure : false
 
     if (isSecure) {
       const seedBuffer = createHash('sha256').update(keyStr).digest()
@@ -83,7 +81,7 @@ class Holesail extends ReadyResource {
       try {
         z32.decode(keyForPing)
       } catch {
-        throw new Error('Invalid key format. Key should be either 64 hex characters (secure) or 52 z32 characters (public).')
+        throw new Error('Invalid key format.')
       }
     }
 

@@ -15,10 +15,7 @@ import { createRequire } from 'node:module'
 
 import HyperDHT from 'hyperdht'
 import b4a from 'b4a'
-import z32 from 'z32'
-import { createHash } from 'crypto'
 import colors from 'barely-colours'
-import HolesailClient from 'holesail-client'
 
 const __filename = fileURLToPath(import.meta.url)
 const require = createRequire(import.meta.url)
@@ -117,32 +114,8 @@ if (argv.live) {
     await fileServer.close()
   })
 } else if (argv.lookup) {
-  const keyInput = argv.lookup
-  const { key: keyStr, secure: specifiedSecure } = Holesail.urlParser(keyInput)
-  let keyForPing
   try {
-    if (specifiedSecure !== undefined) {
-      if (specifiedSecure) {
-        const seedBuffer = createHash('sha256').update(keyStr).digest()
-        keyForPing = z32.encode(seedBuffer)
-      } else {
-        keyForPing = keyStr
-        z32.decode(keyForPing) // Validate z32 format
-      }
-    } else {
-      // autodetect
-      const lowerKey = keyStr.toLowerCase()
-      if (keyStr.length === 64 && /^[0-9a-f]+$/i.test(keyStr)) {
-        const seedBuffer = createHash('sha256').update(keyStr).digest()
-        keyForPing = z32.encode(seedBuffer)
-      } else if (keyStr.length === 52 && /^[ybndrfg8ejkmcpqxot1uwisza345h769]+$/i.test(lowerKey)) {
-        keyForPing = keyStr
-      } else {
-        throw new Error('Invalid key format. Key should be either 64 hex characters (secure) or 52 z32 characters (public).')
-      }
-    }
-
-    const result = await HolesailClient.ping(keyForPing)
+    const result = await Holesail.lookup(argv.lookup)
     if (result) {
       console.log(colors.cyan(colors.underline(colors.bold('Holesail Lookup Result'))) + ' 🔍')
       console.log(colors.magenta('Host: ') + colors.green(result.host || 'N/A'))

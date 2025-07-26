@@ -67,6 +67,34 @@ class Holesail extends ReadyResource {
     return { key, secure }
   }
 
+  static async lookup (url) {
+    const { key: keyStr, secure: specifiedSecure } = Holesail.urlParser(url)
+    let keyForPing
+    if (specifiedSecure !== undefined) {
+      if (specifiedSecure) {
+        const seedBuffer = createHash('sha256').update(keyStr).digest()
+        keyForPing = z32.encode(seedBuffer)
+      } else {
+        keyForPing = keyStr
+        z32.decode(keyForPing) // Validate z32 format
+      }
+    } else {
+      // autodetect
+      const lowerKey = keyStr.toLowerCase()
+      if (keyStr.length === 64 && /^[0-9a-f]+$/i.test(keyStr)) {
+        const seedBuffer = createHash('sha256').update(keyStr).digest()
+        keyForPing = z32.encode(seedBuffer)
+      } else if (keyStr.length === 52 && /^[ybndrfg8ejkmcpqxot1uwisza345h769]+$/i.test(lowerKey)) {
+        keyForPing = keyStr
+      } else {
+        throw new Error('Invalid key format. Key should be either 64 hex characters (secure) or 52 z32 characters (public).')
+      }
+    }
+
+    const result = await HolesailClient.ping(keyForPing)
+    return result
+  }
+
   async _open () {
     if (this.server) {
       this.dht = new HolesailServer()

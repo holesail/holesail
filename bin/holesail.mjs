@@ -13,8 +13,6 @@ import stdout from '../lib/stdout.js'
 import { fileURLToPath } from 'url'
 import { createRequire } from 'node:module'
 
-import HyperDHT from 'hyperdht'
-import b4a from 'b4a'
 import colors from 'barely-colours'
 
 const __filename = fileURLToPath(import.meta.url)

@@ -69,7 +69,7 @@
     "colors": "^1.4.0",
     "graceful-goodbye": "^1.3.3",
     "holesail-client": "^2.1.1",
-    "holesail-server": "^2.1.1",
+    "holesail-server": "^2.2.0",
     "hyper-cmd-lib-keys": "^0.1.1",
     "livefiles": "^1.0.2",
     "minimist": "^1.2.8",

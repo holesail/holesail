@@ -67,6 +67,27 @@ class Holesail extends ReadyResource {
     return { key, secure }
   }
 
+  static async lookup (url) {
+    const { key: keyStr, secure: specifiedSecure } = Holesail.urlParser(url)
+    let keyForPing
+
+    const isSecure = specifiedSecure !== undefined ? specifiedSecure : false
+
+    if (isSecure) {
+      const seedBuffer = createHash('sha256').update(keyStr).digest()
+      keyForPing = z32.encode(seedBuffer)
+    } else {
+      keyForPing = keyStr
+      try {
+        z32.decode(keyForPing)
+      } catch {
+        throw new Error('Invalid key format.')
+      }
+    }
+
+    return await HolesailClient.ping(keyForPing)
+  }
+
   async _open () {
     if (this.server) {
       this.dht = new HolesailServer()

@@ -13,6 +13,8 @@ import stdout from '../lib/stdout.js'
 import { fileURLToPath } from 'url'
 import { createRequire } from 'node:module'
 
+import colors from 'barely-colours'
+
 const __filename = fileURLToPath(import.meta.url)
 const require = createRequire(import.meta.url)
 const { version } = require('../package.json')
@@ -109,6 +111,21 @@ if (argv.live) {
     await conn.close()
     await fileServer.close()
   })
+} else if (argv.lookup) {
+  try {
+    const result = await Holesail.lookup(argv.lookup)
+    if (result) {
+      console.log(colors.cyan(colors.underline(colors.bold('Holesail Lookup Result'))) + ' 🔍')
+      console.log(colors.magenta('Host: ') + colors.green(result.host || 'N/A'))
+      console.log(colors.magenta('Port: ') + colors.green(result.port || 'N/A'))
+      console.log(colors.magenta('Protocol: ') + colors.green(result.protocol || 'N/A'))
+    } else {
+      console.log(colors.red('No record found for the provided key.'))
+    }
+  } catch (error) {
+    console.error(colors.red('Error during lookup:'), error.message)
+  }
+  process.exit(0)
 } else { // Default if no correct option is chosen
   printHelp(argv.help)
   process.exit(0)

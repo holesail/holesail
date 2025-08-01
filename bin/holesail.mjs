@@ -17,6 +17,18 @@ const argv = minimist(process.argv.slice(2))
 
 validateInput(argv)
 
+let logOpt = false
+if (argv.log !== undefined) {
+  if (typeof argv.log === 'boolean' && argv.log) {
+    logOpt = 1 // Default to INFO level if --log is provided without a value
+  } else if (typeof argv.log === 'string') {
+    const parsed = parseInt(argv.log, 10)
+    logOpt = isNaN(parsed) ? 1 : Math.max(0, Math.min(3, parsed)) // Clamp between 0 (DEBUG) and 3 (ERROR)
+  } else if (typeof argv.log === 'number') {
+    logOpt = Math.max(0, Math.min(3, argv.log)) // Clamp between 0 (DEBUG) and 3 (ERROR)
+  }
+}
+
 // Display help and exit
 if (argv.help || argv.h) {
   printHelp(argv.help)
@@ -44,7 +56,7 @@ if (argv.live) {
     udp: argv.udp,
     secure,
     key: argv.key,
-    log: argv.log
+    log: logOpt
   })
   await conn.ready()
   const info = conn.info
@@ -58,7 +70,7 @@ if (argv.live) {
     key,
     udp: argv.udp,
     secure: argv.public,
-    log: argv.log
+    log: logOpt
   })
   await conn.ready()
   const info = conn.info
@@ -88,7 +100,7 @@ if (argv.live) {
     host: argv.host || '127.0.0.1',
     secure,
     key: argv.key,
-    log: argv.log
+    log: logOpt
   }
   const conn = new Holesail(connOptions)
   await conn.ready()

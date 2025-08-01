@@ -23,7 +23,7 @@ class Holesail extends ReadyResource {
     }
     this.key = data.key
     this.udp = opts.udp
-    this.log = opts.log || false
+    this.log = opts.log !== undefined ? opts.log : false
     this.dht = null
     this.running = false
     this.#initialise()
@@ -76,13 +76,22 @@ class Holesail extends ReadyResource {
   }
 
   async _open () {
+    let enabled = false
+    let level = 1 // Default to INFO level
+    if (typeof this.log === 'boolean') {
+      enabled = this.log
+      if (enabled) level = 1 // Enable INFO and above if log is true
+    } else if (typeof this.log === 'number') {
+      enabled = true
+      level = Math.max(0, Math.min(3, this.log)) // Clamp level between 0 (DEBUG) and 3 (ERROR)
+    }
     if (this.server) {
-      const logger = new HolesailLogger({ prefix: 'HolesailServer', enabled: this.log })
+      const logger = new HolesailLogger({ prefix: 'HolesailServer', enabled, level })
       this.dht = new HolesailServer({ logger })
       await this.connect()
     } else {
-      const logger = new HolesailLogger({ prefix: 'HolesailClient', enabled: this.log })
-      this.dht = new HolesailClient({ key: this.seed, secure: this.secure, logger })
+      const logger = new HolesailLogger({ prefix: 'HolesailClient', enabled, level, debug: this.log === 0 })
+      this.dht = new HolesailClient({ key: this.seed, secure: this.secure, logger, debug: this.log === 0 })
       await this.connect()
     }
   }

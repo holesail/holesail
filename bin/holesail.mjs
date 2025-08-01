@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-
-import { runtime } from 'which-runtime'
 import process from 'process'
 import minimist from 'minimist' // Required to parse CLI arguments
 import goodbye from 'graceful-goodbye'
@@ -9,11 +7,9 @@ import Livefiles from 'livefiles'
 import printHelp from '../lib/help.js'
 import { validateInput } from '../lib/validateInput.js'
 import stdout from '../lib/stdout.js'
-import { fileURLToPath } from 'url'
 import { createRequire } from 'node:module'
 import colors from 'barely-colours'
 
-const __filename = fileURLToPath(import.meta.url)
 const require = createRequire(import.meta.url)
 const { version } = require('../package.json')
 

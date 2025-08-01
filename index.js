@@ -5,7 +5,7 @@ const libKeys = require('hyper-cmd-lib-keys')
 const z32 = require('z32')
 const { validateOpts } = require('./lib/validateInput')
 const createHash = require('crypto').createHash
-const HolesailLogger = require('../holesail-logger')
+const HolesailLogger = require('holesail-logger')
 
 class Holesail extends ReadyResource {
   constructor (opts = {}) {

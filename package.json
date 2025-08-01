@@ -81,7 +81,7 @@
     "ready-resource": "^1.1.2",
     "which-runtime": "^1.2.1",
     "z32": "^1.1.0",
-    "holesail-logger": "file:../holesail-logger"  
+    "holesail-logger":  "^1.0.0"
   },
   "bin": {
     "holesail": "./bin/holesail.mjs"

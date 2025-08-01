@@ -5,6 +5,7 @@ const libKeys = require('hyper-cmd-lib-keys')
 const z32 = require('z32')
 const { validateOpts } = require('./lib/validateInput')
 const createHash = require('crypto').createHash
+const HolesailLogger = require('../holesail-logger')
 
 class Holesail extends ReadyResource {
   constructor (opts = {}) {
@@ -76,10 +77,12 @@ class Holesail extends ReadyResource {
 
   async _open () {
     if (this.server) {
-      this.dht = new HolesailServer({ log: this.log })
+      const logger = new HolesailLogger({ prefix: 'HolesailServer', enabled: this.log })
+      this.dht = new HolesailServer({ logger })
       await this.connect()
     } else {
-      this.dht = new HolesailClient({ key: this.seed, secure: this.secure, log: this.log })
+      const logger = new HolesailLogger({ prefix: 'HolesailClient', enabled: this.log })
+      this.dht = new HolesailClient({ key: this.seed, secure: this.secure, logger })
       await this.connect()
     }
   }

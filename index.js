@@ -86,11 +86,11 @@ class Holesail extends ReadyResource {
       level = Math.max(0, Math.min(3, this.log)) // Clamp level between 0 (DEBUG) and 3 (ERROR)
     }
     if (this.server) {
-      const logger = new HolesailLogger({ prefix: 'HolesailServer', enabled, level })
+      const logger = new HolesailLogger({ prefix: 'Holesail', enabled, level })
       this.dht = new HolesailServer({ logger })
       await this.connect()
     } else {
-      const logger = new HolesailLogger({ prefix: 'HolesailClient', enabled, level, debug: this.log === 0 })
+      const logger = new HolesailLogger({ prefix: 'Holesail', enabled, level, debug: this.log === 0 })
       this.dht = new HolesailClient({ key: this.seed, secure: this.secure, logger, debug: this.log === 0 })
       await this.connect()
     }

@@ -72,7 +72,8 @@ class Holesail extends ReadyResource {
         throw new Error('Invalid key format.')
       }
     }
-    return await HolesailClient.ping(keyForPing)
+    const pingResult = await HolesailClient.ping(keyForPing)
+    return { ping: pingResult, secure: isSecure }
   }
 
   async _open () {

@@ -115,10 +115,10 @@ if (argv.live) {
     role: fsInfo.role
   })
   // destroy before exiting
-goodbye(async () => {
-  await conn.close()
-  await fileServer.close()
-})
+  goodbye(async () => {
+    await conn.close()
+    await fileServer.close()
+  })
 } else if (argv.lookup) {
   try {
     const { ping: result, secure } = await Holesail.lookup(argv.lookup)

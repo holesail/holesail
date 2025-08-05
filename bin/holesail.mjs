@@ -127,7 +127,7 @@ goodbye(async () => {
       console.log(colors.magenta('Host: ') + colors.green(result.host || 'N/A'))
       console.log(colors.magenta('Port: ') + colors.green(result.port || 'N/A'))
       console.log(colors.magenta('Protocol: ') + colors.green(result.protocol || 'N/A'))
-      console.log(colors.magenta('Secure: ') + colors.green(secure ? 'Yes' : 'No'))
+      console.log(colors.magenta('Private: ') + colors.green(secure ? 'Yes' : 'No'))
     } else {
       console.log(colors.red('No record found for the provided key.'))
     }

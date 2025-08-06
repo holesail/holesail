@@ -80,7 +80,8 @@
     "querystring": "npm:bare-node-querystring@^1.0.0",
     "ready-resource": "^1.1.2",
     "which-runtime": "^1.2.1",
-    "z32": "^1.1.0"
+    "z32": "^1.1.0",
+    "holesail-logger":  "^1.1.0"
   },
   "bin": {
     "holesail": "./bin/holesail.mjs"

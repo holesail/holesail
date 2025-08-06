@@ -126,7 +126,7 @@ if (argv.live) {
       console.log(colors.cyan(colors.underline(colors.bold('Holesail Lookup Result'))) + ' 🔍')
       console.log(colors.magenta('Host: ') + colors.green(result.host || 'N/A'))
       console.log(colors.magenta('Port: ') + colors.green(result.port || 'N/A'))
-      console.log(colors.magenta('Protocol: ') + colors.green(result.protocol || 'N/A'))
+      console.log(colors.magenta('Protocol: ') + colors.green(result.protocol.toUpperCase() || 'N/A'))
       console.log(colors.magenta('Private: ') + colors.green(secure ? 'Yes' : 'No'))
     } else {
       console.log(colors.red('No record found for the provided key.'))

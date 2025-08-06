@@ -121,13 +121,13 @@ if (argv.live) {
   })
 } else if (argv.lookup) {
   try {
-    const { ping: result, secure } = await Holesail.lookup(argv.lookup)
-    if (result) {
+    const data = await Holesail.lookup(argv.lookup)
+    if (data) {
       console.log(colors.cyan(colors.underline(colors.bold('Holesail Lookup Result'))) + ' 🔍')
-      console.log(colors.magenta('Host: ') + colors.green(result.host || 'N/A'))
-      console.log(colors.magenta('Port: ') + colors.green(result.port || 'N/A'))
-      console.log(colors.magenta('Protocol: ') + colors.green(result.protocol.toUpperCase() || 'N/A'))
-      console.log(colors.magenta('Private: ') + colors.green(secure ? 'Yes' : 'No'))
+      console.log(colors.magenta('Host: ') + colors.green(data.host || 'N/A'))
+      console.log(colors.magenta('Port: ') + colors.green(data.port || 'N/A'))
+      console.log(colors.magenta('Protocol: ') + colors.green(data?.protocol?.toUpperCase() || 'N/A'))
+      console.log(colors.magenta('Private: ') + colors.green(data.secure ? 'Yes' : 'No'))
     } else {
       console.log(colors.red('No record found for the provided key.'))
     }

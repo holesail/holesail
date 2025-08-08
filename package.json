@@ -1,6 +1,6 @@
 {
   "name": "holesail",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Holesail is TCP/UDP peer-to-peer proxy. Holesail let's you instantly share any application running on a specific port from your local computer.",
   "main": "index.js",
   "pear": {
@@ -68,8 +68,8 @@
     "cli-box": "6.0.10",
     "colors": "^1.4.0",
     "graceful-goodbye": "^1.3.3",
-    "holesail-client": "^2.1.1",
-    "holesail-server": "^2.2.0",
+    "holesail-client": "^2.2.0",
+    "holesail-server": "^2.3.0",
     "hyper-cmd-lib-keys": "^0.1.1",
     "livefiles": "^1.0.2",
     "minimist": "^1.2.8",

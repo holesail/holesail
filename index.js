@@ -43,7 +43,7 @@ class Holesail extends ReadyResource {
   }
 
   static urlParser (url) {
-    url = String(url || '');
+    url = String(url || '')
     const protocol = 'hs://'
     let key
     let secure

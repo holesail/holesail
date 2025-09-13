@@ -1,3 +1,10 @@
 node_modules
 .idea
 package-lock.json
+build
+sandbox
+install
+*.js.h
+*.bundle
+*.bundle.h
+*.d

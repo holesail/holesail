@@ -38,7 +38,7 @@
     "refresh": "rm package-lock.json && rm -rf node_modules && npm i && npm update",
     "build:prepare": "npx bare-make generate --platform darwin --arch arm64",
     "build": "npm run build:prepare && npx bare-make build && npm run build:strip",
-    "build:strip": "npx bare-make install --strip"
+    "build:strip": "npx bare-make install --strip --prefix out/"
   },
   "repository": {
     "type": "git",

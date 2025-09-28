@@ -11,6 +11,14 @@ fetch_package("github:holepunchto/bare@1.22.0")
 
 project(${name} C CXX ASM)
 
+bare_target(target)
+
+if(target MATCHES "win32-x64")
+  enable_language(ASM_NASM)
+else()
+  enable_language(ASM)
+endif()
+
 add_bare_bundle(
   ${name}_bundle
   ENTRY src/bin/holesail.mjs

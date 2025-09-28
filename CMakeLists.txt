@@ -16,7 +16,11 @@ find_package(cmake-fetch REQUIRED PATHS node_modules/cmake-fetch)
 fetch_package("github:holepunchto/libjstl")
 fetch_package("github:holepunchto/bare@1.22.0")
 
+
+
 bare_target(target)
+
+
 
 add_bare_bundle(
   ${name}_bundle
@@ -45,7 +49,7 @@ set_target_properties(
 target_link_libraries(
   ${name}
   PUBLIC
-    $<LINK_LIBRARY:WHOLE_ARCHIVE,bare_static>
+    $
 )
 
 link_bare_modules(${name})

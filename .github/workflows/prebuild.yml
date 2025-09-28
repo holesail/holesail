@@ -1,4 +1,4 @@
-name: Prebuild
+name: Build 
 on:
   push:
     branches:
@@ -80,7 +80,7 @@ jobs:
       - run: npm install
       - run: bare-make generate --platform ${{ matrix.platform }} --arch ${{ matrix.arch }} ${{ matrix.flags }}
       - run: bare-make build
-      - run: bare-make install --prefix install/${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
+      - run: bare-make install --strip  --prefix install/${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}

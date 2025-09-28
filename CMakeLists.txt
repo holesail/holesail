@@ -9,7 +9,7 @@ fetch_package("github:holepunchto/libjstl")
 fetch_package("github:holepunchto/bare@1.22.0")
 
 
-project(${name} C CXX)
+project(${name} C CXX ASM)
 
 add_bare_bundle(
   ${name}_bundle

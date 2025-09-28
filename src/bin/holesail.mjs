@@ -11,11 +11,9 @@ import stdout from '../lib/stdout.js'
 import { createRequire } from 'node:module'
 import colors from 'barely-colours'
 
-import { fileURLToPath } from 'url'
-const __filename = fileURLToPath(import.meta.url)
+import pkg from '../../package.json' with { type: 'json' }
 
-const require = createRequire(import.meta.url)
-const { version } = require('../package.json')
+const version = pkg.version
 
 const argv = minimist(process.argv.slice(2))
 

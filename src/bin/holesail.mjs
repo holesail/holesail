@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 
 const require = createRequire(import.meta.url)
-const { version } = require('../package.json')
+const { version } = require('../../package.json')
 
 const argv = minimist(process.argv.slice(2))
 

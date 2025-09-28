@@ -37,7 +37,7 @@
     "test": "standard && node test.mjs",
     "refresh": "rm package-lock.json && rm -rf node_modules && npm i && npm update",
     "build:prepare": "npx bare-make generate --platform darwin --arch arm64",
-    "build": "npx bare-make build",
+    "build": "npm run build:prepare && npx bare-make build && npm run build:strip",
     "build:strip": "npx bare-make install --strip"
   },
   "repository": {
@@ -86,6 +86,7 @@
     "qrcode-terminal": "^0.12.0",
     "querystring": "npm:bare-node-querystring@^1.0.0",
     "ready-resource": "^1.1.2",
+    "url": "npm:bare-url@^2.2.2",
     "which-runtime": "^1.2.1",
     "z32": "^1.1.0"
   },

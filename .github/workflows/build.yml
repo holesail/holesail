@@ -1,8 +1,8 @@
-name: Build 
+name: Prebuild
 on:
   workflow_dispatch:
 jobs:
-  build:
+  prebuild:
     strategy:
       matrix:
         include:
@@ -85,7 +85,7 @@ jobs:
           retention-days: 5
   merge:
     runs-on: ubuntu-latest
-    needs: build 
+    needs: prebuild
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -93,6 +93,6 @@ jobs:
           merge-multiple: true
       - uses: actions/upload-artifact@v4
         with:
-          name: builds 
+          name: prebuilds
           path: install
           retention-days: 5

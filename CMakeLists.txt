@@ -4,6 +4,8 @@ set(name bare_distributable)
 
 project(${name} C CXX ASM)
 
+bare_target(target)
+
 if(target MATCHES "win32-x64")
   enable_language(ASM_NASM)
 else()
@@ -18,7 +20,6 @@ fetch_package("github:holepunchto/bare@1.22.0")
 
 
 
-bare_target(target)
 
 
 

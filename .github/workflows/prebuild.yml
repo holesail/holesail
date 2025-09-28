@@ -1,5 +1,8 @@
 name: Prebuild
 on:
+  push:
+    branches:
+      -  '**'
   workflow_dispatch:
 jobs:
   prebuild:

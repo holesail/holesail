@@ -4,8 +4,6 @@ set(name bare_distributable)
 
 project(${name} C CXX ASM)
 
-bare_target(target)
-
 if(target MATCHES "win32-x64")
   enable_language(ASM_NASM)
 else()
@@ -18,6 +16,7 @@ find_package(cmake-fetch REQUIRED PATHS node_modules/cmake-fetch)
 fetch_package("github:holepunchto/libjstl")
 fetch_package("github:holepunchto/bare@1.22.0")
 
+bare_target(target)
 
 add_bare_bundle(
   ${name}_bundle

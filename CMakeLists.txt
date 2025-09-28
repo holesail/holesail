@@ -19,10 +19,6 @@ endif()
 fetch_package("github:holepunchto/libjstl")
 fetch_package("github:holepunchto/bare@1.22.0")
 
-
-
-
-
 add_bare_bundle(
   ${name}_bundle
   ENTRY src/bin/holesail.mjs
@@ -50,7 +46,7 @@ set_target_properties(
 target_link_libraries(
   ${name}
   PUBLIC
-    $
+    $<LINK_LIBRARY:WHOLE_ARCHIVE,bare_static>
 )
 
 link_bare_modules(${name})

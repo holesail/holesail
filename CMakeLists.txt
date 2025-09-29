@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.31)
 
-set(name bare_distributable)
-
-
+set(name holesail)
 
 find_package(cmake-bare-bundle REQUIRED PATHS node_modules/cmake-bare-bundle)
 find_package(cmake-fetch REQUIRED PATHS node_modules/cmake-fetch)

@@ -1,9 +1,8 @@
 name: Build 
 on:
-  push:
+  workflow_dispatch:
     branches:
       -  '**'
-  workflow_dispatch:
 jobs:
   prebuild:
     strategy:

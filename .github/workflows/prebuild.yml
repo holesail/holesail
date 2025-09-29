@@ -96,6 +96,6 @@ jobs:
           merge-multiple: true
       - uses: actions/upload-artifact@v4
         with:
-          name: prebuilds
+          name: builds 
           path: install
           retention-days: 1

@@ -6,7 +6,7 @@ function validateInput (args) {
     process.exit()
   }
 
-  // restrict the use of localhost or 0.0.0.0 when udp is true
+  //  restrict the use of localhost or 0.0.0.0 when udp is true
   if (args.udp && (args.host === 'localhost' || args.host === '0.0.0.0')) {
     console.log(colors.red('Error: You can’t use localhost or 0.0.0.0 as an address when using UDP'))
     process.exit(2)

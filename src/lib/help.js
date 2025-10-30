@@ -27,6 +27,7 @@ ${colors.bold('Examples:')}
   ${colors.yellow('holesail --live 3000')}      Start a server on port 3000.
   ${colors.yellow('holesail --filemanager .')}  Start filemanager in current directory.
   ${colors.yellow('holesail <key>')}            Connect to a server.
+  ${colors.yellow('holesail --list')}           Lists all keys you have runned on your system.
 
 ${colors.bold('Notes:')}
   Treat private keys like SSH keys. Public keys are shareable, but secure sensitive data with passwords or connectors.
@@ -74,6 +75,17 @@ ${colors.bold('Notes:')}
   ${colors.yellow('--password <pass>')}  Set a custom password (Default: admin).
   ${colors.yellow('--role <admin|user>')}Set a user role.
     `
+  }
+
+  if (opts && opts === 'list') {
+    message = `
+${colors.cyan('\\nList all stored secure keys')}
+${colors.bold('Usage:')}
+${colors.yellow('holesail --list')}
+${colors.bold('Description:')}
+Displays all securely stored Holesail keys with their associated host, port, and creation time.
+Keys are encrypted and stored in ~/.holesail/keys.json using AES-256 encryption.
+`
   }
 
   const help = header + message

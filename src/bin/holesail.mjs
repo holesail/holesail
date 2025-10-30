@@ -5,6 +5,7 @@ import minimist from 'minimist' // Required to parse CLI arguments
 import goodbye from 'graceful-goodbye'
 import Holesail from '../index.js'
 import Livefiles from 'livefiles'
+import HolesailKey from 'holesail-key'
 import printHelp from '../lib/help.js'
 import { validateInput } from '../lib/validateInput.js'
 import stdout from '../lib/stdout.js'
@@ -41,6 +42,12 @@ if (argv.help || argv.h) {
 if (argv.version) {
   console.log(version)
   process.exit(0)
+}
+
+if (argv.list && argv.clear) {
+  const clear = await HolesailKey.clear();
+  console.log(colors.blue('Cleared all the keys.'));
+  process.exit(0);
 }
 
 // Set a port live

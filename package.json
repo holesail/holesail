@@ -75,6 +75,7 @@
     "colors": "^1.4.0",
     "graceful-goodbye": "^1.3.3",
     "holesail-client": "^2.2.0",
+    "holesail-key": "^1.0.0",
     "holesail-logger": "^1.1.0",
     "holesail-server": "^2.3.1",
     "hyper-cmd-lib-keys": "^0.1.1",

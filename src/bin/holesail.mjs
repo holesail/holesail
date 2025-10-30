@@ -12,6 +12,7 @@ import { createRequire } from 'node:module'
 import colors from 'barely-colours'
 
 import pkg from '../../package.json' with { type: 'json' }
+import HolesailKey from 'holesail-key'
 
 const version = pkg.version
 
@@ -42,6 +43,26 @@ if (argv.version) {
   console.log(version)
   process.exit(0)
 }
+// List all stored keys
+if (argv.list) {
+  const keys = HolesailKey.getKeys()
+
+  if (keys.length === 0) {
+    console.log(colors.yellow('No keys stored yet.'))
+    process.exit(0)
+  }
+
+  console.log(colors.cyan(colors.underline(colors.bold('Stored Holesail Keys'))) + ' 🔑\n')
+
+  keys.forEach((keyEntry, index) => {
+    console.log(colors.magenta(`[${index + 1}]`) + ' Key: ' + colors.dim(keyEntry.key))
+    console.log('    Created: ' + colors.yellow(keyEntry.createdAt.toLocaleString()))
+    console.log()
+  })
+
+  process.exit(0)
+}
+
 
 // Set a port live
 if (argv.live) {
@@ -62,6 +83,14 @@ if (argv.live) {
   })
   await conn.ready()
   const info = conn.info
+
+  // Store the key in secure storage
+  if(info.secure) {
+    HolesailKey.addKey('hs://s000'+info.key)
+  } else {
+    HolesailKey.addKey('hs://0000'+info.key)
+  }
+
   stdout(info.protocol, info.type, info.secure, info.host, info.port, info.url)
 } else if (argv.connect || argv._[0]) {
   const key = argv.connect || argv._[0]

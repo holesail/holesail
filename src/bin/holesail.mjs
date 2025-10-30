@@ -13,7 +13,6 @@ import { createRequire } from 'node:module'
 import colors from 'barely-colours'
 
 import pkg from '../../package.json' with { type: 'json' }
-import HolesailKey from 'holesail-key'
 
 const version = pkg.version
 

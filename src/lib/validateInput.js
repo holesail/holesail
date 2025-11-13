@@ -6,6 +6,12 @@ function validateInput (args) {
     process.exit()
   }
 
+  //  restrict the use of localhost or 0.0.0.0 when udp is true
+  if (args.udp && (args.host === 'localhost' || args.host === '0.0.0.0')) {
+    console.log(colors.red('Error: You can’t use localhost or 0.0.0.0 as an address when using UDP'))
+    process.exit(2)
+  }
+
   // Restrict key length to be at least 32 char long
   if (args.key && args.key.length < 32 && !args.force) {
     console.log(colors.red('Error: A key should have a minimum length of 32 chars for security purposes. If you still wish to proceed use --force'))

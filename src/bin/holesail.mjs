@@ -8,7 +8,6 @@ import Livefiles from 'livefiles'
 import printHelp from '../lib/help.js'
 import { validateInput } from '../lib/validateInput.js'
 import stdout from '../lib/stdout.js'
-import { createRequire } from 'node:module'
 import colors from 'barely-colours'
 
 import pkg from '../../package.json' with { type: 'json' }

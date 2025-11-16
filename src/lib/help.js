@@ -1,6 +1,6 @@
 const colors = require('barely-colours')
 
-function printHelp (opts) {
+function printHelp(opts) {
   const header = `${colors.cyan('Holesail CLI - Instantly share and connect to servers')}`
   let message = `
 

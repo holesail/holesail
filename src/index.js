@@ -8,7 +8,7 @@ const createHash = require('crypto').createHash
 const HolesailLogger = require('holesail-logger')
 
 class Holesail extends ReadyResource {
-  constructor (opts = {}) {
+  constructor(opts = {}) {
     super()
     validateOpts(opts)
     this.server = opts.server || false
@@ -29,7 +29,7 @@ class Holesail extends ReadyResource {
     this.#initialise()
   }
 
-  #initialise () {
+  #initialise() {
     if (this.server) {
       if (this.key) {
         this.seed = createHash('sha256').update(this.key.toString()).digest('hex')
@@ -38,11 +38,13 @@ class Holesail extends ReadyResource {
         this.seed = createHash('sha256').update(this.key.toString()).digest('hex')
       }
     } else {
-      this.seed = this.secure ? z32.encode(createHash('sha256').update(this.key.toString()).digest()) : this.key
+      this.seed = this.secure
+        ? z32.encode(createHash('sha256').update(this.key.toString()).digest())
+        : this.key
     }
   }
 
-  static urlParser (url) {
+  static urlParser(url) {
     url = String(url || '')
     const protocol = 'hs://'
     let key
@@ -58,7 +60,7 @@ class Holesail extends ReadyResource {
     return { key, secure }
   }
 
-  static async lookup (url) {
+  static async lookup(url) {
     const { key, secure: isSecure } = Holesail.urlParser(url)
     let argKey = key
     if (isSecure) {
@@ -71,12 +73,12 @@ class Holesail extends ReadyResource {
         throw new Error(`Invalid key format: ${argKey}`)
       }
     }
-    const result = await HolesailClient.ping(argKey) || {}
+    const result = (await HolesailClient.ping(argKey)) || {}
     result.secure = isSecure
     return result
   }
 
-  async _open () {
+  async _open() {
     let enabled = false
     let level = 1 // Default to INFO level
     if (typeof this.log === 'boolean') {
@@ -95,30 +97,45 @@ class Holesail extends ReadyResource {
       this.dht = new HolesailServer({ logger })
       await this.connect()
     } else {
-      this.dht = new HolesailClient({ key: this.seed, secure: this.secure, logger, debug: this.log === 0 })
+      this.dht = new HolesailClient({
+        key: this.seed,
+        secure: this.secure,
+        logger,
+        debug: this.log === 0
+      })
       await this.connect()
     }
   }
 
-  async connect () {
+  async connect() {
     if (this.running) throw new Error('Already connected')
     if (this.server) {
-      await this.dht.start({ port: this.port, host: this.host, seed: this.seed, secure: this.secure, udp: this.udp })
+      await this.dht.start({
+        port: this.port,
+        host: this.host,
+        seed: this.seed,
+        secure: this.secure,
+        udp: this.udp
+      })
     } else {
-      await this.dht.connect({ port: this.port, host: this.host, udp: this.udp })
+      await this.dht.connect({
+        port: this.port,
+        host: this.host,
+        udp: this.udp
+      })
     }
     this.running = true
   }
 
-  async pause () {
+  async pause() {
     await this.dht.pause()
   }
 
-  async resume () {
+  async resume() {
     await this.dht.resume()
   }
 
-  get info () {
+  get info() {
     const info = this.dht.info
     let key
     if (this.key && this.secure) {
@@ -150,13 +167,13 @@ class Holesail extends ReadyResource {
     }
   }
 
-  async _close () {
+  async _close() {
     this.dht.destroy()
     this.running = false
   }
 }
 
 // eslint-disable-next-line no-unused-vars
-function noop () {}
+function noop() {}
 
 module.exports = Holesail

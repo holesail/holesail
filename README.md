@@ -1,11 +1,12 @@
- # Holesail
- ```
- _   _       _                 _ _   _       
-| | | | ___ | | ___  ___  __ _(_) | (_) ___  
-| |_| |/ _ \| |/ _ \/ __|/ _` | | | | |/ _ \ 
+# Holesail
+
+```
+_   _       _                 _ _   _
+| | | | ___ | | ___  ___  __ _(_) | (_) ___
+| |_| |/ _ \| |/ _ \/ __|/ _` | | | | |/ _ \
 |  _  | (_) | |  __/\__ \ (_| | | |_| | (_) |
-|_| |_|\___/|_|\___||___/\__,_|_|_(_)_|\___/ 
- ```
+|_| |_|\___/|_|\___||___/\__,_|_|_(_)_|\___/
+```
 
 [Join our Discord Support Server](https://discord.gg/TQVacE7Vnj) [Join our Reddit Community](https://www.reddit.com/r/holesail/)
 
@@ -19,7 +20,6 @@ BTC Address: 183Pfn4fxuMJMSvZXdBdYsNKWSnWHCdBdA
 Holesail is a truly peer-to-peer network tunneling and reverse proxy software that supports both TCP and UDP protocols.
 
 Holesail lets you share any locally running application on a specific port with third parties securely and with a single command. No static IP or port forwarding required.
-
 
 ## Installation
 
@@ -38,20 +38,23 @@ To start a local Holesail Server, use the following command:
 ```
 holesail --live <port>
 ```
+
 Replace `port` with the desired port number you want to expose to the network.
 
 This will give you a connection string to connect to, use that to access this server from anywhere:
 
 ```
-holesail <connection-string> 
+holesail <connection-string>
 ```
 
 ## All commands
 
 To view full usage instructions and all set of commands, run:
+
 ```
 holesail --help
 ```
+
 ## API
 
 ### Usage
@@ -61,13 +64,12 @@ const Holesail = require('holesail')
 
 const hs = new Holesail({
   server: true, // act as a server
-  secure: true  // use secure mode
+  secure: true // use secure mode
 })
 
 await hs.ready()
 
 console.log('Server is ready:', hs.info.url)
-
 ```
 
 Or as a client:
@@ -77,13 +79,12 @@ const Holesail = require('holesail')
 
 const hs = new Holesail({
   client: true,
-  key: 'hs://s000abcdef...', // URL or raw key
+  key: 'hs://s000abcdef...' // URL or raw key
 })
 
 await hs.ready()
 
 console.log('Client connected:', hs.info)
-
 ```
 
 **API**
@@ -92,13 +93,13 @@ console.log('Client connected:', hs.info)
 
 Options:
 
-- server	Boolean	Start as server (default false)
-- client	Boolean	Start as client (default false)
-- key	String	Optional. URL or raw key for connecting
-- secure	Boolean	Enable secure mode (default false)
-- port	Number	Optional. Specific port to bind/connect
-- host	String	Optional. Specific host to bind/connect
-- udp	Boolean	Optional. Force UDP usage (advanced)
+- server Boolean Start as server (default false)
+- client Boolean Start as client (default false)
+- key String Optional. URL or raw key for connecting
+- secure Boolean Enable secure mode (default false)
+- port Number Optional. Specific port to bind/connect
+- host String Optional. Specific host to bind/connect
+- udp Boolean Optional. Force UDP usage (advanced)
 
 `.ready()`
 Wait for Holesail to initialize and connect.

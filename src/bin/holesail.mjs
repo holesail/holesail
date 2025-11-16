@@ -76,7 +76,8 @@ if (argv.live) {
   await conn.ready()
   const info = conn.info
   stdout(info.protocol, info.type, info.secure, info.host, info.port, info.url)
-} else if (argv.filemanager) { // Start server with a filemanager
+} else if (argv.filemanager) {
+  // Start server with a filemanager
   const fileOptions = {
     path: argv.filemanager,
     role: argv.role,
@@ -123,7 +124,9 @@ if (argv.live) {
       console.log(colors.cyan(colors.underline(colors.bold('Holesail Lookup Result'))) + ' 🔍')
       console.log(colors.magenta('Host: ') + colors.green(data.host || 'N/A'))
       console.log(colors.magenta('Port: ') + colors.green(data.port || 'N/A'))
-      console.log(colors.magenta('Protocol: ') + colors.green(data?.protocol?.toUpperCase() || 'N/A'))
+      console.log(
+        colors.magenta('Protocol: ') + colors.green(data?.protocol?.toUpperCase() || 'N/A')
+      )
       console.log(colors.magenta('Private: ') + colors.green(data.secure ? 'Yes' : 'No'))
     } else {
       console.log(colors.red('No record found for the provided key.'))
@@ -132,7 +135,8 @@ if (argv.live) {
     console.error(colors.red('Error during lookup:'), error.message)
   }
   process.exit(0)
-} else { // Default if no correct option is chosen
+} else {
+  // Default if no correct option is chosen
   printHelp(argv.help)
   process.exit(0)
 }

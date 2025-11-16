@@ -1,8 +1,8 @@
-name: Build 
+name: Build
 on:
   push:
     branches:
-      -  '**'
+      - '**'
   workflow_dispatch:
 jobs:
   prebuild:
@@ -96,6 +96,6 @@ jobs:
           merge-multiple: true
       - uses: actions/upload-artifact@v4
         with:
-          name: builds 
+          name: builds
           path: install
           retention-days: 1

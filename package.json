@@ -38,7 +38,9 @@
     "refresh": "rm package-lock.json && rm -rf node_modules && npm i && npm update",
     "build:prepare": "npx bare-make generate --platform darwin --arch arm64",
     "build": "npm run build:prepare && npx bare-make build && npm run build:strip",
-    "build:strip": "npx bare-make install --strip"
+    "build:strip": "npx bare-make install --strip",
+    "lint-check": "npx prettier . --check",
+    "lint": "npx prettier . --write"
   },
   "repository": {
     "type": "git",
@@ -82,6 +84,8 @@
     "minimist": "^1.2.8",
     "module": "npm:bare-node-module@^1.0.0",
     "path": "npm:bare-node-path@^1.0.1",
+    "prettier": "^3.6.2",
+    "prettier-config-holepunch": "^2.0.0",
     "process": "npm:bare-process@^4.2.1",
     "qrcode-terminal": "^0.12.0",
     "querystring": "npm:bare-node-querystring@^1.0.0",
@@ -96,7 +100,6 @@
   "devDependencies": {
     "bare-make": "^1.6.3",
     "cmake-bare-bundle": "^2.1.4",
-    "cmake-fetch": "^1.4.6",
-    "standard": "^17.1.2"
+    "cmake-fetch": "^1.4.6"
   }
 }

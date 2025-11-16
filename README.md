@@ -131,8 +131,7 @@ Documentation for Holesail can be found at https://docs.holesail.io/
 
 ## License
 
-Holesail Server is released under the GPL-3.0 License. See the [LICENSE](https://www.gnu.org/licenses/gpl-3.0.en.html) file for more information.
-
+This project is licensed under the GNU AGPL v3 license — see the LICENSE
 ## Contributing
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.

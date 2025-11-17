@@ -1,3 +1,6 @@
+CMakeLists.txt
+main.c
+builtins.json
 node_modules
 .idea
 package-lock.json

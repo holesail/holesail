@@ -1,8 +1,8 @@
 {
   "name": "holesail",
-  "version": "1.10.1",
+  "version": "2.3.2",
   "description": "Holesail is TCP/UDP peer-to-peer proxy. Holesail let's you instantly share any application running on a specific port from your local computer.",
-  "main": "index.js",
+  "main": "src/index.js",
   "pear": {
     "name": "holesail",
     "type": "terminal",
@@ -23,11 +23,24 @@
     "fs": {
       "bare": "bare-fs",
       "default": "fs"
+    },
+    "process": {
+      "bare": "bare-process",
+      "default": "process"
+    },
+    "crypto": {
+      "bare": "bare-crypto",
+      "default": "crypto"
     }
   },
   "scripts": {
-    "test": "npm test",
-    "refresh": "rm package-lock.json && rm -rf node_modules && npm i && npm update"
+    "test": "standard && node test.mjs",
+    "refresh": "rm package-lock.json && rm -rf node_modules && npm i && npm update",
+    "build:prepare": "npx bare-make generate --platform darwin --arch arm64",
+    "build": "npm run build:prepare && npx bare-make build && npm run build:strip",
+    "build:strip": "npx bare-make install --strip",
+    "lint-check": "npx prettier . --check",
+    "lint": "npx prettier . --write"
   },
   "repository": {
     "type": "git",
@@ -39,7 +52,7 @@
     "holepunch"
   ],
   "author": "supersuryaansh",
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/holesail/holesail/issues"
   },
@@ -49,48 +62,44 @@
       "includes/**/*"
     ]
   },
+  "overrides": {
+    "sodium-native": "5.0.8"
+  },
   "dependencies": {
-    "b4a": "^1.6.6",
-    "bare-crypto": "^1.3.1",
-    "bare-events": "^2.5.0",
-    "bare-fs": "^4.0.1",
-    "bare-http1": "^4.0.2",
-    "bare-net": "^2.0.0",
-    "bare-os": "^3.3.0",
+    "bare-crypto": "^1.12.0",
+    "bare-module": "^6.1.2",
     "bare-path": "^3.0.0",
-    "bare-process": "^4.0.0",
+    "bare-process": "^4.2.2",
     "bare-querystring": "^1.0.0",
-    "bare-subprocess": "^5.0.2",
-    "bare-tty": "^5.0.1",
-    "bare-utils": "1.1.1",
-    "barely-pm2": "^0.0.4",
-    "child_process": "npm:bare-subprocess@^5.0.2",
-    "cli-box": "^6.0.10",
+    "barely-colours": "^1.0.0",
+    "child_process": "npm:bare-subprocess@^5.1.5",
+    "cli-box": "6.0.10",
     "colors": "^1.4.0",
-    "crypto": "npm:bare-crypto@^1.3.1",
-    "events": "npm:bare-events@^2.5.0",
-    "fs": "npm:bare-node-fs@^1.0.2",
-    "graceful-goodbye": "^1.3.0",
-    "holesail-client": "^1.1.6",
-    "holesail-server": "^1.4.4",
-    "http": "npm:bare-http1@^4.0.2",
+    "graceful-goodbye": "^1.3.3",
+    "holesail-client": "^2.3.0",
+    "holesail-logger": "^1.1.0",
+    "holesail-server": "^2.4.0",
     "hyper-cmd-lib-keys": "^0.1.1",
-    "hyperdht": "^6.20.0",
+    "livefiles": "^1.1.0",
     "minimist": "^1.2.8",
-    "net": "npm:bare-net@^2.0.0",
-    "os": "npm:bare-os@^3.3.0",
-    "path": "npm:bare-path@^3.0.0",
-    "process": "npm:bare-process@^4.0.0",
+    "module": "npm:bare-node-module@^1.0.0",
+    "path": "npm:bare-node-path@^1.0.1",
+    "prettier": "^3.6.2",
+    "prettier-config-holepunch": "^2.0.0",
+    "process": "npm:bare-process@^4.2.1",
     "qrcode-terminal": "^0.12.0",
-    "querystring": "npm:bare-querystring@^1.0.0",
-    "tty": "npm:bare-tty@^5.0.1",
-    "util": "npm:bare-utils@^1.1.1",
-    "which-runtime": "^1.2.1"
+    "querystring": "npm:bare-node-querystring@^1.0.0",
+    "ready-resource": "^1.2.0",
+    "url": "npm:bare-url@^2.3.2",
+    "which-runtime": "^1.3.2",
+    "z32": "^1.1.0"
   },
   "bin": {
-    "holesail": "./index.js"
+    "holesail": "./src/bin/holesail.mjs"
   },
   "devDependencies": {
-    "standard": "^17.1.2"
+    "bare-make": "^1.6.3",
+    "cmake-bare-bundle": "^2.1.4",
+    "cmake-fetch": "^1.4.6"
   }
 }

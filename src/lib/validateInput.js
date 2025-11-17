@@ -6,12 +6,10 @@ function validateInput(args) {
     process.exit()
   }
 
-  //  restrict the use of localhost or 0.0.0.0 when udp is true
   if (args.udp && (args.host === 'localhost' || args.host === '0.0.0.0')) {
     console.log(
-      colors.red('Error: You can’t use localhost or 0.0.0.0 as an address when using UDP')
+      colors.yellow('Warning: localhost or 0.0.0.0 may not work properly within netcat with UDP.')
     )
-    process.exit(2)
   }
 
   // Restrict key length to be at least 32 char long

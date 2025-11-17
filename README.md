@@ -132,6 +132,7 @@ Documentation for Holesail can be found at https://docs.holesail.io/
 ## License
 
 This project is licensed under the GNU AGPL v3 license — see the LICENSE
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.

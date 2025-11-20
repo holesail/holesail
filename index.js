@@ -20,13 +20,13 @@ const validator = new ValidateInput(argv)
 
 // Setting up the command hierarchy
 // Display help and exit
-if (argv.help) {
+if (argv.help || argv.h) {
   help.printHelp(help.helpMessage)
   process.exit(-1)
 }
 
 // Display version and exit
-if (argv.version) {
+if (argv.version || argv.v) {
   console.log(pkg.version)
   process.exit(-1)
 }

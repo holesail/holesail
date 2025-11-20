@@ -40,6 +40,6 @@ ${colors.bold('Notes:')}
 `,
 
   printHelp: function (helpMessage) {
-    console.log(helpMessage);
+    console.log(helpMessage)
   }
-};
+}

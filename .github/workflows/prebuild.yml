@@ -81,7 +81,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}
-          path: install/*
+          path: install/*/bin/*
           retention-days: 1
   merge:
     runs-on: ubuntu-latest

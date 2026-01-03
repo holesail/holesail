@@ -13,6 +13,9 @@ jobs:
             platform: linux
             arch: arm64
           - os: ubuntu-22.04
+            platform: linux
+            arch: ia32
+          - os: ubuntu-22.04
             platform: android
             arch: x64
             flags: -D ANDROID_STL=c++_static
@@ -69,6 +72,14 @@ jobs:
           chmod +x llvm.sh
           sudo ./llvm.sh 20
         if: ${{ matrix.platform == 'linux' }}
+      - run: |
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install -y \
+            gcc-multilib g++-multilib \
+            libc6-dev-i386 \
+            libstdc++6:i386
+        if: ${{ matrix.platform == 'linux' && matrix.arch == 'ia32' }}
       - run: choco upgrade llvm
         if: ${{ matrix.platform == 'win32' }}
       - run: choco install nasm

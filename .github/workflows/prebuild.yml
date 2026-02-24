@@ -21,6 +21,7 @@ jobs:
           - os: ubuntu-22.04
             platform: linux
             arch: ia32
+            flags: -D CMAKE_C_FLAGS=-msse2 -D CMAKE_CXX_FLAGS=-msse2
 
           # ===== Android =====
           - os: ubuntu-22.04

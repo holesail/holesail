@@ -9,20 +9,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # ===== Linux =====
-          - os: ubuntu-22.04
-            platform: linux
-            arch: x64
-
-          - os: ubuntu-22.04-arm
-            platform: linux
-            arch: arm64
-
-          - os: ubuntu-22.04
-            platform: linux
-            arch: ia32
-            flags: -D CMAKE_C_FLAGS=-msse2 -D "CMAKE_CXX_FLAGS=-msse2 -stdlib=libstdc++" -D CMAKE_EXE_LINKER_FLAGS=-stdlib=libstdc++
-
           # ===== Android =====
           - os: ubuntu-22.04
             platform: android
@@ -94,25 +80,6 @@ jobs:
         with:
           node-version: lts/*
 
-      # ===== LLVM =====
-      - name: Install LLVM (Linux)
-        if: ${{ matrix.platform == 'linux' }}
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 20
-
-      # ===== Linux ia32 multilib =====
-      - name: Install Linux ia32 multilib
-        if: ${{ matrix.platform == 'linux' && matrix.arch == 'ia32' }}
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo apt update
-          sudo apt install -y \
-            gcc-multilib g++-multilib \
-            libc6-dev-i386 \
-            libstdc++6:i386
-
       # ===== Windows deps =====
       - name: Install LLVM (Windows)
         if: ${{ matrix.platform == 'win32' }}
@@ -139,9 +106,79 @@ jobs:
           path: install/${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.tags }}/bin/*
           retention-days: 1
 
+  prebuild-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            arch: x64
+          - os: ubuntu-22.04-arm
+            arch: arm64
+          - os: ubuntu-22.04
+            arch: ia32
+            flags: -D CMAKE_C_FLAGS=-msse2 -D "CMAKE_CXX_FLAGS=-msse2 -stdlib=libstdc++" -D CMAKE_EXE_LINKER_FLAGS=-stdlib=libstdc++
+
+    runs-on: ${{ matrix.os }}
+    name: linux-${{ matrix.arch }}
+    container:
+      image: debian:buster
+
+    steps:
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y \
+            curl wget git ca-certificates gnupg \
+            build-essential cmake ninja-build \
+            python3 \
+            lsb-release software-properties-common
+
+      - name: Install ia32 multilib
+        if: ${{ matrix.arch == 'ia32' }}
+        run: |
+          dpkg --add-architecture i386
+          apt-get update
+          apt-get install -y \
+            gcc-multilib g++-multilib \
+            libc6-dev-i386 \
+            libstdc++6:i386
+
+      - name: Install LLVM
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          ./llvm.sh 20
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: build/_drive
+          key: corestore-linux-${{ matrix.arch }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - run: npm install -g bare-make
+      - run: npm install
+
+      - run: bare-make generate --platform linux --arch ${{ matrix.arch }} ${{ matrix.flags }}
+
+      - run: bare-make build
+
+      - run: bare-make install --strip --prefix install/linux-${{ matrix.arch }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-${{ matrix.arch }}
+          path: install/linux-${{ matrix.arch }}/bin/*
+          retention-days: 1
+
   merge:
     runs-on: ubuntu-latest
-    needs: prebuild
+    needs: [prebuild, prebuild-linux]
     steps:
       - uses: actions/download-artifact@v4
         with:

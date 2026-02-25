@@ -117,18 +117,19 @@ jobs:
             arch: arm64
           - os: ubuntu-22.04
             arch: ia32
-            flags: -D CMAKE_C_FLAGS=-msse2 -D "CMAKE_CXX_FLAGS=-msse2 -stdlib=libstdc++" -D CMAKE_EXE_LINKER_FLAGS=-stdlib=libstdc++
+            flags: -D CMAKE_C_FLAGS=-msse2 -D CMAKE_CXX_FLAGS=-msse2
 
     runs-on: ${{ matrix.os }}
     name: linux-${{ matrix.arch }}
     container:
-      image: debian:buster
+      image: ubuntu:19.10
 
     steps:
       - name: Fix archived apt sources
         run: |
-          echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.list
-          echo "deb http://archive.debian.org/debian-security buster/updates main" >> /etc/apt/sources.list
+          sed -i 's|http://archive.ubuntu.com/ubuntu|http://old-releases.ubuntu.com/ubuntu|g' /etc/apt/sources.list
+          sed -i 's|http://security.ubuntu.com/ubuntu|http://old-releases.ubuntu.com/ubuntu|g' /etc/apt/sources.list
+          sed -i 's|http://ports.ubuntu.com/ubuntu-ports|http://old-releases.ubuntu.com/ubuntu|g' /etc/apt/sources.list
 
       - name: Install system dependencies
         run: |
@@ -138,6 +139,8 @@ jobs:
             build-essential cmake ninja-build \
             python3 \
             lsb-release software-properties-common
+        env:
+          DEBIAN_FRONTEND: noninteractive
 
       - name: Install ia32 multilib
         if: ${{ matrix.arch == 'ia32' }}
@@ -154,6 +157,7 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           ./llvm.sh 20
+          apt-get install -y libc++-20-dev libc++abi-20-dev
 
       - uses: actions/checkout@v4
 

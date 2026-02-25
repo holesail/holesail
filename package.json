@@ -98,7 +98,7 @@
     "holesail": "./src/bin/holesail.mjs"
   },
   "devDependencies": {
-    "bare-make": "^1.6.3",
+    "bare-make": "^1.7.0",
     "cmake-bare-bundle": "^2.1.4",
     "cmake-fetch": "^1.4.6"
   }

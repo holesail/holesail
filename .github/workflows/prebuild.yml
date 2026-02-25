@@ -125,6 +125,11 @@ jobs:
       image: debian:buster
 
     steps:
+      - name: Fix archived apt sources
+        run: |
+          echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.list
+          echo "deb http://archive.debian.org/debian-security buster/updates main" >> /etc/apt/sources.list
+
       - name: Install system dependencies
         run: |
           apt-get update

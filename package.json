@@ -83,9 +83,8 @@
     "livefiles": "^1.1.0",
     "minimist": "^1.2.8",
     "module": "npm:bare-node-module@^1.0.0",
+    "paparam": "^1.10.1",
     "path": "npm:bare-node-path@^1.0.1",
-    "prettier": "^3.6.2",
-    "prettier-config-holepunch": "^2.0.0",
     "process": "npm:bare-process@^4.2.1",
     "qrcode-terminal": "^0.12.0",
     "querystring": "npm:bare-node-querystring@^1.0.0",
@@ -100,6 +99,8 @@
   "devDependencies": {
     "bare-make": "^1.6.3",
     "cmake-bare-bundle": "^2.1.4",
-    "cmake-fetch": "^1.4.6"
+    "cmake-fetch": "^1.4.6",
+    "prettier": "^3.6.2",
+    "prettier-config-holepunch": "^2.0.0"
   }
 }

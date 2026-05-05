@@ -13,7 +13,7 @@ const connect = command(
   async () => {
     const { key } = connect.args
     const { host, udp, port, log } = connect.flags
-    const logger = new HolesailLogger({ enabled: true, level: log })
+    const logger = new HolesailLogger({ prefix: 'Holesail', level: log })
 
     const conn = new Holesail({
       client: true,
@@ -24,8 +24,7 @@ const connect = command(
       logger
     })
     await conn.ready()
-    const info = conn.info
-    logger.log({ type: 1, msg: info })
+    logger.info(conn.info)
   }
 )
 

@@ -13,7 +13,7 @@ const share = command(
   async () => {
     const { port } = share.args
     const { host = '127.0.0.1', udp, seed, log } = share.flags
-    const logger = new HolesailLogger({ enabled: true, level: log })
+    const logger = new HolesailLogger({ prefix: 'Holesail', level: log })
 
     const conn = new Holesail({
       server: true,
@@ -25,7 +25,7 @@ const share = command(
     })
     await conn.ready()
     const info = conn.info
-    logger.log({ type: 1, msg: info.key })
+    logger.info(info.key)
   }
 )
 

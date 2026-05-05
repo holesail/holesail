@@ -1,6 +1,6 @@
 const ReadyResource = require('ready-resource')
-const HolesailServer = require('holesail-server')
-const HolesailClient = require('holesail-client')
+const HolesailClient = require('/Volumes/superdisk/Developer/holesail-client/index.js')
+const HolesailServer = require('/Volumes/superdisk/Developer/holesail-server/index.js')
 const z32 = require('z32')
 const createHash = require('crypto').createHash
 

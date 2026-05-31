@@ -2,105 +2,68 @@ const ReadyResource = require('ready-resource')
 const HolesailClient = require('/Volumes/superdisk/Developer/holesail-client/index.js')
 const HolesailServer = require('/Volumes/superdisk/Developer/holesail-server/index.js')
 const z32 = require('z32')
-const createHash = require('crypto').createHash
 
 class Holesail extends ReadyResource {
   constructor(opts = {}) {
     super()
     this.server = opts.server || false
     this.client = opts.client || false
+
     this.port = opts.port
     this.host = opts.host
-    this.key = opts.key
-    this.logger = opts.logger
     this.udp = opts.udp
+
+    this.invite = opts.invite || null
+    this.seed = opts.seed || null
+    this.logger = opts.logger
+
+    this.bootstrap = opts.bootstrap || null
+
     this.dht = null
     this.running = false
-    this.#initialise()
   }
 
-  #initialise() {
-    if (this.server) {
-      if (this.key) {
-        this.seed = createHash('sha256').update(this.key.toString()).digest('hex')
-      } else if (this.secure) {
-        this.key = libKeys.randomBytes(32).toString('hex')
-        this.seed = createHash('sha256').update(this.key.toString()).digest('hex')
-      }
-    } else {
-      this.seed = this.secure
-        ? z32.encode(createHash('sha256').update(this.key.toString()).digest())
-        : this.key
-    }
-  }
-
-  static urlParser(url) {
-    url = String(url || '')
-    const protocol = 'hs://'
-    let key
-    let secure
-    if (url && url.substring(0, 5) === protocol && url.substring(5, 9).length === 4) {
-      key = url.substring(9)
-    } else {
-      key = url
-    }
-    if (url && url.substring(5, 6) === 's') {
-      secure = true
-    }
-    return { key, secure }
-  }
-
-  static async lookup(url) {
-    const { key, secure: isSecure } = Holesail.urlParser(url)
-    let argKey = key
-    if (isSecure) {
-      const seedBuffer = createHash('sha256').update(key).digest()
-      argKey = z32.encode(seedBuffer)
-    } else {
-      try {
-        z32.decode(argKey)
-      } catch {
-        throw new Error(`Invalid key format: ${argKey}`)
-      }
-    }
-    const result = (await HolesailClient.ping(argKey)) || {}
-    result.secure = isSecure
-    return result
+  static async probe(invite) {
+    return await HolesailClient.probe(invite)
   }
 
   async _open() {
+    if (this.running) return
     if (this.server) {
-      this.dht = new HolesailServer({ logger: this.logger })
-      await this.connect()
-    } else {
-      this.dht = new HolesailClient({
-        key: this.seed,
-        secure: this.secure,
+      const opts = {
+        port: this.port,
+        host: this.host,
+        udp: this.udp,
+        seed: this.seed,
         logger: this.logger,
-        debug: this.log === 0
-      })
-      await this.connect()
+        bootstrap: this.bootstrap || {}
+      }
+      this.dht = new HolesailServer(opts)
+    } else {
+      const opts = {
+        port: this.port,
+        host: this.host,
+        udp: this.udp,
+        invite: this.invite,
+        logger: this.logger,
+        bootstrap: this.bootstrap
+      }
+      this.dht = new HolesailClient(opts)
     }
+    await this.dht.ready()
+    this.running = true
+    this._emit()
   }
 
-  async connect() {
-    if (this.running) throw new Error('Already connected')
+  _emit() {
+    this.dht.on('listening', () => this.emit('listening'))
+    this.dht.on('close', () => this.emit('close'))
+
     if (this.server) {
-      await this.dht.start({
-        port: this.port,
-        host: this.host,
-        seed: this.seed,
-        secure: this.secure,
-        udp: this.udp
-      })
+      this.dht.on('connection', () => this.emit('connection'))
     } else {
-      await this.dht.connect({
-        port: this.port,
-        host: this.host,
-        udp: this.udp
-      })
+      this.dht.on('connect', () => this.emit('connect'))
     }
-    this.running = true
   }
 
   async pause() {
@@ -112,39 +75,24 @@ class Holesail extends ReadyResource {
   }
 
   get info() {
-    const info = this.dht.info
-    let key
-    if (this.key && this.secure) {
-      key = this.key
-    } else {
-      key = info.key
+    const dhtInfo = this.dht.info
+    const info = {
+      server: this.server,
+      client: this.client,
+      state: dhtInfo.state,
+      port: dhtInfo.port,
+      host: dhtInfo.host,
+      udp: dhtInfo.udp,
+      seed: dhtInfo.seed,
+      invite: dhtInfo.invite
     }
-    let url
-    if (this.secure) {
-      url = 'hs://' + 's000' + key
-    } else {
-      url = 'hs://' + '0000' + key
-    }
-    if (this.secure && this.client) {
-      const key = this.key
-      info.seed = createHash('sha256').update(key.toString()).digest('hex')
-    }
-    return {
-      type: info.type,
-      state: info.state,
-      secure: info.secure,
-      port: info.port,
-      host: info.host,
-      protocol: info.protocol,
-      seed: info.seed,
-      key,
-      url,
-      publicKey: info.publicKey
-    }
+
+    if (this.server) info.seed = this.seed
+    return info
   }
 
   async _close() {
-    this.dht.destroy()
+    this.dht.close()
     this.running = false
   }
 }

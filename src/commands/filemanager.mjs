@@ -18,7 +18,7 @@ const filemanager = command(
   async () => {
     const { dir } = filemanager.args
     const { host = '127.0.0.1', port, log, seed, user, pass, role } = filemanager.flags
-    const logger = new HolesailLogger({ enabled: true, level: log })
+    const logger = new HolesailLogger({ prefix: 'Holesail', level: log })
 
     const livefileOpts = {
       path: dir,
@@ -43,7 +43,7 @@ const filemanager = command(
     const conn = new Holesail(opts)
     await conn.ready()
     const info = conn.info
-    logger.log({ type: 1, msg: `${JSON.stringify(fsInfo)} ${JSON.stringify(info)}` })
+    logger.info(`${JSON.stringify(fsInfo)} ${JSON.stringify(info)}`)
 
     goodbye(async () => {
       await conn.close()

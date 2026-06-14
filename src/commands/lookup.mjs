@@ -3,22 +3,24 @@ import HolesailLogger from 'holesail-logger'
 import Holesail from '../index.js'
 
 const lookup = command(
-  'lookup',
+  'probe',
   summary('lookup details of a connection'),
-  arg('<key>', 'connection key'),
+  arg('<invite>', 'invite to the remote peer'),
+  flag('--log|-l <level>', 'log level'),
   async () => {
-    const { key } = lookup.args
-    const logger = new HolesailLogger({ enabled: true, level: 0 })
+    const { invite } = lookup.args
+    const { log } = connect.flags
+    const logger = new HolesailLogger({ prefix: 'Holesail', level: log })
 
     try {
-      const data = await Holesail.lookup(key)
+      const data = await Holesail.probe(invite)
       if (data) {
-        logger.log({ type: 1, msg: JSON.stringify(data) })
+        logger.info(data)
       } else {
-        logger.log({ type: 1, msg: 'No record found for the provided key.' })
+        logger.error('No record found for the provided key.')
       }
     } catch (error) {
-      logger.log({ type: 1, msg: `Error during lookup: ${error.message}` })
+      logger.error(`Error during lookup: ${error.message}`)
     }
     // process.exit(0)
   }

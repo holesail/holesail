@@ -66,6 +66,7 @@
     "sodium-native": "5.0.8"
   },
   "dependencies": {
+    "@holesail/invite": "^1.2.0",
     "bare-crypto": "^1.12.0",
     "bare-module": "^6.1.2",
     "bare-path": "^3.0.0",

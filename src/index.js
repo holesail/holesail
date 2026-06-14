@@ -1,7 +1,7 @@
 const ReadyResource = require('ready-resource')
 const HolesailClient = require('/Volumes/superdisk/Developer/holesail-client/index.js')
 const HolesailServer = require('/Volumes/superdisk/Developer/holesail-server/index.js')
-const z32 = require('z32')
+const { randomSeed } = require('@holesail/invite')
 
 class Holesail extends ReadyResource {
   constructor(opts = {}) {
@@ -25,6 +25,10 @@ class Holesail extends ReadyResource {
 
   static async probe(invite) {
     return await HolesailClient.probe(invite)
+  }
+
+  static randomSeed() {
+    return randomSeed()
   }
 
   async _open() {
@@ -57,7 +61,6 @@ class Holesail extends ReadyResource {
 
   _emit() {
     this.dht.on('listening', () => this.emit('listening'))
-    this.dht.on('close', () => this.emit('close'))
 
     if (this.server) {
       this.dht.on('connection', () => this.emit('connection'))

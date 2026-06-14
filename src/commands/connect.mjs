@@ -5,13 +5,13 @@ import Holesail from '../index.js'
 const connect = command(
   'connect',
   summary('Connect to a Holesail server'),
-  arg('<key>', 'remote key to connect to'),
+  arg('<invite>', 'invite to the remote peer'),
   flag('--host|-h <host>', 'custom local address'),
   flag('--udp|-u', 'use UDP protocol'),
   flag('--port|-p <port>', 'use custom port'),
   flag('--log|-l <level>', 'log level'),
   async () => {
-    const { key } = connect.args
+    const { invite } = connect.args
     const { host, udp, port, log } = connect.flags
     const logger = new HolesailLogger({ prefix: 'Holesail', level: log })
 
@@ -19,8 +19,8 @@ const connect = command(
       client: true,
       port,
       host,
-      key,
       udp,
+      invite,
       logger
     })
     await conn.ready()

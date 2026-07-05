@@ -97,6 +97,7 @@ class Holesail extends ReadyResource {
   async _close() {
     this.dht.close()
     this.running = false
+    this.emit('close')
   }
 }
 

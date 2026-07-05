@@ -3,7 +3,7 @@ import banner from '../lib/banner.js'
 
 import connect from '../commands/connect.mjs'
 import share from '../commands/share.mjs'
-import probe from '../commands/lookup.mjs'
+import probe from '../commands/probe.mjs'
 import filemanager from '../commands/filemanager.mjs'
 import seed from '../commands/seed.mjs'
 

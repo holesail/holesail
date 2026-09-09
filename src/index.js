@@ -1,6 +1,6 @@
 const ReadyResource = require('ready-resource')
-const HolesailClient = require('/Volumes/superdisk/Developer/holesail-client/index.js')
-const HolesailServer = require('/Volumes/superdisk/Developer/holesail-server/index.js')
+const HolesailClient = require('holesail-client')
+const HolesailServer = require('holesail-server')
 const { randomSeed } = require('@holesail/invite')
 
 class Holesail extends ReadyResource {

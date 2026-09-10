@@ -66,6 +66,7 @@
     "sodium-native": "5.0.8"
   },
   "dependencies": {
+    "@holesail/invite": "^1.2.0",
     "bare-crypto": "^1.12.0",
     "bare-module": "^6.1.2",
     "bare-path": "^3.0.0",
@@ -76,16 +77,16 @@
     "cli-box": "6.0.10",
     "colors": "^1.4.0",
     "graceful-goodbye": "^1.3.3",
-    "holesail-client": "^2.3.0",
-    "holesail-logger": "^1.1.0",
-    "holesail-server": "^2.4.0",
+    "holesail-client": "^3.0.0-dev.0",
+    "holesail-logger": "^2.0.0",
+    "holesail-server": "^3.0.0-dev.0",
     "hyper-cmd-lib-keys": "^0.1.1",
+    "hyperdht": "^6.34.0",
     "livefiles": "^1.1.0",
     "minimist": "^1.2.8",
     "module": "npm:bare-node-module@^1.0.0",
+    "paparam": "^1.10.1",
     "path": "npm:bare-node-path@^1.0.1",
-    "prettier": "^3.6.2",
-    "prettier-config-holepunch": "^2.0.0",
     "process": "npm:bare-process@^4.2.1",
     "qrcode-terminal": "^0.12.0",
     "querystring": "npm:bare-node-querystring@^1.0.0",
@@ -100,6 +101,8 @@
   "devDependencies": {
     "bare-make": "^1.6.3",
     "cmake-bare-bundle": "^2.1.4",
-    "cmake-fetch": "^1.4.6"
+    "cmake-fetch": "^1.4.6",
+    "prettier": "^3.6.2",
+    "prettier-config-holepunch": "^2.0.0"
   }
 }

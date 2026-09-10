@@ -81,6 +81,7 @@
     "holesail-logger": "^2.0.0",
     "holesail-server": "^3.0.0-dev.0",
     "hyper-cmd-lib-keys": "^0.1.1",
+    "hyperdht": "^6.34.0",
     "livefiles": "^1.1.0",
     "minimist": "^1.2.8",
     "module": "npm:bare-node-module@^1.0.0",

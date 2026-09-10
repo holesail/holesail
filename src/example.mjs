@@ -3,14 +3,16 @@ import Holesail from './index.js'
 
 // Capture every event an instance emits by wrapping its emit()
 const eventCounts = new Map() // label -> Map(event -> count)
-function captureEvents (label, instance) {
+function captureEvents(label, instance) {
   const counts = new Map()
   eventCounts.set(label, counts)
   const originalEmit = instance.emit.bind(instance)
   instance.emit = (event, ...args) => {
     const count = (counts.get(event) || 0) + 1
     counts.set(event, count)
-    console.log(`[${label}] emit "${String(event)}" (#${count})${count > 1 ? '  <-- DUPLICATE' : ''}`)
+    console.log(
+      `[${label}] emit "${String(event)}" (#${count})${count > 1 ? '  <-- DUPLICATE' : ''}`
+    )
     return originalEmit(event, ...args)
   }
 }

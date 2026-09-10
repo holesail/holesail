@@ -1,6 +1,7 @@
 const ReadyResource = require('ready-resource')
 const HolesailClient = require('holesail-client')
 const HolesailServer = require('holesail-server')
+const HyperDHT = require('hyperdht')
 const { randomSeed } = require('@holesail/invite')
 
 class Holesail extends ReadyResource {
@@ -40,7 +41,7 @@ class Holesail extends ReadyResource {
         udp: this.udp,
         seed: this.seed,
         logger: this.logger,
-        bootstrap: this.bootstrap || {}
+        bootstrap: this.bootstrap === false ? false : this.bootstrap || HyperDHT.BOOTSTRAP
       }
       this.dht = new HolesailServer(opts)
     } else {
@@ -54,9 +55,9 @@ class Holesail extends ReadyResource {
       }
       this.dht = new HolesailClient(opts)
     }
+    this._emit()
     await this.dht.ready()
     this.running = true
-    this._emit()
   }
 
   _emit() {
@@ -95,9 +96,8 @@ class Holesail extends ReadyResource {
   }
 
   async _close() {
-    this.dht.close()
+    await this.dht.close()
     this.running = false
-    this.emit('close')
   }
 }
 

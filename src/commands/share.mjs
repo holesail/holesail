@@ -25,7 +25,7 @@ const share = command(
     })
     await conn.ready()
     const info = conn.info
-    logger.info(info.key)
+    logger.info(info.invite)
   }
 )
 

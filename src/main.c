@@ -1,4 +1,7 @@
 #include <assert.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <bare.h>
 #include <uv.h>
 
@@ -9,8 +12,15 @@ main(int argc, char *argv[]) {
   int err;
 
   argv = uv_setup_args(argc, argv);
-  
-  char **new_argv = malloc((argc + 2) * sizeof(char *));
+
+  if (argc < 0) {
+    fprintf(stderr, "Invalid argument count\n");
+    return 1;
+  }
+
+  // calloc validates that (argc + 2) * sizeof(char *) does not overflow
+  // before allocating, unlike a manual malloc(n * size) computation.
+  char **new_argv = calloc((size_t) argc + 2, sizeof(char *));
   if (new_argv == NULL) {
     perror("Failed to allocate memory");
     return 1; 

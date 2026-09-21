@@ -10,3 +10,4 @@ install
 *.d
 prebuilds
 .DS_Store
+.claude

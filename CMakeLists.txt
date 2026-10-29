@@ -14,7 +14,7 @@ else()
   enable_language(ASM)
 endif()
 
-fetch_package("github:holepunchto/libjstl")
+fetch_package("github:holepunchto/libjstl#098664c")
 fetch_package("github:holepunchto/bare@1.24.3")
 
 add_bare_bundle(

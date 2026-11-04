@@ -37,7 +37,7 @@ if (argv.help || argv.h) {
 }
 
 // Display version and exit
-if (argv.version) {
+if (argv.version || argv.v) {
   console.log(version)
   process.exit(0)
 }

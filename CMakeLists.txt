@@ -14,8 +14,10 @@ else()
   enable_language(ASM)
 endif()
 
-fetch_package("github:holepunchto/libjstl")
-fetch_package("github:holepunchto/bare@1.24.3")
+set(BARE_ENGINE "github:holepunchto/libjerry" CACHE STRING "The JavaScript engine to use")
+set(BARE_PREBUILDS OFF CACHE BOOL "Enable prebuilds for supported third-party dependencies")
+
+fetch_package("github:holepunchto/bare")
 
 add_bare_bundle(
   ${name}_bundle
